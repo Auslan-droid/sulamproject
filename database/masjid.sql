@@ -25,9 +25,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table masjid.users: ~0 rows (approximately)
+INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `created_at`) VALUES
+  (1, 'admin', 'admin@sulamproject.com', '$2y$10$uMwmE2bIzKGGuvhtXBG2G.FLkoSa570g2lTfv4SNv3dA1mGN/0oV.', 'user', '2025-11-14 03:13:58'),
+  (2, 'user', 'user@example.com', '$2y$10$VcaaCHJnozwMobNNiKv.IOvO2RrwBZorKhJP6Mg5qL1OB9bRkSU3C', 'user', '2025-11-14 03:13:58');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
