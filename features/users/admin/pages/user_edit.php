@@ -1,9 +1,10 @@
 <?php
-session_start();
-require_once __DIR__ . '/db.php';
-
-if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') { http_response_code(403); echo 'Forbidden'; exit; }
+// Moved from /user_edit.php
+$ROOT = dirname(__DIR__, 4);
+require_once $ROOT . '/features/shared/lib/auth/session.php';
+require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
+initSecureSession();
+requireAdmin();
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) { http_response_code(400); echo 'Bad Request'; exit; }
@@ -56,6 +57,9 @@ $result = $stmt->get_result();
 $user = $result ? $result->fetch_assoc() : null;
 $stmt->close();
 if (!$user) { http_response_code(404); echo 'User not found'; exit; }
+
+$stylePath = $ROOT . '/assets/css/style.css';
+$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
 ?>
 <!doctype html>
 <html lang="en">
@@ -63,11 +67,11 @@ if (!$user) { http_response_code(404); echo 'User not found'; exit; }
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit User #<?php echo (int)$user['id']; ?></title>
-  <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
+  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
 </head>
 <body>
   <div class="dashboard">
-    <?php $currentPage='user_edit.php'; include __DIR__ . '/includes/sidebar.php'; ?>
+  <?php $currentPage='user_edit.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
     <main class="content">
       <div class="small-card" style="max-width:800px;margin:0 auto;">
         <h2>Edit User: <?php echo htmlspecialchars($user['name']); ?></h2>
@@ -118,11 +122,12 @@ if (!$user) { http_response_code(404); echo 'User not found'; exit; }
 
           <div class="actions">
             <button class="btn" type="submit">Save</button>
-            <a class="btn outline" href="admin.php">Back</a>
+            <a class="btn outline" href="/sulamproject/admin">Back</a>
           </div>
         </form>
       </div>
     </main>
   </div>
+<?php include $ROOT . '/features/shared/components/footer.php'; ?>
 </body>
 </html>

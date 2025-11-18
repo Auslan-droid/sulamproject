@@ -1,10 +1,12 @@
 <?php
+// Moved from /login.php
+$ROOT = dirname(__DIR__, 4);
 // Login handler: verifies username/password against DB and redirects to dashboard
 session_start();
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  require_once __DIR__ . '/db.php';
+  require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
 
   $rawUsername = isset($_POST['username']) ? trim($_POST['username']) : '';
   $rawPassword = isset($_POST['password']) ? $_POST['password'] : '';
@@ -12,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($rawUsername === '' || $rawPassword === '') {
     $message = 'Please enter your username and password.';
   } else {
-  // Fetch user by username including role
-  $stmt = $mysqli->prepare('SELECT id, username, email, roles, password FROM `users` WHERE username = ? LIMIT 1');
+    // Fetch user by username including role
+    $stmt = $mysqli->prepare('SELECT id, username, email, roles, password FROM `users` WHERE username = ? LIMIT 1');
     if ($stmt) {
       $stmt->bind_param('s', $rawUsername);
       $stmt->execute();
@@ -27,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id'] = (int)$user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['roles'];
-        header('Location: dashboard.php');
+  header('Location: /sulamproject/dashboard');
         exit;
       } else {
         $message = 'Invalid username or password.';
@@ -37,20 +39,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 }
-?><!doctype html>
+
+$stylePath = $ROOT . '/assets/css/style.css';
+$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
+?>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login — SulamProject</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
+  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
   </head>
   <body>
-    <main class="centered small-card">
+  <main class="centered small-card">
       <h2>Login</h2>
       <?php if ($message): ?><div class="notice"><?php echo $message; ?></div><?php endif; ?>
 
-      <form method="post" action="login.php">
+  <form method="post" action="/sulamproject/login">
         <label>Username
           <input type="text" name="username" required>
         </label>
@@ -59,9 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </label>
         <div class="actions">
           <button class="btn" type="submit">Sign in</button>
-          <a class="btn outline" href="register.php">Register</a>
+          <a class="btn outline" href="/sulamproject/register">Register</a>
         </div>
       </form>
     </main>
   </body>
+  <?php include $ROOT . '/features/shared/components/footer.php'; ?>
 </html>

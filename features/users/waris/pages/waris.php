@@ -1,9 +1,11 @@
 <?php
-session_start();
-require_once __DIR__ . '/db.php';
-if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
-
-$userId = (int)$_SESSION['user_id'];
+// Moved from /waris.php
+$ROOT = dirname(__DIR__, 4);
+require_once $ROOT . '/features/shared/lib/auth/session.php';
+require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
+initSecureSession();
+requireAuth();
+$userId = (int) getUserId();
 $message = '';
 $messageClass = 'notice';
 
@@ -57,6 +59,9 @@ $stmt->execute();
 $res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) { $waris[] = $row; }
 $stmt->close();
+
+$stylePath = $ROOT . '/assets/css/style.css';
+$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
 ?>
 <!doctype html>
 <html lang="en">
@@ -64,11 +69,11 @@ $stmt->close();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Waris — SulamProject</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
+  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
 </head>
 <body>
   <div class="dashboard">
-    <?php $currentPage='waris.php'; include __DIR__ . '/includes/sidebar.php'; ?>
+  <?php $currentPage='waris.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
 
     <main class="content">
       <div class="small-card" style="max-width:980px;margin:0 auto;">
@@ -127,5 +132,6 @@ $stmt->close();
       </div>
     </main>
   </div>
+<?php include $ROOT . '/features/shared/components/footer.php'; ?>
 </body>
 </html>

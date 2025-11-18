@@ -1,9 +1,11 @@
 <?php
+// Moved from /register.php
+$ROOT = dirname(__DIR__, 4);
 $message = '';
 $messageClass = 'notice';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  require_once __DIR__ . '/db.php'; // ensures DB and `users` table exist in `masjidkamek`
+  require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
 
   // Collect & validate inputs
   $rawName = isset($_POST['name']) ? trim($_POST['name']) : '';
@@ -33,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $mysqli->real_escape_string($rawEmail);
     $passwordHash = password_hash($rawPassword, PASSWORD_DEFAULT);
 
-  // Use prepared statement for insert into users
-  $stmt = $mysqli->prepare('INSERT INTO `users` (name, username, email, password) VALUES (?, ?, ?, ?)');
+    // Use prepared statement for insert into users
+    $stmt = $mysqli->prepare('INSERT INTO `users` (name, username, email, password) VALUES (?, ?, ?, ?)');
     if ($stmt) {
       $stmt->bind_param('ssss', $name, $username, $email, $passwordHash);
       if ($stmt->execute()) {
@@ -62,20 +64,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = implode(' ', $errors);
   }
 }
-?><!doctype html>
+
+$stylePath = $ROOT . '/assets/css/style.css';
+$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
+?>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register — SulamProject</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
+  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
   </head>
   <body>
-    <main class="centered small-card">
+  <main class="centered small-card">
       <h2>Register</h2>
-  <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
+      <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
 
-      <form method="post" action="register.php">
+  <form method="post" action="/sulamproject/register">
         <label>Name
           <input type="text" name="name" maxlength="120" required>
         </label>
@@ -90,9 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </label>
         <div class="actions">
           <button class="btn" type="submit">Create account</button>
-          <a class="btn outline" href="login.php">Back to Login</a>
+          <a class="btn outline" href="/sulamproject/login">Back to Login</a>
         </div>
       </form>
     </main>
   </body>
+  <?php include $ROOT . '/features/shared/components/footer.php'; ?>
 </html>

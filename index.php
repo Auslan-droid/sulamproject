@@ -4,8 +4,8 @@
  * Central entry point for all requests
  */
 
-// Load router and routes
-$router = require_once __DIR__ . '/routes.php';
+// Load router and routes (moved under features)
+$router = require_once __DIR__ . '/features/shared/lib/routes.php';
 
 // Get request method and URI
 $method = $_SERVER['REQUEST_METHOD'];

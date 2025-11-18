@@ -1,14 +1,17 @@
 <?php
-session_start();
-require_once __DIR__ . '/db.php';
-
-if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') { http_response_code(403); echo 'Forbidden'; exit; }
+// Moved from /admin.php
+$ROOT = dirname(__DIR__, 4);
+require_once $ROOT . '/features/shared/lib/auth/session.php';
+require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
+initSecureSession();
+requireAdmin();
 
 // Simple list of users with edit links
 $users = [];
 $res = $mysqli->query("SELECT id, name, username, email, roles, is_meninggal FROM users ORDER BY id DESC");
 if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(); }
+$stylePath = $ROOT . '/assets/css/style.css';
+$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
 ?>
 <!doctype html>
 <html lang="en">
@@ -16,11 +19,11 @@ if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin — Users</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
+  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
 </head>
 <body>
   <div class="dashboard">
-    <?php $currentPage='admin.php'; include __DIR__ . '/includes/sidebar.php'; ?>
+  <?php $currentPage='admin.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
     <main class="content">
       <div class="small-card" style="max-width:1100px;margin:0 auto;">
         <h2>Manage Users</h2>
@@ -39,7 +42,7 @@ if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(
                 <td><?php echo htmlspecialchars($u['email']); ?></td>
                 <td><?php echo htmlspecialchars($u['roles']); ?></td>
                 <td><?php echo $u['is_meninggal'] ? 'Yes' : 'No'; ?></td>
-                <td><a class="btn" href="user_edit.php?id=<?php echo (int)$u['id']; ?>">Edit</a></td>
+                <td><a class="btn" href="/sulamproject/admin/user-edit?id=<?php echo (int)$u['id']; ?>">Edit</a></td>
               </tr>
             <?php endforeach; ?>
           </tbody>
@@ -47,5 +50,6 @@ if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(
       </div>
     </main>
   </div>
+<?php include $ROOT . '/features/shared/components/footer.php'; ?>
 </body>
 </html>

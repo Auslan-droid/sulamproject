@@ -1,14 +1,24 @@
 /* CSS Variables */
 :root {
-  --bg: #031d0d; /* green top */
+  --bg: #ffffff; /* page background */
   --card: #0b1220;
   --accent: #4f46e5;
-  --muted: #9aa4b2;
+  --muted: #64748b; /* slate-500 */
   --btn-text: #ffffff;
-  --text-primary: #e6eef7;
-  --border-subtle: rgba(255,255,255,0.06);
-  --card-bg: linear-gradient(180deg, rgba(22,163,74,0.10), rgba(6,95,70,0.10));
+  --text-primary: #0f172a; /* slate-900 */
+  --border-subtle: rgba(0,0,0,0.08);
+  /* More contrasty green container background */
+  --card-bg: linear-gradient(180deg, rgba(22,163,74,0.18), rgba(6,95,70,0.22));
+  --card-border: rgba(22,163,74,0.28);
   --shadow-sm: 0 8px 22px rgba(0,0,0,0.28);
   --shadow-md: 0 10px 24px rgba(0,0,0,0.28);
   --shadow-lg: 0 12px 32px rgba(0,0,0,0.35);
+
+  /* Sidebar theme */
+  --sidebar-bg: #0b1220; /* darker panel for better contrast */
+  --sidebar-border: rgba(255,255,255,0.08);
+  --sidebar-link: #cbd5e1;
+  --sidebar-link-hover-bg: rgba(255,255,255,0.06);
+  --sidebar-active-bg: rgba(79, 70, 229, 0.18); /* accent tint */
+  --sidebar-active-text: #ffffff;
 }

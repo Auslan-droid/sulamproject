@@ -14,6 +14,7 @@
 </head>
 <body>
     <?php echo $content ?? ''; ?>
+    <?php include __DIR__ . '/../footer.php'; ?>
     
     <?php if (isset($additionalScripts)): ?>
         <?php foreach ($additionalScripts as $script): ?>
