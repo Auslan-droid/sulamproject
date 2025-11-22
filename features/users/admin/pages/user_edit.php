@@ -58,76 +58,71 @@ $user = $result ? $result->fetch_assoc() : null;
 $stmt->close();
 if (!$user) { http_response_code(404); echo 'User not found'; exit; }
 
-$stylePath = $ROOT . '/assets/css/style.css';
-$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
+// 1. Capture the inner content
+ob_start();
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edit User #<?php echo (int)$user['id']; ?></title>
-  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
-</head>
-<body>
-  <div class="dashboard">
-  <?php $currentPage='user_edit.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
-    <main class="content">
-      <div class="small-card" style="max-width:800px;margin:0 auto;">
-        <h2>Edit User: <?php echo htmlspecialchars($user['name']); ?></h2>
-        <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
+<div class="small-card" style="max-width:800px;margin:0 auto;">
+  <h2>Edit User: <?php echo htmlspecialchars($user['name']); ?></h2>
+  <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
 
-        <form method="post">
-          <label>Role
-            <select name="roles">
-              <option value="user" <?php echo $user['roles']==='user'?'selected':''; ?>>user</option>
-              <option value="admin" <?php echo $user['roles']==='admin'?'selected':''; ?>>admin</option>
-            </select>
-          </label>
-          <label>Phone Number
-            <input type="text" name="phone_number" value="<?php echo htmlspecialchars((string)$user['phone_number']); ?>">
-          </label>
-          <label>Address
-            <textarea name="address" rows="3"><?php echo htmlspecialchars((string)$user['address']); ?></textarea>
-          </label>
-          <label>Marital Status
-            <select name="marital_status">
-              <?php $opts=['','single','married','divorced','widowed','others']; foreach($opts as $o): ?>
-                <option value="<?php echo $o; ?>" <?php echo ($user['marital_status']===$o? 'selected':'' ); ?>><?php echo $o===''?'(none)':ucfirst($o); ?></option>
-              <?php endforeach; ?>
-            </select>
-          </label>
-          <label>Income (MYR)
-            <input type="number" step="0.01" name="income" value="<?php echo htmlspecialchars((string)$user['income']); ?>">
-          </label>
-          <label>
-            <input type="checkbox" name="is_deceased" <?php echo $user['is_deceased']? 'checked':''; ?>>
-            Deceased
-          </label>
+  <form method="post">
+    <label>Role
+      <select name="roles">
+        <option value="user" <?php echo $user['roles']==='user'?'selected':''; ?>>user</option>
+        <option value="admin" <?php echo $user['roles']==='admin'?'selected':''; ?>>admin</option>
+      </select>
+    </label>
+    <label>Phone Number
+      <input type="text" name="phone_number" value="<?php echo htmlspecialchars((string)$user['phone_number']); ?>">
+    </label>
+    <label>Address
+      <textarea name="address" rows="3"><?php echo htmlspecialchars((string)$user['address']); ?></textarea>
+    </label>
+    <label>Marital Status
+      <select name="marital_status">
+        <?php $opts=['','single','married','divorced','widowed','others']; foreach($opts as $o): ?>
+          <option value="<?php echo $o; ?>" <?php echo ($user['marital_status']===$o? 'selected':'' ); ?>><?php echo $o===''?'(none)':ucfirst($o); ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+    <label>Income (MYR)
+      <input type="number" step="0.01" name="income" value="<?php echo htmlspecialchars((string)$user['income']); ?>">
+    </label>
+    <label>
+      <input type="checkbox" name="is_deceased" <?php echo $user['is_deceased']? 'checked':''; ?>>
+      Deceased
+    </label>
 
-          <fieldset>
-            <legend>Death Record (optional)</legend>
-            <div class="grid-3">
-              <label>Date
-                <input type="date" name="date">
-              </label>
-              <label>Time
-                <input type="time" name="time">
-              </label>
-              <label>Islamic Date
-                <input type="text" name="islamic_date" placeholder="e.g., 10 Rabiulawal 1447H">
-              </label>
-            </div>
-          </fieldset>
-
-          <div class="actions">
-            <button class="btn" type="submit">Save</button>
-            <a class="btn outline" href="/sulamproject/admin">Back</a>
-          </div>
-        </form>
+    <fieldset>
+      <legend>Death Record (optional)</legend>
+      <div class="grid-3">
+        <label>Date
+          <input type="date" name="date">
+        </label>
+        <label>Time
+          <input type="time" name="time">
+        </label>
+        <label>Islamic Date
+          <input type="text" name="islamic_date" placeholder="e.g., 10 Rabiulawal 1447H">
+        </label>
       </div>
-    </main>
-  </div>
-<?php include $ROOT . '/features/shared/components/footer.php'; ?>
-</body>
-</html>
+    </fieldset>
+
+    <div class="actions">
+      <button class="btn" type="submit">Save</button>
+      <a class="btn outline" href="<?php echo url('admin'); ?>">Back</a>
+    </div>
+  </form>
+</div>
+<?php
+$content = ob_get_clean();
+
+// 2. Wrap with dashboard layout
+ob_start();
+include $ROOT . '/features/shared/components/layouts/dashboard-layout.php';
+$content = ob_get_clean();
+
+// 3. Render with base layout
+$pageTitle = 'Edit User #' . $user['id'];
+include $ROOT . '/features/shared/components/layouts/base.php';
+?>

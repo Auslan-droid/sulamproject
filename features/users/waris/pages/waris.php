@@ -69,78 +69,72 @@ while ($row = $res->fetch_assoc()) {
     }
 $stmt->close();
 
-$stylePath = $ROOT . '/assets/css/style.css';
-$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
+// 1. Capture the inner content
+ob_start();
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Waris — SulamProject</title>
-  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
-</head>
-<body>
-  <div class="dashboard">
-  <?php $currentPage='waris.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
+<div class="small-card" style="max-width:980px;margin:0 auto;">
+  <h2>Waris (Inheritors)</h2>
+  <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
 
-    <main class="content">
-      <div class="small-card" style="max-width:980px;margin:0 auto;">
-        <h2>Waris (Inheritors)</h2>
-        <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
+  <h3>Add Waris</h3>
+  <form method="post">
+    <input type="hidden" name="action" value="add">
+    <div class="grid-2">
+      <label>Name
+        <input type="text" name="name" required>
+      </label>
+      <label>Email
+        <input type="email" name="email">
+      </label>
+    </div>
+    <div class="grid-2">
+      <label>No Telefon
+        <input type="text" name="no_telefon">
+      </label>
+      <label>Alamat
+        <input type="text" name="alamat">
+      </label>
+    </div>
+    <div class="actions">
+      <button class="btn" type="submit">Add</button>
+    </div>
+  </form>
 
-        <h3>Add Waris</h3>
-        <form method="post">
-          <input type="hidden" name="action" value="add">
-          <div class="grid-2">
-            <label>Name
-              <input type="text" name="name" required>
-            </label>
-            <label>Email
-              <input type="email" name="email">
-            </label>
-          </div>
-          <div class="grid-2">
-            <label>No Telefon
-              <input type="text" name="no_telefon">
-            </label>
-            <label>Alamat
-              <input type="text" name="alamat">
-            </label>
-          </div>
-          <div class="actions">
-            <button class="btn" type="submit">Add</button>
-          </div>
-        </form>
+  <h3 style="margin-top:2rem;">Your Waris</h3>
+  <?php if (empty($waris)): ?>
+    <p>No waris yet.</p>
+  <?php else: ?>
+    <table class="table">
+      <thead><tr><th>Name</th><th>Email</th><th>No Telefon</th><th>Alamat</th><th>Action</th></tr></thead>
+      <tbody>
+        <?php foreach ($waris as $w): ?>
+          <tr>
+            <td><?php echo htmlspecialchars($w['name']); ?></td>
+            <td><?php echo htmlspecialchars((string)$w['email']); ?></td>
+            <td><?php echo htmlspecialchars((string)$w['no_telefon']); ?></td>
+            <td><?php echo htmlspecialchars((string)$w['alamat']); ?></td>
+            <td>
+              <form method="post" onsubmit="return confirm('Delete this waris?');" style="display:inline;">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" value="<?php echo (int)$w['id']; ?>">
+                <button class="btn outline" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  <?php endif; ?>
+</div>
+<?php
+$content = ob_get_clean();
 
-        <h3 style="margin-top:2rem;">Your Waris</h3>
-        <?php if (empty($waris)): ?>
-          <p>No waris yet.</p>
-        <?php else: ?>
-          <table class="table">
-            <thead><tr><th>Name</th><th>Email</th><th>No Telefon</th><th>Alamat</th><th>Action</th></tr></thead>
-            <tbody>
-              <?php foreach ($waris as $w): ?>
-                <tr>
-                  <td><?php echo htmlspecialchars($w['name']); ?></td>
-                  <td><?php echo htmlspecialchars((string)$w['email']); ?></td>
-                  <td><?php echo htmlspecialchars((string)$w['no_telefon']); ?></td>
-                  <td><?php echo htmlspecialchars((string)$w['alamat']); ?></td>
-                  <td>
-                    <form method="post" onsubmit="return confirm('Delete this waris?');" style="display:inline;">
-                      <input type="hidden" name="action" value="delete">
-                      <input type="hidden" name="id" value="<?php echo (int)$w['id']; ?>">
-                      <button class="btn outline" type="submit">Delete</button>
-                    </form>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        <?php endif; ?>
-      </div>
-    </main>
-  </div>
-<?php include $ROOT . '/features/shared/components/footer.php'; ?>
-</body>
-</html>
+// 2. Wrap with dashboard layout
+ob_start();
+include $ROOT . '/features/shared/components/layouts/dashboard-layout.php';
+$content = ob_get_clean();
+
+// 3. Render with base layout
+$pageTitle = 'Waris';
+include $ROOT . '/features/shared/components/layouts/base.php';
+?>

@@ -38,62 +38,66 @@ $items = [];
 $res = $mysqli->query('SELECT id, description, image_path, created_at FROM donations ORDER BY id DESC');
 if ($res) { while ($row = $res->fetch_assoc()) { $items[] = $row; } $res->close(); }
 
-$stylePath = $ROOT . '/assets/css/style.css';
-$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
+// 1. Capture the inner content
+ob_start();
 ?>
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Donations — SulamProject</title>
-  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
-  </head>
-  <body>
-    <div class="dashboard">
-  <?php $currentPage='donations.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
-      <main class="content">
-        <div class="page-card">
-          <h2>Donations</h2>
-          <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
+<div class="page-card">
+  <h2>Donations</h2>
+  <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
 
-          <?php if ($isAdmin): ?>
-          <h3>Create Donation Post</h3>
-          <form method="post" enctype="multipart/form-data">
-            <label>Description
-              <textarea name="description" rows="3" required></textarea>
-            </label>
-            <div class="grid-2">
-              <label>Gamba (upload)
-                <input type="file" name="gamba" accept="image/*">
-              </label>
-              <label>or Gamba URL
-                <input type="url" name="gamba_url" placeholder="https://...">
-              </label>
-            </div>
-            <div class="actions">
-              <button class="btn" type="submit">Publish</button>
-            </div>
-          </form>
-          <?php endif; ?>
-
-          <h3 style="margin-top:1.5rem;">Latest</h3>
-          <?php if (empty($items)): ?>
-            <p>No donation posts yet.</p>
-          <?php else: ?>
-            <div class="cards">
-              <?php foreach ($items as $d): ?>
-                <div class="card">
-                  <?php if (!empty($d['gamba'])): ?><img src="<?php echo htmlspecialchars($d['gamba']); ?>" alt="Donation image" style="max-width:100%;height:auto;"><?php endif; ?>
-                  <p><?php echo nl2br(htmlspecialchars($d['description'])); ?></p>
-                  <small>Posted: <?php echo htmlspecialchars($d['created_at']); ?></small>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          <?php endif; ?>
-        </div>
-      </main>
+  <?php if ($isAdmin): ?>
+  <h3>Create Donation Post</h3>
+  <form method="post" enctype="multipart/form-data">
+    <label>Description
+      <textarea name="description" rows="3" required></textarea>
+    </label>
+    <div class="grid-2">
+      <label>Gamba (upload)
+        <input type="file" name="gamba" accept="image/*">
+      </label>
+      <label>or Gamba URL
+        <input type="url" name="gamba_url" placeholder="https://...">
+      </label>
     </div>
-  </body>
-  <?php include $ROOT . '/features/shared/components/footer.php'; ?>
-</html>
+    <div class="actions">
+      <button class="btn" type="submit">Publish</button>
+    </div>
+  </form>
+  <?php endif; ?>
+
+  <h3 style="margin-top:1.5rem;">Latest</h3>
+  <?php if (empty($items)): ?>
+    <p>No donation posts yet.</p>
+  <?php else: ?>
+    <div class="cards">
+      <?php foreach ($items as $d): ?>
+        <div class="card">
+          <?php if (!empty($d['image_path'])): ?>
+             <?php 
+                // Handle both full URLs and relative paths
+                $imgSrc = $d['image_path'];
+                if (!str_starts_with($imgSrc, 'http')) {
+                    $imgSrc = url($imgSrc);
+                }
+             ?>
+             <img src="<?php echo htmlspecialchars($imgSrc); ?>" alt="Donation image" style="max-width:100%;height:auto;">
+          <?php endif; ?>
+          <p><?php echo nl2br(htmlspecialchars($d['description'])); ?></p>
+          <small>Posted: <?php echo htmlspecialchars($d['created_at']); ?></small>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
+</div>
+<?php
+$content = ob_get_clean();
+
+// 2. Wrap with dashboard layout
+ob_start();
+include $ROOT . '/features/shared/components/layouts/dashboard-layout.php';
+$content = ob_get_clean();
+
+// 3. Render with base layout
+$pageTitle = 'Donations';
+include $ROOT . '/features/shared/components/layouts/base.php';
+?>
