@@ -81,7 +81,7 @@ class AuthService {
         }
         
         return $this->db->fetchOne(
-            "SELECT id, username, email, role, created_at FROM users WHERE id = ?",
+            "SELECT id, username, email, roles, created_at FROM users WHERE id = ?",
             [getUserId()]
         );
     }

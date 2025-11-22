@@ -28,14 +28,14 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   if ($desc === '') { $message = 'Description is required.'; }
   else {
-    $stmt = $mysqli->prepare('INSERT INTO events (description, gamba) VALUES (?, ?)');
+    $stmt = $mysqli->prepare('INSERT INTO events (description, image_path) VALUES (?, ?)');
     if ($stmt) { $stmt->bind_param('ss', $desc, $gamba); $stmt->execute(); $stmt->close(); $message='Event created'; $messageClass='notice success'; }
   }
 }
 
 // List events
 $events = [];
-$res = $mysqli->query('SELECT id, description, gamba, created_at FROM events ORDER BY id DESC');
+$res = $mysqli->query('SELECT id, description, image_path, created_at FROM events ORDER BY id DESC');
 if ($res) { while ($row = $res->fetch_assoc()) { $events[] = $row; } $res->close(); }
 
 $stylePath = $ROOT . '/assets/css/style.css';

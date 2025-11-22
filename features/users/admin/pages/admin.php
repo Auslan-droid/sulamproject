@@ -8,7 +8,7 @@ requireAdmin();
 
 // Simple list of users with edit links
 $users = [];
-$res = $mysqli->query("SELECT id, name, username, email, roles, is_meninggal FROM users ORDER BY id DESC");
+$res = $mysqli->query("SELECT id, name, username, email, roles, is_deceased FROM users ORDER BY id DESC");
 if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(); }
 $stylePath = $ROOT . '/assets/css/style.css';
 $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
@@ -41,7 +41,7 @@ $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
                 <td><?php echo htmlspecialchars($u['username']); ?></td>
                 <td><?php echo htmlspecialchars($u['email']); ?></td>
                 <td><?php echo htmlspecialchars($u['roles']); ?></td>
-                <td><?php echo $u['is_meninggal'] ? 'Yes' : 'No'; ?></td>
+                <td><?php echo $u['is_deceased'] ? 'Yes' : 'No'; ?></td>
                 <td><a class="btn" href="/sulamproject/admin/user-edit?id=<?php echo (int)$u['id']; ?>">Edit</a></td>
               </tr>
             <?php endforeach; ?>

@@ -13,7 +13,7 @@ $messageClass = 'notice';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['action']) && $_POST['action'] === 'add') {
     // Count existing
-    $cntRes = $mysqli->prepare('SELECT COUNT(*) AS c FROM waris WHERE user_id=?');
+    $cntRes = $mysqli->prepare('SELECT COUNT(*) AS c FROM next_of_kin WHERE user_id=?');
     $cntRes->bind_param('i', $userId);
     $cntRes->execute();
     $count = $cntRes->get_result()->fetch_assoc()['c'] ?? 0;
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($name === '') {
         $message = 'Name is required for waris.';
       } else {
-        $stmt = $mysqli->prepare('INSERT INTO waris (user_id, name, email, no_telefon, alamat) VALUES (?, ?, ?, ?, ?)');
+        $stmt = $mysqli->prepare('INSERT INTO next_of_kin (user_id, name, email, phone_number, address) VALUES (?, ?, ?, ?, ?)');
         if ($stmt) {
           $stmt->bind_param('issss', $userId, $name, $email, $no_telefon, $alamat);
           if ($stmt->execute()) {
@@ -46,18 +46,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['action']) && $_POST['action'] === 'delete') {
     $id = (int)($_POST['id'] ?? 0);
-    $stmt = $mysqli->prepare('DELETE FROM waris WHERE id=? AND user_id=?');
+    $stmt = $mysqli->prepare('DELETE FROM next_of_kin WHERE id=? AND user_id=?');
     if ($stmt) { $stmt->bind_param('ii', $id, $userId); $stmt->execute(); $stmt->close(); $message='Deleted'; $messageClass='notice success'; }
   }
 }
 
 // Fetch waris
 $waris = [];
-$stmt = $mysqli->prepare('SELECT id, name, email, no_telefon, alamat FROM waris WHERE user_id=? ORDER BY id DESC');
+$stmt = $mysqli->prepare('SELECT id, name, email, phone_number, address FROM next_of_kin WHERE user_id=? ORDER BY id DESC');
 $stmt->bind_param('i', $userId);
 $stmt->execute();
 $res = $stmt->get_result();
-while ($row = $res->fetch_assoc()) { $waris[] = $row; }
+while ($row = $res->fetch_assoc()) {
+        // Map old column names to new ones for compatibility
+        $waris[] = [
+            'id' => $row['id'],
+            'name' => $row['name'],
+            'email' => $row['email'],
+            'no_telefon' => $row['phone_number'], // Map phone_number to no_telefon
+            'alamat' => $row['address'] // Map address to alamat
+        ];
+    }
 $stmt->close();
 
 $stylePath = $ROOT . '/assets/css/style.css';

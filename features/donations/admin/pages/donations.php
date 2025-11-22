@@ -28,14 +28,14 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   if ($desc === '') { $message = 'Description is required.'; }
   else {
-    $stmt = $mysqli->prepare('INSERT INTO donations (description, gamba) VALUES (?, ?)');
+    $stmt = $mysqli->prepare('INSERT INTO donations (description, image_path) VALUES (?, ?)');
     if ($stmt) { $stmt->bind_param('ss', $desc, $gamba); $stmt->execute(); $stmt->close(); $message='Donation post created'; $messageClass='notice success'; }
   }
 }
 
 // List donations
 $items = [];
-$res = $mysqli->query('SELECT id, description, gamba, created_at FROM donations ORDER BY id DESC');
+$res = $mysqli->query('SELECT id, description, image_path, created_at FROM donations ORDER BY id DESC');
 if ($res) { while ($row = $res->fetch_assoc()) { $items[] = $row; } $res->close(); }
 
 $stylePath = $ROOT . '/assets/css/style.css';
