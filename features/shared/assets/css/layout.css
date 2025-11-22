@@ -1,0 +1,78 @@
+/* Dashboard Layout */
+.dashboard {
+  display: flex;
+  gap: 1rem;
+  min-height: 100vh;
+  padding-left: 240px; /* account for fixed sidebar */
+}
+
+.sidebar {
+  width: 240px;
+  padding: 1rem;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .brand {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #ffffff; /* ensure brand text is white on dark sidebar */
+}
+
+.sidebar .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.sidebar .nav a {
+  color: var(--sidebar-link);
+  text-decoration: none;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  transition: background .15s ease, color .15s ease;
+}
+
+.sidebar .nav a:hover {
+  background: var(--sidebar-link-hover-bg);
+  color: var(--sidebar-active-text);
+}
+
+.sidebar .nav a.active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+.sidebar-footer img {
+  display: block;
+  max-width: 80%;
+  height: auto;
+  margin: 0.5rem auto 0;
+  border: 2px solid #000000; /* black border around the logo */
+  border-radius: 8px;
+}
+
+.content {
+  flex: 1;
+  padding: 1rem;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 1rem;
+}
