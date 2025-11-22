@@ -14,7 +14,28 @@ $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard — SulamProject</title>
-  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
+    <?php 
+    // Auto-detect base path for assets
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $webRoot = str_replace('/features/dashboard/user/pages/dashboard.php', '', $scriptName);
+    if ($webRoot === $scriptName) {
+        // Try to find 'sulamprojectex' or similar in path
+        $parts = explode('/', trim($scriptName, '/'));
+        if (count($parts) > 0) {
+            $webRoot = '/' . $parts[0];
+        } else {
+            $webRoot = '';
+        }
+    }
+    $v = time();
+    ?>
+  <link rel="stylesheet" href="<?php echo $webRoot; ?>/features/shared/assets/css/variables.css?v=<?php echo $v; ?>">
+  <link rel="stylesheet" href="<?php echo $webRoot; ?>/features/shared/assets/css/base.css?v=<?php echo $v; ?>">
+  <link rel="stylesheet" href="<?php echo $webRoot; ?>/features/shared/assets/css/layout.css?v=<?php echo $v; ?>">
+  <link rel="stylesheet" href="<?php echo $webRoot; ?>/features/shared/assets/css/cards.css?v=<?php echo $v; ?>">
+  <link rel="stylesheet" href="<?php echo $webRoot; ?>/features/shared/assets/css/footer.css?v=<?php echo $v; ?>">
+  <link rel="stylesheet" href="<?php echo $webRoot; ?>/features/shared/assets/css/responsive.css?v=<?php echo $v; ?>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   </head>
   <body>
     <div class="dashboard">

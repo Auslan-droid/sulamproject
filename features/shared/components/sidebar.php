@@ -4,7 +4,7 @@ $ROOT = dirname(__DIR__, 3);
 require_once $ROOT . '/features/shared/lib/auth/session.php';
 initSecureSession();
 $isAdmin = isAdmin();
-$base = '/sulamprojectex';
+$base = defined('APP_BASE_PATH') ? APP_BASE_PATH : '/sulamprojectex';
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
 ?>
 <aside class="sidebar">

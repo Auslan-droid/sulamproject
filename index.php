@@ -6,7 +6,10 @@
 
 // Load router and routes (moved under features)
 // Define base path (empty for root, or '/subfolder' if in a subfolder)
-define('APP_BASE_PATH', '');
+// Auto-detect base path
+$scriptName = $_SERVER['SCRIPT_NAME']; // e.g. /sulamprojectex/index.php
+$dir = dirname($scriptName); // e.g. /sulamprojectex
+define('APP_BASE_PATH', $dir === '/' || $dir === '\\' ? '' : $dir);
 
 // Load router and routes (moved under features)
 $router = require_once __DIR__ . '/features/shared/lib/routes.php';
