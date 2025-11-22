@@ -30,7 +30,8 @@ function isAuthenticated() {
 
 function requireAuth() {
     if (!isAuthenticated()) {
-        header('Location: /sulamproject/login');
+        $base = defined('APP_BASE_PATH') ? APP_BASE_PATH : '';
+        header("Location: $base/login");
         exit();
     }
 }

@@ -34,6 +34,7 @@ $router->post('/register', function() {
 
 $router->get('/logout', function() use ($ROOT) {
     require_once $ROOT . '/features/shared/lib/auth/session.php';
+    initSecureSession();
     destroySession();
     redirect('/login');
 });

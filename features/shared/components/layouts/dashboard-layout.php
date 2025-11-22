@@ -7,19 +7,19 @@ require_once __DIR__ . '/../../lib/utilities/functions.php';
     <aside class="sidebar">
         <div class="brand">OurMasjid</div>
         <nav class="nav">
-            <?php $base = '/sulamproject'; $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: ''; ?>
-            <a href="<?php echo $base; ?>/dashboard" class="<?php echo str_starts_with($path, "$base/dashboard") ? 'active' : ''; ?>">Dashboard</a>
-            <a href="<?php echo $base; ?>/residents" class="<?php echo str_starts_with($path, "$base/residents") ? 'active' : ''; ?>">Residents</a>
-            <a href="<?php echo $base; ?>/waris" class="<?php echo str_starts_with($path, "$base/waris") ? 'active' : ''; ?>">Waris</a>
-            <a href="<?php echo $base; ?>/donations" class="<?php echo str_starts_with($path, "$base/donations") ? 'active' : ''; ?>">Donations</a>
-            <a href="<?php echo $base; ?>/events" class="<?php echo str_starts_with($path, "$base/events") ? 'active' : ''; ?>">Events</a>
+            <?php $base = url(''); $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: ''; ?>
+            <a href="<?php echo url('dashboard'); ?>" class="<?php echo str_starts_with($path, "$base/dashboard") ? 'active' : ''; ?>">Dashboard</a>
+            <a href="<?php echo url('residents'); ?>" class="<?php echo str_starts_with($path, "$base/residents") ? 'active' : ''; ?>">Residents</a>
+            <a href="<?php echo url('waris'); ?>" class="<?php echo str_starts_with($path, "$base/waris") ? 'active' : ''; ?>">Waris</a>
+            <a href="<?php echo url('donations'); ?>" class="<?php echo str_starts_with($path, "$base/donations") ? 'active' : ''; ?>">Donations</a>
+            <a href="<?php echo url('events'); ?>" class="<?php echo str_starts_with($path, "$base/events") ? 'active' : ''; ?>">Events</a>
             <?php if (isAdmin()): ?>
-                <a href="<?php echo $base; ?>/admin" class="<?php echo str_starts_with($path, "$base/admin") ? 'active' : ''; ?>">Admin</a>
+                <a href="<?php echo url('admin'); ?>" class="<?php echo str_starts_with($path, "$base/admin") ? 'active' : ''; ?>">Admin</a>
             <?php endif; ?>
-            <a href="/sulamproject/logout">Logout</a>
+            <a href="<?php echo url('logout'); ?>">Logout</a>
         </nav>
         <div class="sidebar-footer">
-            <img src="/sulamproject/assets/uploads/masjid_logo.jpg" alt="Masjid Logo">
+            <img src="<?php echo url('assets/uploads/masjid_logo.jpg'); ?>" alt="Masjid Logo">
         </div>
     </aside>
 

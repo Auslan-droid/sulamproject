@@ -5,19 +5,19 @@
     </div>
 
     <section class="dashboard-cards">
-    <a class="dashboard-card" href="/sulamproject/residents">
+    <a class="dashboard-card" href="<?php echo url('residents'); ?>">
             <i class="fa-solid fa-users icon" aria-hidden="true"></i>
             <h3>Residents</h3>
             <p>View and update resident information.</p>
         </a>
         
-    <a class="dashboard-card" href="/sulamproject/donations">
+    <a class="dashboard-card" href="<?php echo url('donations'); ?>">
             <i class="fa-solid fa-coins icon" aria-hidden="true"></i>
             <h3>Donations</h3>
             <p>Record your donations.</p>
         </a>
         
-    <a class="dashboard-card" href="/sulamproject/events">
+    <a class="dashboard-card" href="<?php echo url('events'); ?>">
             <i class="fa-solid fa-calendar-days icon" aria-hidden="true"></i>
             <h3>Events</h3>
             <p>View upcoming events.</p>
