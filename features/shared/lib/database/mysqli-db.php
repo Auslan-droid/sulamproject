@@ -10,13 +10,21 @@ $DB_CHARSET = 'utf8mb4';
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 try {
+    // 1. Try connecting directly to the specific database (Production/Hostinger friendly)
+    $mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+    $mysqli->set_charset($DB_CHARSET);
+} catch (mysqli_sql_exception $e) {
+    // 2. If that fails, assume DB doesn't exist yet (Local Dev friendly)
+    // Connect to server only, then create DB
     $mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS);
     $mysqli->set_charset($DB_CHARSET);
 
     // Create database if it doesn't exist
     $mysqli->query("CREATE DATABASE IF NOT EXISTS `{$DB_NAME}` CHARACTER SET {$DB_CHARSET} COLLATE {$DB_CHARSET}_unicode_ci");
     $mysqli->select_db($DB_NAME);
+}
 
+try {
     // Ensure tables exist (bootstrap)
     $mysqli->query("CREATE TABLE IF NOT EXISTS `users` (
         `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -25,11 +33,11 @@ try {
         `email` VARCHAR(120) NOT NULL,
         `password` VARCHAR(255) NOT NULL,
         `roles` VARCHAR(50) NOT NULL DEFAULT 'user',
-        `no_telefon` VARCHAR(20) NULL,
-        `alamat` TEXT NULL,
-        `status_perkahwinan` ENUM('bujang','berkahwin','bercerai','duda','janda','lain-lain') NULL,
-        `is_meninggal` TINYINT(1) NOT NULL DEFAULT 0,
-        `pendapatan` DECIMAL(10,2) NULL,
+        `phone_number` VARCHAR(20) NULL,
+        `address` TEXT NULL,
+        `marital_status` ENUM('single','married','divorced','widowed','others') NULL,
+        `is_deceased` TINYINT(1) NOT NULL DEFAULT 0,
+        `income` DECIMAL(10,2) NULL,
         `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (`id`),
@@ -37,24 +45,24 @@ try {
         UNIQUE KEY `uniq_email` (`email`)
     ) ENGINE=InnoDB DEFAULT CHARSET={$DB_CHARSET} COLLATE {$DB_CHARSET}_unicode_ci;");
 
-    $mysqli->query("CREATE TABLE IF NOT EXISTS `waris` (
+    $mysqli->query("CREATE TABLE IF NOT EXISTS `next_of_kin` (
       `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       `user_id` INT UNSIGNED NOT NULL,
       `name` VARCHAR(120) NOT NULL,
       `email` VARCHAR(120) NULL,
-      `no_telefon` VARCHAR(20) NULL,
-      `alamat` TEXT NULL,
+      `phone_number` VARCHAR(20) NULL,
+      `address` TEXT NULL,
       `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`),
-      KEY `idx_waris_user_id` (`user_id`),
-      CONSTRAINT `fk_waris_user_boot` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+      KEY `idx_next_of_kin_user_id` (`user_id`),
+      CONSTRAINT `fk_next_of_kin_user_boot` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET={$DB_CHARSET} COLLATE {$DB_CHARSET}_unicode_ci;");
 
     $mysqli->query("CREATE TABLE IF NOT EXISTS `events` (
       `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       `description` TEXT NOT NULL,
-      `gamba` VARCHAR(255) NULL,
+      `image_path` VARCHAR(255) NULL,
       `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`)
@@ -63,7 +71,7 @@ try {
     $mysqli->query("CREATE TABLE IF NOT EXISTS `donations` (
       `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       `description` TEXT NOT NULL,
-      `gamba` VARCHAR(255) NULL,
+      `image_path` VARCHAR(255) NULL,
       `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`)
@@ -73,8 +81,8 @@ try {
       `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       `user_id` INT UNSIGNED NOT NULL,
       `time` TIME NULL,
-      `tarikh` DATE NULL,
-      `tarikh_islam` VARCHAR(50) NULL,
+      `date` DATE NULL,
+      `islamic_date` VARCHAR(50) NULL,
       `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`),
       KEY `idx_deaths_user_id` (`user_id`),
