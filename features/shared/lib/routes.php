@@ -33,7 +33,7 @@ $router->post('/register', function() use ($ROOT) {
 $router->get('/logout', function() use ($ROOT) {
     require_once $ROOT . '/features/shared/lib/auth/session.php';
     destroySession();
-    header('Location: /sulamproject/login');
+    header('Location: /sulamprojectex/login');
     exit;
 });
 

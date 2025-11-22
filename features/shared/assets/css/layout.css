@@ -76,3 +76,9 @@
   justify-content: space-between;
   margin: 0 0 1rem;
 }
+
+/* Centered Layout (Login/Register) */
+.centered {
+  margin: auto;
+  width: 100%;
+}

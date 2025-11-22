@@ -12,7 +12,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 
 // Remove base path if present (for subdirectory installations)
-$basePath = '/sulamproject';
+$basePath = '/sulamprojectex';
 if (strpos($uri, $basePath) === 0) {
     $uri = substr($uri, strlen($basePath)) ?: '/';
 }

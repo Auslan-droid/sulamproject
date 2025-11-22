@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo e($pageTitle ?? 'SulamProject'); ?> — SulamProject</title>
-    <link rel="stylesheet" href="/sulamproject/features/shared/assets/css/variables.css">
-    <link rel="stylesheet" href="/sulamproject/features/shared/assets/css/base.css">
+    <link rel="stylesheet" href="/sulamprojectex/features/shared/assets/css/variables.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="/sulamprojectex/features/shared/assets/css/base.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="/sulamprojectex/features/shared/assets/css/footer.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <?php if (isset($additionalStyles)): ?>
         <?php foreach ($additionalStyles as $style): ?>

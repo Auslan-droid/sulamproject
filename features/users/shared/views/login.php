@@ -7,7 +7,7 @@
         </div>
     <?php endif; ?>
 
-    <form method="post" action="/sulamproject/login">
+    <form method="post" action="/sulamprojectex/login">
         <?php echo csrfField(); ?>
         
         <label>
@@ -22,11 +22,11 @@
         
         <div class="actions">
             <button class="btn" type="submit">Sign in</button>
-            <a class="btn outline" href="/sulamproject/register">Register</a>
+            <a class="btn outline" href="/sulamprojectex/register">Register</a>
         </div>
     </form>
     
     <p class="small" style="margin-top: 1.5rem; color: var(--muted);">
-        Don't have an account? <a href="/sulamproject/register" style="color: var(--accent);">Create one</a>
+        Don't have an account? <a href="/sulamprojectex/register" style="color: var(--accent);">Create one</a>
     </p>
 </main>
