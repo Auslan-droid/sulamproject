@@ -212,6 +212,17 @@ body {
     gap: 1.25rem;
 }
 
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row label {
+    flex: 1;
+    /* Ensure labels inside row take equal width */
+    width: 100%; 
+}
+
 .login-card label {
     color: var(--muted);
     font-size: 0.9rem;
@@ -310,36 +321,44 @@ body {
     color: #065f46;
 }
 
-/* Responsive */
+/* Register Mode Transitions */
+.login-wrapper .event-display,
+.login-wrapper .login-card,
+.login-wrapper .event-card.compact,
+.login-wrapper .event-image-compact,
+.login-wrapper .event-content-compact {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Register Mode State */
+.login-wrapper.register-mode .event-display {
+    flex: 0;
+    max-width: 0;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.login-wrapper.register-mode .login-card {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Adjust responsive behavior for register mode */
 @media (max-width: 1000px) {
-    .login-wrapper {
-        flex-direction: column-reverse;
-        gap: 3rem;
-        padding-top: 6rem;
+    .login-wrapper.register-mode .event-display {
+        display: none;
     }
-
-    .event-display {
-        padding-right: 0;
-        justify-content: center;
-    }
-
-    .event-card.compact {
+    
+    .login-wrapper.register-mode .login-card {
         max-width: 450px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-row {
         flex-direction: column;
-        /* Stack image and content on mobile */
-    }
-
-    .event-image-compact {
-        width: 100%;
-        height: 200px;
-    }
-
-    .event-content-compact {
-        width: 100%;
-        padding: 2rem;
-    }
-
-    .login-card {
-        max-width: 450px;
+        gap: 1.25rem;
     }
 }

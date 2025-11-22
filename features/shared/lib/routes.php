@@ -22,12 +22,14 @@ $router->post('/login', function() {
     $controller->handleLogin();
 });
 
-$router->get('/register', function() use ($ROOT) {
-    require $ROOT . '/features/users/shared/pages/register-direct.php';
+$router->get('/register', function() {
+    $controller = new AuthController();
+    $controller->showRegister();
 });
 
-$router->post('/register', function() use ($ROOT) {
-    require $ROOT . '/features/users/shared/pages/register-direct.php';
+$router->post('/register', function() {
+    $controller = new AuthController();
+    $controller->handleRegister();
 });
 
 $router->get('/logout', function() use ($ROOT) {
