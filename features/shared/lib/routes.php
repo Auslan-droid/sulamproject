@@ -5,20 +5,21 @@
 
 $ROOT = dirname(__DIR__, 3);
 require_once $ROOT . '/features/shared/lib/utilities/Router.php';
-// Note: Using procedural login/register pages backed by mysqli for now
-// require_once $ROOT . '/features/users/shared/controllers/AuthController.php';
+require_once $ROOT . '/features/users/shared/controllers/AuthController.php';
 require_once $ROOT . '/features/dashboard/admin/controllers/DashboardController.php';
 require_once $ROOT . '/features/shared/lib/auth/session.php';
 
 $router = new Router();
 
-// Authentication routes (procedural pages using mysqli)
-$router->get('/login', function() use ($ROOT) {
-    require $ROOT . '/features/users/shared/pages/login-direct.php';
+// Authentication routes (controller-based)
+$router->get('/login', function() {
+    $controller = new AuthController();
+    $controller->showLogin();
 });
 
-$router->post('/login', function() use ($ROOT) {
-    require $ROOT . '/features/users/shared/pages/login-direct.php';
+$router->post('/login', function() {
+    $controller = new AuthController();
+    $controller->handleLogin();
 });
 
 $router->get('/register', function() use ($ROOT) {

@@ -1,0 +1,128 @@
+/**
+ * Login Page Styles
+ * Scoped to login view (main.centered.small-card)
+ */
+
+main.centered.small-card {
+    max-width: 420px;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+main.centered.small-card h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    text-align: center;
+}
+
+main.centered.small-card .notice {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+main.centered.small-card .notice.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+main.centered.small-card .notice.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+main.centered.small-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+main.centered.small-card label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary, #4a4a4a);
+}
+
+main.centered.small-card input[type="text"],
+main.centered.small-card input[type="password"],
+main.centered.small-card input[type="email"] {
+    padding: 0.75rem;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+main.centered.small-card input[type="text"]:focus,
+main.centered.small-card input[type="password"]:focus,
+main.centered.small-card input[type="email"]:focus {
+    outline: none;
+    border-color: var(--accent, #007bff);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+main.centered.small-card .actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+main.centered.small-card .btn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+main.centered.small-card .btn[type="submit"],
+main.centered.small-card .btn:not(.outline) {
+    background: var(--accent, #007bff);
+    color: white;
+    border: none;
+}
+
+main.centered.small-card .btn[type="submit"]:hover,
+main.centered.small-card .btn:not(.outline):hover {
+    background: var(--accent-dark, #0056b3);
+}
+
+main.centered.small-card .btn.outline {
+    background: transparent;
+    color: var(--accent, #007bff);
+    border: 1px solid var(--accent, #007bff);
+}
+
+main.centered.small-card .btn.outline:hover {
+    background: var(--accent, #007bff);
+    color: white;
+}
+
+main.centered.small-card .small {
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+main.centered.small-card a {
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+main.centered.small-card a:hover {
+    opacity: 0.8;
+}

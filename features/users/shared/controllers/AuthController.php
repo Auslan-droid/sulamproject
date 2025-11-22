@@ -37,6 +37,7 @@ class AuthController {
         $content = ob_get_clean();
         
         $pageTitle = 'Login';
+        $additionalStyles = ['/sulamproject/features/users/shared/assets/css/login.css'];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
     
