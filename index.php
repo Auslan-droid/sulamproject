@@ -5,21 +5,32 @@
  */
 
 // Load router and routes (moved under features)
+// Define base path (empty for root, or '/subfolder' if in a subfolder)
+define('APP_BASE_PATH', '');
+
+// Load router and routes (moved under features)
 $router = require_once __DIR__ . '/features/shared/lib/routes.php';
 
 // Get request method and URI
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 
-// Remove base path if present (for subdirectory installations)
-$basePath = '/sulamprojectex';
-if (strpos($uri, $basePath) === 0) {
-    $uri = substr($uri, strlen($basePath)) ?: '/';
+// Remove query string
+if (false !== $pos = strpos($uri, '?')) {
+    $uri = substr($uri, 0, $pos);
 }
 
-// Remove script name from URI if present
-if (strpos($uri, '/index.php') === 0) {
-    $uri = substr($uri, 10) ?: '/';
+// Decode URI
+$uri = rawurldecode($uri);
+
+// Remove base path if present
+if (APP_BASE_PATH !== '' && strpos($uri, APP_BASE_PATH) === 0) {
+    $uri = substr($uri, strlen(APP_BASE_PATH));
+}
+
+// Ensure URI starts with /
+if (empty($uri) || $uri[0] !== '/') {
+    $uri = '/' . $uri;
 }
 
 // Dispatch request

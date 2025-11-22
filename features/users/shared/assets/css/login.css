@@ -1,130 +1,345 @@
 /**
- * Login Page Styles
- * Scoped to login view (main.centered.small-card)
+ * Login Page Specific Styles
+ * Extends base.css, does not replace it.
  */
 
-main.centered.small-card {
-    max-width: 420px;
-    padding: 2rem;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin: auto; /* Center in the flex container (body) */
-    width: 100%;
+body {
+    background-color: var(--bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
 }
 
-main.centered.small-card h2 {
+/* Brand Logo */
+.brand-logo {
+    position: absolute;
+    top: 2.5rem;
+    left: 3rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 20;
+    letter-spacing: -0.5px;
+}
+
+.brand-logo i {
+    font-size: 1.4rem;
+}
+
+/* Wrapper */
+.login-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    /* Push to edges */
+    gap: 4rem;
+    flex: 1;
+    width: 100%;
+    max-width: 1400px;
+    /* Wide container */
+    margin: 0 auto;
+    padding: 2rem 5%;
+    /* Side padding */
+    padding-top: 4rem;
+}
+
+/* Event Display Section - Expanded Card */
+.event-display {
+    flex: 1;
+    /* Allow it to grow */
+    max-width: none;
+    /* Remove restriction */
+    display: flex;
+    justify-content: flex-start;
+    /* Align left */
+    padding-right: 2rem;
+}
+
+.event-card.compact {
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    /* Larger radius */
+    width: 100%;
+    max-width: 650px;
+    /* Much wider card */
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    /* Horizontal layout inside card */
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 320px;
+}
+
+.event-card.compact:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.event-image-compact {
+    width: 45%;
+    /* Split width */
+    height: auto;
+    /* Full height */
+    background: linear-gradient(135deg, #eef6ec 0%, #d1e7dd 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    position: relative;
+}
+
+.date-badge-small {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    padding: 0.6rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.date-badge-small .day {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.date-badge-small .month {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+}
+
+.event-content-compact {
+    width: 55%;
+    /* Rest of width */
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tag-small {
+    display: inline-block;
+    background: rgba(15, 138, 95, 0.1);
+    color: var(--accent);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+}
+
+.event-content-compact h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1.75rem;
+    /* Larger title */
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.event-content-compact p {
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.carousel-dots {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.carousel-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border-subtle);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.carousel-dots span.active {
+    background: var(--accent);
+    transform: scale(1.2);
+}
+
+/* Login Card - Focused */
+.login-card {
+    margin: 0;
+    background-color: #ffffff;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-lg);
+    border-radius: 20px;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 380px;
+    padding: 2.5rem;
+    color: var(--text-primary);
+}
+
+.login-card h2 {
+    color: var(--text-primary);
+    font-weight: 800;
     margin-bottom: 1.5rem;
     font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--text-primary, #1a1a1a);
     text-align: center;
 }
 
-main.centered.small-card .notice {
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.5rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-}
-
-main.centered.small-card .notice.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-main.centered.small-card .notice.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-main.centered.small-card form {
+.login-card form {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
 }
 
-main.centered.small-card label {
+.login-card label {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.login-card input[type="text"],
+.login-card input[type="password"],
+.login-card input[type="email"] {
+    background: #f8faf9;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    color: var(--text-primary);
+    padding: 0.9rem 1rem;
+    width: 100%;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.login-card input:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(15, 138, 95, 0.1);
+}
+
+.login-card .actions {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--text-secondary, #4a4a4a);
-}
-
-main.centered.small-card input[type="text"],
-main.centered.small-card input[type="password"],
-main.centered.small-card input[type="email"] {
-    padding: 0.75rem;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.2s ease;
-}
-
-main.centered.small-card input[type="text"]:focus,
-main.centered.small-card input[type="password"]:focus,
-main.centered.small-card input[type="email"]:focus {
-    outline: none;
-    border-color: var(--accent, #007bff);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-}
-
-main.centered.small-card .actions {
-    display: flex;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
-main.centered.small-card .btn {
-    flex: 1;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    border-radius: 4px;
+.login-card .btn {
+    padding: 0.9rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
     cursor: pointer;
+    text-decoration: none;
+    font-size: 0.95rem;
     transition: all 0.2s ease;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
 }
 
-main.centered.small-card .btn[type="submit"],
-main.centered.small-card .btn:not(.outline) {
-    background: var(--accent, #007bff);
-    color: white;
+.login-card .btn[type="submit"] {
+    background-color: var(--accent);
+    color: #ffffff;
     border: none;
+    box-shadow: 0 4px 12px rgba(15, 138, 95, 0.2);
 }
 
-main.centered.small-card .btn[type="submit"]:hover,
-main.centered.small-card .btn:not(.outline):hover {
-    background: var(--accent-dark, #0056b3);
+.login-card .btn[type="submit"]:hover {
+    background-color: #0c704d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 138, 95, 0.25);
 }
 
-main.centered.small-card .btn.outline {
-    background: transparent;
-    color: var(--accent, #007bff);
-    border: 1px solid var(--accent, #007bff);
-}
-
-main.centered.small-card .btn.outline:hover {
-    background: var(--accent, #007bff);
-    color: white;
-}
-
-main.centered.small-card .small {
+.login-card .register-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
     font-size: 0.9rem;
-    text-align: center;
+    color: var(--muted);
 }
 
-main.centered.small-card a {
+.login-card .register-row .link {
+    color: var(--accent);
+    font-weight: 700;
     text-decoration: none;
-    transition: opacity 0.2s ease;
 }
 
-main.centered.small-card a:hover {
-    opacity: 0.8;
+.login-card .register-row .link:hover {
+    text-decoration: underline;
+}
+
+.login-card .notice {
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.login-card .notice.error {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.login-card .notice.success {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+    .login-wrapper {
+        flex-direction: column-reverse;
+        gap: 3rem;
+        padding-top: 6rem;
+    }
+
+    .event-display {
+        padding-right: 0;
+        justify-content: center;
+    }
+
+    .event-card.compact {
+        max-width: 450px;
+        flex-direction: column;
+        /* Stack image and content on mobile */
+    }
+
+    .event-image-compact {
+        width: 100%;
+        height: 200px;
+    }
+
+    .event-content-compact {
+        width: 100%;
+        padding: 2rem;
+    }
+
+    .login-card {
+        max-width: 450px;
+    }
 }

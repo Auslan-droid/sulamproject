@@ -33,8 +33,7 @@ $router->post('/register', function() use ($ROOT) {
 $router->get('/logout', function() use ($ROOT) {
     require_once $ROOT . '/features/shared/lib/auth/session.php';
     destroySession();
-    header('Location: /sulamprojectex/login');
-    exit;
+    redirect('/login');
 });
 
 // Dashboard route
@@ -64,11 +63,10 @@ $router->get('/dashboard', function() use ($ROOT) {
 $router->get('/', function() {
     initSecureSession();
     if (isAuthenticated()) {
-        header('Location: /sulamproject/dashboard');
+        redirect('/dashboard');
     } else {
-        header('Location: /sulamproject/login');
+        redirect('/login');
     }
-    exit();
 });
 
 // Feature pages (use new feature pages with full HTML + POST handling)
