@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `username` VARCHAR(50) NOT NULL,
     `email` VARCHAR(120) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
-    `roles` VARCHAR(50) NOT NULL DEFAULT 'user',
+    `roles` ENUM('resident', 'admin') NOT NULL DEFAULT 'resident',
     `phone_number` VARCHAR(20) NULL,
     `address` TEXT NULL,
     `marital_status` ENUM('single','married','divorced','widowed','others') NULL,
@@ -45,8 +45,10 @@ CREATE TABLE IF NOT EXISTS `events` (
 
 CREATE TABLE IF NOT EXISTS `donations` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
     `description` TEXT NOT NULL,
     `image_path` VARCHAR(255) NULL,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)

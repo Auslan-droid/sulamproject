@@ -73,10 +73,10 @@ $router->get('/', function() {
 });
 
 // Feature pages (use new feature pages with full HTML + POST handling)
-$router->get('/residents', function() use ($ROOT) {
+$router->get('/users', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
-    require $ROOT . '/features/residents/admin/pages/residents.php';
+    require $ROOT . '/features/residents/admin/pages/user-management.php';
 });
 
 $router->get('/donations', function() use ($ROOT) {

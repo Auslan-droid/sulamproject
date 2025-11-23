@@ -6,84 +6,125 @@ require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
 initSecureSession();
 requireAuth();
 $isAdmin = isAdmin();
-$message = '';
-$messageClass = 'notice';
+// Initialize Controller
+require_once $ROOT . '/features/donations/admin/controllers/DonationsController.php';
+$controller = new DonationsController($mysqli, $ROOT);
 
-// Handle create (admin only)
+// Handle Actions
+$message = '';
+$messageClass = '';
+
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
-  $desc = trim($_POST['description'] ?? '');
-  $gamba = null;
-  // Handle file upload if provided
-  if (!empty($_FILES['gamba']['name'])) {
-    $uploadDir = $ROOT . '/assets/uploads';
-    if (!is_dir($uploadDir)) { @mkdir($uploadDir, 0777, true); }
-    $ext = pathinfo($_FILES['gamba']['name'], PATHINFO_EXTENSION);
-    $basename = 'donation_' . time() . '_' . bin2hex(random_bytes(4)) . ($ext?'.'.preg_replace('/[^a-zA-Z0-9]+/','',$ext):'');
-    $target = $uploadDir . '/' . $basename;
-    if (move_uploaded_file($_FILES['gamba']['tmp_name'], $target)) {
-      $gamba = 'assets/uploads/' . $basename;
-    }
-  } else if (isset($_POST['gamba_url']) && $_POST['gamba_url'] !== '') {
-    $gamba = trim($_POST['gamba_url']);
-  }
-  if ($desc === '') { $message = 'Description is required.'; }
-  else {
-    $stmt = $mysqli->prepare('INSERT INTO donations (description, image_path) VALUES (?, ?)');
-    if ($stmt) { $stmt->bind_param('ss', $desc, $gamba); $stmt->execute(); $stmt->close(); $message='Donation post created'; $messageClass='notice success'; }
-  }
+    $result = $controller->handleCreate();
+    $message = $result['message'];
+    $messageClass = $result['messageClass'];
 }
 
-// List donations
-$items = [];
-$res = $mysqli->query('SELECT id, description, image_path, created_at FROM donations ORDER BY id DESC');
-if ($res) { while ($row = $res->fetch_assoc()) { $items[] = $row; } $res->close(); }
+// Fetch Data
+$items = $controller->getAllDonations();
 
 // 1. Capture the inner content
 ob_start();
 ?>
-<div class="page-card">
-  <h2>Donations</h2>
-  <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
+<div class="donations-page">
+  
+  <div class="section-header">
+    <h2 class="section-title">Manage Donations</h2>
+  </div>
 
-  <?php if ($isAdmin): ?>
-  <h3>Create Donation Post</h3>
-  <form method="post" enctype="multipart/form-data">
-    <label>Description
-      <textarea name="description" rows="3" required></textarea>
-    </label>
-    <div class="grid-2">
-      <label>Gamba (upload)
-        <input type="file" name="gamba" accept="image/*">
-      </label>
-      <label>or Gamba URL
-        <input type="url" name="gamba_url" placeholder="https://...">
-      </label>
+  <?php if ($message): ?>
+    <div class="<?php echo $messageClass; ?>" style="margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: <?php echo strpos($messageClass, 'success') !== false ? '#d1fae5' : '#fee2e2'; ?>; color: <?php echo strpos($messageClass, 'success') !== false ? '#065f46' : '#991b1b'; ?>;">
+        <?php echo $message; ?>
     </div>
-    <div class="actions">
-      <button class="btn" type="submit">Publish</button>
-    </div>
-  </form>
   <?php endif; ?>
 
-  <h3 style="margin-top:1.5rem;">Latest</h3>
+  <?php if ($isAdmin): ?>
+  <div class="create-card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem; color: #374151;">Create New Donation Cause</h3>
+    <form method="post" enctype="multipart/form-data">
+      
+      <div class="form-grid">
+        <div class="form-group">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-input" required placeholder="e.g. Mosque Fund, Orphanage Support">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" name="is_active" value="1" checked id="isActive">
+                <label for="isActive" style="font-size: 0.95rem; color: #374151;">Active (Visible to public)</label>
+            </div>
+        </div>
+
+        <div class="form-group full-width">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-textarea" placeholder="Describe what this donation is for..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">QR Code Image</label>
+            <div class="file-upload-wrapper">
+                <input type="file" name="gamba" accept="image/*" style="width: 100%;">
+                <small style="display: block; margin-top: 0.5rem; color: #6b7280;">Recommended: Square PNG/JPG</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Or Image URL</label>
+            <input type="url" name="gamba_url" class="form-input" placeholder="https://example.com/qr-code.png">
+        </div>
+      </div>
+
+      <div class="actions" style="text-align: right;">
+        <button class="btn-primary" type="submit">Publish Donation</button>
+      </div>
+    </form>
+  </div>
+  <?php endif; ?>
+
+  <div class="section-header" style="margin-top: 1rem;">
+    <h3 class="section-title">Existing Donations</h3>
+  </div>
+
   <?php if (empty($items)): ?>
-    <p>No donation posts yet.</p>
+    <div class="empty-state">
+        <p>No donation causes have been created yet.</p>
+    </div>
   <?php else: ?>
-    <div class="cards">
+    <div class="donations-grid">
       <?php foreach ($items as $d): ?>
-        <div class="card">
-          <?php if (!empty($d['image_path'])): ?>
-             <?php 
-                // Handle both full URLs and relative paths
-                $imgSrc = $d['image_path'];
-                if (!str_starts_with($imgSrc, 'http')) {
-                    $imgSrc = url($imgSrc);
-                }
-             ?>
-             <img src="<?php echo htmlspecialchars($imgSrc); ?>" alt="Donation image" style="max-width:100%;height:auto;">
-          <?php endif; ?>
-          <p><?php echo nl2br(htmlspecialchars($d['description'])); ?></p>
-          <small>Posted: <?php echo htmlspecialchars($d['created_at']); ?></small>
+        <div class="donation-card">
+          <div class="donation-image-container">
+            <?php if (!empty($d['image_path'])): ?>
+                <?php 
+                    $imgSrc = $d['image_path'];
+                    if (!str_starts_with($imgSrc, 'http')) {
+                        $imgSrc = url($imgSrc);
+                    }
+                ?>
+                <img src="<?php echo htmlspecialchars($imgSrc); ?>" alt="QR Code" class="donation-qr">
+            <?php else: ?>
+                <span style="color: #9ca3af; font-size: 0.9rem;">No QR Code</span>
+            <?php endif; ?>
+          </div>
+          
+          <div class="donation-content">
+            <div class="donation-header">
+                <h4 class="donation-title"><?php echo htmlspecialchars($d['title']); ?></h4>
+                <span class="status-badge <?php echo $d['is_active'] ? 'status-active' : 'status-inactive'; ?>">
+                    <?php echo $d['is_active'] ? 'Active' : 'Inactive'; ?>
+                </span>
+            </div>
+            
+            <?php if (!empty($d['description'])): ?>
+                <p class="donation-desc"><?php echo nl2br(htmlspecialchars($d['description'])); ?></p>
+            <?php endif; ?>
+            
+            <div class="donation-meta">
+                Created: <?php echo date('M j, Y', strtotime($d['created_at'])); ?>
+            </div>
+          </div>
         </div>
       <?php endforeach; ?>
     </div>
@@ -99,5 +140,8 @@ $content = ob_get_clean();
 
 // 3. Render with base layout
 $pageTitle = 'Donations';
+$additionalStyles = [
+    url('features/donations/admin/assets/donations-admin.css')
+];
 include $ROOT . '/features/shared/components/layouts/base.php';
 ?>

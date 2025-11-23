@@ -19,7 +19,7 @@
 </head>
 <body>
     <?php echo $content ?? ''; ?>
-    <?php include __DIR__ . '/../footer.php'; ?>
+    <?php // Footer temporarily removed ?>
     
     <?php if (isset($additionalScripts)): ?>
         <?php foreach ($additionalScripts as $script): ?>

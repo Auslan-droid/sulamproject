@@ -42,8 +42,8 @@ function getUserId() {
 
 function getUserRole() {
     // Support both 'role' and legacy 'roles' session keys; normalize to lowercase
-    $role = $_SESSION['role'] ?? $_SESSION['roles'] ?? 'user';
-    return is_string($role) ? strtolower($role) : 'user';
+    $role = $_SESSION['role'] ?? $_SESSION['roles'] ?? 'resident';
+    return is_string($role) ? strtolower($role) : 'resident';
 }
 
 function isAdmin() {

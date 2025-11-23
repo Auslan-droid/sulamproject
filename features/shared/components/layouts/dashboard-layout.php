@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../lib/utilities/functions.php';
         <nav class="nav">
             <?php $base = url(''); $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: ''; ?>
             <a href="<?php echo url('dashboard'); ?>" class="<?php echo str_starts_with($path, "$base/dashboard") ? 'active' : ''; ?>">Dashboard</a>
-            <a href="<?php echo url('residents'); ?>" class="<?php echo str_starts_with($path, "$base/residents") ? 'active' : ''; ?>">Residents</a>
+            <a href="<?php echo url('users'); ?>" class="<?php echo str_starts_with($path, "$base/users") ? 'active' : ''; ?>">User Management</a>
             <a href="<?php echo url('waris'); ?>" class="<?php echo str_starts_with($path, "$base/waris") ? 'active' : ''; ?>">Waris</a>
             <a href="<?php echo url('donations'); ?>" class="<?php echo str_starts_with($path, "$base/donations") ? 'active' : ''; ?>">Donations</a>
             <a href="<?php echo url('events'); ?>" class="<?php echo str_starts_with($path, "$base/events") ? 'active' : ''; ?>">Events</a>
