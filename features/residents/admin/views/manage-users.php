@@ -25,6 +25,7 @@
                         <th style="padding: 0.5rem;">Email</th>
                         <th style="padding: 0.5rem;">Phone</th>
                         <th style="padding: 0.5rem;">Status</th>
+                        <th style="padding: 0.5rem;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,6 +49,19 @@
                             <td style="padding: 0.5rem;"><?php echo e($user['phone_number'] ?? '-'); ?></td>
                             <td style="padding: 0.5rem;">
                                 <?php echo $user['is_deceased'] ? '<span style="color:red;">Deceased</span>' : 'Active'; ?>
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <?php if ($user['roles'] === 'resident'): ?>
+                                    <a href="/admin/waris?user_id=<?php echo $user['id']; ?>" style="
+                                        display: inline-block;
+                                        padding: 0.3rem 0.6rem;
+                                        background-color: var(--primary-color, #4f46e5);
+                                        color: white;
+                                        text-decoration: none;
+                                        border-radius: 4px;
+                                        font-size: 0.85rem;
+                                    ">View Waris</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

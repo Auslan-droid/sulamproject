@@ -36,8 +36,13 @@ CREATE TABLE IF NOT EXISTS `next_of_kin` (
 
 CREATE TABLE IF NOT EXISTS `events` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
     `description` TEXT NOT NULL,
+    `event_date` DATE NULL,
+    `event_time` TIME NULL,
+    `location` VARCHAR(255) NULL,
     `image_path` VARCHAR(255) NULL,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
