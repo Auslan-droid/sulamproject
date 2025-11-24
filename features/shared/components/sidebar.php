@@ -11,8 +11,10 @@ $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
   <div class="brand">OurMasjid</div>
   <nav class="nav">
     <a href="<?php echo $base; ?>/dashboard" class="<?php echo str_starts_with($path, "$base/dashboard") ? 'active' : ''; ?>">Dashboard</a>
-    <a href="<?php echo $base; ?>/residents" class="<?php echo str_starts_with($path, "$base/residents") ? 'active' : ''; ?>">Residents</a>
+    <?php if ($isAdmin): ?>
+    <a href="<?php echo $base; ?>/users" class="<?php echo str_starts_with($path, "$base/users") ? 'active' : ''; ?>">Users</a>
     <a href="<?php echo $base; ?>/waris" class="<?php echo str_starts_with($path, "$base/waris") ? 'active' : ''; ?>">Waris</a>
+    <?php endif; ?>
     <a href="<?php echo $base; ?>/donations" class="<?php echo str_starts_with($path, "$base/donations") ? 'active' : ''; ?>">Donations</a>
     <a href="<?php echo $base; ?>/events" class="<?php echo str_starts_with($path, "$base/events") ? 'active' : ''; ?>">Events</a>
     <?php if ($isAdmin): ?>

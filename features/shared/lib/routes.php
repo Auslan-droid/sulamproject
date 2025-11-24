@@ -76,34 +76,56 @@ $router->get('/', function() {
 $router->get('/users', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
+    requireAdmin();
     require $ROOT . '/features/residents/admin/pages/user-management.php';
 });
 
 $router->get('/donations', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
-    require $ROOT . '/features/donations/admin/pages/donations.php';
+    if (isAdmin()) {
+        require $ROOT . '/features/donations/admin/pages/donations.php';
+    } else {
+        require $ROOT . '/features/donations/user/pages/donations.php';
+    }
 });
 $router->post('/donations', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
-    require $ROOT . '/features/donations/admin/pages/donations.php';
+    if (isAdmin()) {
+        require $ROOT . '/features/donations/admin/pages/donations.php';
+    } else {
+        // Users don't post to donations yet
+        http_response_code(403);
+        die('Access denied.');
+    }
 });
 
 $router->get('/events', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
-    require $ROOT . '/features/events/admin/pages/events.php';
+    if (isAdmin()) {
+        require $ROOT . '/features/events/admin/pages/events.php';
+    } else {
+        require $ROOT . '/features/events/user/pages/events.php';
+    }
 });
 $router->post('/events', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
-    require $ROOT . '/features/events/admin/pages/events.php';
+    if (isAdmin()) {
+        require $ROOT . '/features/events/admin/pages/events.php';
+    } else {
+        // Users don't post to events yet
+        http_response_code(403);
+        die('Access denied.');
+    }
 });
 
 $router->get('/waris', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
+    requireAdmin();
     require $ROOT . '/features/users/waris/pages/waris.php';
 });
 
