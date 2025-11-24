@@ -42,7 +42,7 @@ $content = ob_get_clean();
 
 // 2. Wrap with dashboard layout
 ob_start();
-include $ROOT . '/features/shared/components/layouts/dashboard-layout.php';
+include $ROOT . '/features/shared/components/layouts/app-layout.php';
 $content = ob_get_clean();
 
 // 3. Render with base layout

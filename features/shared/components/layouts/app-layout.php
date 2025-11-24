@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../lib/utilities/functions.php';
 <?php require_once $ROOT . '/features/shared/lib/auth/session.php'; initSecureSession(); ?>
 <div class="dashboard">
     <?php include $ROOT . '/features/shared/components/sidebar.php'; ?>
-
+    
     <main class="content">
         <?php echo $content ?? ''; ?>
     </main>

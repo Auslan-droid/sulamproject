@@ -18,7 +18,7 @@ class DashboardController extends BaseController {
         $dashboardContent = ob_get_clean();
         
         ob_start();
-        include __DIR__ . '/../../../shared/components/layouts/dashboard-layout.php';
+        include __DIR__ . '/../../../shared/components/layouts/app-layout.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Dashboard';
@@ -36,7 +36,7 @@ class DashboardController extends BaseController {
         $dashboardContent = ob_get_clean();
         
         ob_start();
-        include __DIR__ . '/../../../shared/components/layouts/dashboard-layout.php';
+        include __DIR__ . '/../../../shared/components/layouts/app-layout.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Dashboard';
