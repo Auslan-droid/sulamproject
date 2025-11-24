@@ -23,14 +23,23 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // Fetch Data
 $events = $controller->getAllEvents();
 
+// Define page header
+$pageHeader = [
+    'title' => 'Events Management',
+    'subtitle' => 'Create and schedule community events and announcements.',
+    'breadcrumb' => [
+        ['label' => 'Home', 'url' => url('/')],
+        ['label' => 'Events', 'url' => null],
+    ],
+    'actions' => [
+        ['label' => 'View Calendar', 'icon' => 'fa-calendar', 'url' => url('features/events/admin/pages/calendar.php'), 'class' => 'btn-secondary'],
+    ]
+];
+
 // 1. Capture the inner content
 ob_start();
 ?>
 <div class="events-page">
-  
-  <div class="section-header">
-    <h2 class="section-title">Manage Events</h2>
-  </div>
 
   <?php if ($message): ?>
     <div class="<?php echo $messageClass; ?>" style="margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: <?php echo strpos($messageClass, 'success') !== false ? '#d1fae5' : '#fee2e2'; ?>; color: <?php echo strpos($messageClass, 'success') !== false ? '#065f46' : '#991b1b'; ?>;">

@@ -14,6 +14,20 @@ $controller = new UsersController($mysqli);
 $data = $controller->index();
 extract($data); // Makes $users and $currentRole available to the view
 
+// Define page header
+$pageHeader = [
+    'title' => 'Resident Management',
+    'subtitle' => 'Manage household and individual resident records.',
+    'breadcrumb' => [
+        ['label' => 'Home', 'url' => url('/')],
+        ['label' => 'Residents', 'url' => null],
+    ],
+    'actions' => [
+        ['label' => 'Add Resident', 'icon' => 'fa-user-plus', 'url' => url('features/residents/admin/pages/resident-add.php'), 'class' => 'btn-primary'],
+        ['label' => 'Import Data', 'icon' => 'fa-file-import', 'url' => url('features/residents/admin/pages/import.php'), 'class' => 'btn-secondary'],
+    ]
+];
+
 // 1. Capture the inner content
 ob_start();
 include __DIR__ . '/../views/manage-residents.php';

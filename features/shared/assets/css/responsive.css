@@ -13,6 +13,19 @@
     border-bottom: 1px solid var(--border-subtle);
   }
   
+  /* Adjust logo and brand on smaller screens */
+  .sidebar .logo-container {
+    height: 78px;
+  }
+  
+  .sidebar .sidebar-logo {
+    max-height: 78px;
+  }
+  
+  .sidebar .brand-text {
+    font-size: 1.1rem;
+  }
+  
   .dashboard-cards {
     grid-template-columns: 1fr 1fr;
   }

@@ -8,6 +8,7 @@
   --bg: #ffffff; /* page background */
   --card: #0a2e21; /* very dark green for panels */
   --accent: #0f8a5f; /* primary accent (vibrant natural green) */
+  --accent-hover: #0d7550; /* darker green for hover state */
   --muted: #4b7660; /* muted green/gray for secondary text */
   --btn-text: #ffffff;
   --text-primary: #083f2f; /* deep green for main text */

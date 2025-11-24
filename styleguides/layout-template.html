@@ -21,6 +21,28 @@
 
     <style>
         /* Template-specific styles */
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            flex: 1;
+            gap: 1rem;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .content {
+            flex: 1;
+            padding: 1rem;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -109,6 +131,37 @@
             font-size: 1.1rem;
         }
         
+        .sidebar .nav a {
+            color: var(--sidebar-link);
+            text-decoration: none;
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+            transition: background .15s ease, color .15s ease;
+            position: relative;
+        }
+
+        .sidebar .nav a:hover {
+            background: var(--sidebar-link-hover-bg);
+            color: var(--sidebar-active-text);
+        }
+
+        .sidebar .nav a.active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-active-text);
+        }
+
+        .sidebar .nav a.active::after {
+            content: '';
+            position: absolute;
+            right: 0.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+
         .nav-divider {
             margin-top: 1rem;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -128,7 +181,7 @@
 
         .user-profile .fa-user-circle {
             font-size: 2rem;
-            color: var(--sidebar-active-text);
+            color: var(--sidebar-link);
         }
 
         .user-profile .user-name {
@@ -158,7 +211,7 @@
             color: var(--sidebar-active-text);
         }
 
-        /* Navbar & Breadcrumb Styles */
+        /* Page Header & Breadcrumb Styles */
         .breadcrumb {
             display: flex;
             flex-wrap: wrap;
@@ -192,7 +245,7 @@
             color: var(--text-primary);
         }
 
-        /* Navbar Box Style */
+        /* Page Header Box Style */
         .dashboard-header {
             background-color: #ffffff;
             padding: 1.25rem 1.5rem;
@@ -208,8 +261,9 @@
     <!-- Dashboard Layout Container -->
     <div class="dashboard">
         
-        <!-- Sidebar -->
-        <aside class="sidebar">
+        <div class="dashboard-wrapper">
+            <!-- Sidebar -->
+            <aside class="sidebar">
             <div class="brand">
                 <div class="brand-text">
                     <i class="fa-solid fa-mosque"></i> masjidkamek
@@ -243,8 +297,8 @@
         <!-- Main Content Area -->
         <main class="content">
             
-            <!-- Top Navbar (Loaded via JS) -->
-            <div id="top-navbar-container"></div>
+            <!-- Page Header (Loaded via JS) -->
+            <div id="page-header-container"></div>
 
             <!-- Content Grid/Sections -->
             
@@ -316,16 +370,18 @@
             </div>
 
         </main>
+        </div>
+
     </div>
 
     <script>
-        // Load the top navbar partial
-        fetch('partials/navbar.html')
+        // Load the page header partial
+        fetch('partials/page-header.html')
             .then(response => response.text())
             .then(data => {
-                document.getElementById('top-navbar-container').innerHTML = data;
+                document.getElementById('page-header-container').innerHTML = data;
             })
-            .catch(error => console.error('Error loading navbar:', error));
+            .catch(error => console.error('Error loading page header:', error));
     </script>
 </body>
 </html>

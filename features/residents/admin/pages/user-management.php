@@ -14,6 +14,19 @@ $controller = new UsersController($mysqli);
 $data = $controller->index();
 extract($data); // Makes $users and $currentRole available to the view
 
+// Define page header
+$pageHeader = [
+    'title' => 'User Management',
+    'subtitle' => 'Manage system users, roles, and permissions.',
+    'breadcrumb' => [
+        ['label' => 'Home', 'url' => url('/')],
+        ['label' => 'Users', 'url' => null],
+    ],
+    'actions' => [
+        ['label' => 'Add User', 'icon' => 'fa-user-plus', 'url' => url('features/users/shared/pages/register.php'), 'class' => 'btn-primary'],
+    ]
+];
+
 // 1. Capture the inner content
 ob_start();
 include __DIR__ . '/../views/manage-users.php';

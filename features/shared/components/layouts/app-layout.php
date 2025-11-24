@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../lib/utilities/functions.php';
     <?php include $ROOT . '/features/shared/components/sidebar.php'; ?>
     
     <main class="content">
+        <?php include $ROOT . '/features/shared/components/page-header.php'; ?>
         <?php echo $content ?? ''; ?>
     </main>
 </div>

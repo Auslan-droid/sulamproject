@@ -23,14 +23,23 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // Fetch Data
 $items = $controller->getAllDonations();
 
+// Define page header
+$pageHeader = [
+    'title' => 'Donations Management',
+    'subtitle' => 'Create and manage donation causes for the community.',
+    'breadcrumb' => [
+        ['label' => 'Home', 'url' => url('/')],
+        ['label' => 'Donations', 'url' => null],
+    ],
+    'actions' => [
+        ['label' => 'View Reports', 'icon' => 'fa-chart-line', 'url' => url('features/reports/admin/pages/donations-report.php'), 'class' => 'btn-secondary'],
+    ]
+];
+
 // 1. Capture the inner content
 ob_start();
 ?>
 <div class="donations-page">
-  
-  <div class="section-header">
-    <h2 class="section-title">Manage Donations</h2>
-  </div>
 
   <?php if ($message): ?>
     <div class="<?php echo $messageClass; ?>" style="margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: <?php echo strpos($messageClass, 'success') !== false ? '#d1fae5' : '#fee2e2'; ?>; color: <?php echo strpos($messageClass, 'success') !== false ? '#065f46' : '#991b1b'; ?>;">
