@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $rawName = isset($_POST['name']) ? trim($_POST['name']) : '';
   $rawUsername = isset($_POST['username']) ? trim($_POST['username']) : '';
   $rawEmail = isset($_POST['email']) ? trim($_POST['email']) : '';
+  $rawPhone = isset($_POST['phone_number']) ? trim($_POST['phone_number']) : '';
   $rawPassword = isset($_POST['password']) ? $_POST['password'] : '';
 
   $errors = [];
@@ -25,6 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (strlen($rawEmail) > 120) {
     $errors[] = 'Email must be at most 120 characters.';
   }
+  if ($rawPhone !== '' && strlen($rawPhone) > 20) {
+    $errors[] = 'Phone number must be at most 20 characters.';
+  }
   if (strlen($rawPassword) < 8) {
     $errors[] = 'Password must be at least 8 characters.';
   }
@@ -33,12 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $mysqli->real_escape_string($rawName);
     $username = $mysqli->real_escape_string($rawUsername);
     $email = $mysqli->real_escape_string($rawEmail);
+    $phone = $mysqli->real_escape_string($rawPhone);
     $passwordHash = password_hash($rawPassword, PASSWORD_DEFAULT);
 
     // Use prepared statement for insert into users
-    $stmt = $mysqli->prepare('INSERT INTO `users` (name, username, email, password) VALUES (?, ?, ?, ?)');
+    $stmt = $mysqli->prepare('INSERT INTO `users` (name, username, email, phone_number, password) VALUES (?, ?, ?, ?, ?)');
     if ($stmt) {
-      $stmt->bind_param('ssss', $name, $username, $email, $passwordHash);
+      $stmt->bind_param('sssss', $name, $username, $email, $phone, $passwordHash);
       if ($stmt->execute()) {
         $message = 'Registration successful. You can now log in.';
         $messageClass = 'notice success';
@@ -90,6 +95,9 @@ $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
         </label>
         <label>Email
           <input type="email" name="email" maxlength="120" required>
+        </label>
+        <label>Phone Number
+          <input type="tel" name="phone_number" maxlength="20" placeholder="e.g. 0123456789">
         </label>
         <label>Password
           <input type="password" name="password" minlength="8" required>
