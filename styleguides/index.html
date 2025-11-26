@@ -218,26 +218,54 @@
     <!-- CARDS & CONTAINERS -->
     <section class="sg-section">
         <div class="sg-title">Cards & Containers</div>
-        
-        <div class="sg-subtitle">Small Card</div>
+
+        <div class="sg-subtitle">Card Variants</div>
+        <p>Introduce distinct visual styles for different use-cases (elevated, muted, accent, outline).</p>
+
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
+            <div class="card card--elevated" style="width:280px;">
+                <h4>Elevated Card</h4>
+                <p>Use for important widgets that need prominence.</p>
+                <div class="actions" style="justify-content: flex-start;">
+                    <button class="btn">Action</button>
+                </div>
+            </div>
+
+            <div class="card card--muted" style="width:260px;">
+                <h4>Muted Card</h4>
+                <p>Subtle card for metadata or small notes.</p>
+            </div>
+
+            <div class="card card--accent" style="width:280px;">
+                <h4>Accent Card</h4>
+                <p>Highlights special content with an accent tint.</p>
+            </div>
+
+            <div class="card card--outline small-card" style="width:240px;">
+                <h4>Outline Card</h4>
+                <p>Use when background should show through.</p>
+            </div>
+        </div>
+
+        <div class="sg-subtitle" style="margin-top: 2rem;">Small Card (compact)</div>
         <p>Used for login forms, small widgets, or focused content.</p>
-        <div class="small-card" style="max-width: 400px;">
+        <div class="card small-card" style="max-width: 400px;">
             <h3>Login</h3>
             <p>Please sign in to continue.</p>
             <button class="btn" style="width: 100%">Sign In</button>
         </div>
-        <pre>&lt;div class="small-card"&gt;...&lt;/div&gt;</pre>
+        <pre>&lt;div class="card small-card"&gt;...&lt;/div&gt;</pre>
 
         <div class="sg-subtitle" style="margin-top: 2rem;">Page Card</div>
         <p>The main container for page content.</p>
-        <div class="page-card" style="margin: 0; max-width: 100%;">
+        <div class="card page-card" style="margin: 0; max-width: 100%;">
             <h2>Page Title</h2>
             <p>This is the main content area of a page. It has a subtle gradient background and shadow.</p>
             <div class="actions" style="justify-content: flex-start;">
                 <button class="btn">Primary Action</button>
             </div>
         </div>
-        <pre>&lt;div class="page-card"&gt;...&lt;/div&gt;</pre>
+        <pre>&lt;div class="card page-card"&gt;...&lt;/div&gt;</pre>
     </section>
 
     <!-- NOTICES / ALERTS -->

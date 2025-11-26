@@ -1,23 +1,107 @@
-/* Cards */
-.small-card {
+/* =========================================
+   CARD SYSTEM - Base + Variants + Structural Types
+   ========================================= */
+
+/* Base Card - Stronger, bolder foundation */
+.card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 12px;
+  border-radius: 13px;
   box-shadow: var(--shadow-sm);
   padding: 1.25rem;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.12s ease;
 }
 
+/* Card hover - unified lift effect */
+.card:hover,
+.small-card:hover,
+.page-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(2,34,21,0.14);
+}
+
+/* Card typography - consistent hierarchy */
+.card h3, 
+.card h4 {
+  margin: 0 0 0.6rem 0;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card p {
+  margin: 0 0 0.85rem 0;
+  color: rgba(8,63,47,0.86);
+}
+
+.card small { 
+  color: var(--muted); 
+}
+
+.card img {
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+}
+
+/* =========================================
+   CARD VARIANTS - Visual modifiers
+   ========================================= */
+
+/* Elevated - Stronger shadow, deeper depth */
+.card.card--elevated {
+  box-shadow: 0 20px 50px rgba(2,34,21,0.18);
+  border: 2px solid rgba(6,95,70,0.12);
+  background: #ffffff;
+  padding: 1.5rem;
+}
+
+/* Accent - Mint/green-tinted with left stripe */
+.card.card--accent {
+  background: #e6f7f0;
+  border: 2px solid rgba(15,138,95,0.3);
+  box-shadow: 0 8px 20px rgba(15,138,95,0.1);
+  border-left: 5px solid var(--accent);
+  padding-left: 1.2rem;
+}
+
+/* Muted - Warm neutral, low emphasis */
+.card.card--muted {
+  background: #f5f5f4;
+  color: #78716c;
+  border: 1px solid rgba(120,113,108,0.2);
+  box-shadow: none;
+}
+
+/* Outline - Transparent with dashed border */
+.card.card--outline {
+  background: transparent;
+  border: 2px dashed rgba(15,138,95,0.35);
+  box-shadow: none;
+}
+
+/* =========================================
+   STRUCTURAL CARD TYPES - Layout control only
+   ========================================= */
+
+/* Small Card - Compact container */
+.small-card {
+  max-width: 420px;
+  padding: 1rem;
+  border-radius: 11px;
+}
+
+/* Page Card - Main content container */
 .page-card {
   max-width: 960px;
   margin: 6vh auto;
   padding: 2rem;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
   border-radius: 16px;
-  box-shadow: var(--shadow-lg);
 }
 
-/* Dashboard Cards */
+/* =========================================
+   DASHBOARD CARDS - Layout-focused
+   ========================================= */
+
+/* Dashboard grid wrapper */
 .dashboard-cards {
   display: grid;
   gap: 1rem;
@@ -26,22 +110,15 @@
   margin: 2rem auto;
 }
 
+/* Dashboard card - layout only, inherits visuals from .card */
 .dashboard-card {
   display: block;
-  padding: 1.2rem;
-  border-radius: 14px;
   text-decoration: none;
   color: var(--text-primary);
-  background: var(--card-bg);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
 }
 
 .dashboard-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
-  background: linear-gradient(180deg, rgba(22,163,74,0.14), rgba(6,95,70,0.14));
+  background: linear-gradient(180deg, rgba(22,163,74,0.12), rgba(6,95,70,0.12));
 }
 
 .dashboard-card h3 {
@@ -64,32 +141,11 @@
   margin-bottom: 0.4rem;
 }
 
-/* Modern cards/grid for lists (donations/events) */
+/* =========================================
+   CARDS GRID - For lists of cards
+   ========================================= */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
-}
-
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  box-shadow: var(--shadow-sm);
-  padding: 1rem;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.card img {
-  border-radius: 10px;
-  margin-bottom: 0.6rem;
-}
-
-.card small { 
-  color: var(--muted); 
 }

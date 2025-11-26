@@ -1,4 +1,4 @@
-<div class="small-card" style="max-width:800px;margin:0 auto; padding: 2rem;">
+<div class="card small-card" style="max-width:800px;margin:0 auto;">
     
     <?php if (isset($success)): ?>
         <div class="notice success" style="margin-bottom: 1rem;">
