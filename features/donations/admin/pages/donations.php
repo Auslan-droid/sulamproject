@@ -48,7 +48,7 @@ ob_start();
   <?php endif; ?>
 
   <?php if ($isAdmin): ?>
-  <div class="create-card">
+  <div class="card create-card">
     <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem; color: #374151;">Create New Donation Cause</h3>
     <form method="post" enctype="multipart/form-data">
       
@@ -103,7 +103,7 @@ ob_start();
   <?php else: ?>
     <div class="donations-grid">
       <?php foreach ($items as $d): ?>
-        <div class="donation-card">
+        <div class="card donation-card">
           <div class="donation-image-container">
             <?php if (!empty($d['image_path'])): ?>
                 <?php 
