@@ -1,9 +1,4 @@
 <div class="small-card" style="max-width:980px; margin:0 auto; padding:1.2rem 1.4rem;">
-    <div class="dashboard-header">
-        <h2 style="margin:0">Welcome</h2>
-        <div>Hi, <strong><?php echo e($username); ?></strong> <span style="color: var(--muted);">(Admin)</span></div>
-    </div>
-
     <section class="dashboard-cards">
         <a class="dashboard-card" href="<?php echo url('users'); ?>">
             <i class="fa-solid fa-users-cog icon" aria-hidden="true"></i>

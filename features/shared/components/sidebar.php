@@ -41,13 +41,18 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
     
     <!-- User Profile Section -->
     <div class="nav-divider">
-      <div class="user-profile">
-        <i class="fas fa-user-circle"></i>
-        <div>
-          <div class="user-name"><?php echo htmlspecialchars($username); ?></div>
-          <div class="user-role"><?php echo htmlspecialchars($userRole); ?></div>
+      <a href="<?php echo $base; ?>/profile" class="user-profile <?php echo str_starts_with($path, "$base/profile") ? 'active' : ''; ?>">
+        <div class="default-view">
+          <i class="fas fa-user-circle"></i>
+          <div>
+            <div class="user-name"><?php echo htmlspecialchars($username); ?></div>
+            <div class="user-role"><?php echo htmlspecialchars($userRole); ?></div>
+          </div>
         </div>
-      </div>
+        <div class="hover-view">
+          <i class="fas fa-pen"></i> Edit Profile
+        </div>
+      </a>
     </div>
   </nav>
   

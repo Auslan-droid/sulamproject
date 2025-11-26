@@ -63,6 +63,19 @@ $router->get('/dashboard', function() use ($ROOT) {
     }
 });
 
+// User Profile
+$router->get('/profile', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    require $ROOT . '/features/users/user/pages/profile.php';
+});
+
+$router->post('/profile', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    require $ROOT . '/features/users/user/pages/profile.php';
+});
+
 $router->get('/', function() {
     initSecureSession();
     if (isAuthenticated()) {
