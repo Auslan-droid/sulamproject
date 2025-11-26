@@ -5,10 +5,10 @@
     </div>
 
     <section class="dashboard-cards">
-        <a class="dashboard-card" href="<?php echo url('residents'); ?>">
-            <i class="fa-solid fa-users icon" aria-hidden="true"></i>
-            <h3>Residents</h3>
-            <p>Manage residents and households.</p>
+        <a class="dashboard-card" href="<?php echo url('users'); ?>">
+            <i class="fa-solid fa-users-cog icon" aria-hidden="true"></i>
+            <h3>User Management</h3>
+            <p>Manage users and roles.</p>
         </a>
 
         <a class="dashboard-card" href="<?php echo url('donations'); ?>">

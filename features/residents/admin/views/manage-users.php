@@ -58,8 +58,18 @@
                                         text-decoration: none;
                                         border-radius: 4px;
                                         font-size: 0.85rem;
+                                        margin-right: 0.5rem;
                                     ">View Waris</a>
                                 <?php endif; ?>
+                                <a href="<?php echo url('admin/user-edit?id=' . $user['id']); ?>" style="
+                                    display: inline-block;
+                                    padding: 0.3rem 0.6rem;
+                                    background-color: var(--secondary-color, #6b7280);
+                                    color: white;
+                                    text-decoration: none;
+                                    border-radius: 4px;
+                                    font-size: 0.85rem;
+                                ">Edit</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

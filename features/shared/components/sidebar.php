@@ -27,11 +27,9 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
     </a>
     <?php if ($isAdmin): ?>
     <a href="<?php echo $base; ?>/users" class="<?php echo str_starts_with($path, "$base/users") ? 'active' : ''; ?>">
-      <i class="fas fa-users"></i> Users
+      <i class="fas fa-users-cog"></i> User Management
     </a>
-    <a href="<?php echo $base; ?>/waris" class="<?php echo str_starts_with($path, "$base/waris") ? 'active' : ''; ?>">
-      <i class="fas fa-user-friends"></i> Waris
-    </a>
+
     <?php endif; ?>
     <a href="<?php echo $base; ?>/donations" class="<?php echo str_starts_with($path, "$base/donations") ? 'active' : ''; ?>">
       <i class="fas fa-hand-holding-heart"></i> Donations
@@ -39,11 +37,7 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
     <a href="<?php echo $base; ?>/events" class="<?php echo str_starts_with($path, "$base/events") ? 'active' : ''; ?>">
       <i class="fas fa-calendar-alt"></i> Events
     </a>
-    <?php if ($isAdmin): ?>
-    <a href="<?php echo $base; ?>/admin" class="<?php echo str_starts_with($path, "$base/admin") ? 'active' : ''; ?>">
-      <i class="fas fa-cog"></i> Admin
-    </a>
-    <?php endif; ?>
+
     
     <!-- User Profile Section -->
     <div class="nav-divider">
