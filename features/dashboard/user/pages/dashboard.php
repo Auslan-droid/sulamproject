@@ -12,8 +12,7 @@ $pageHeader = [
     'title' => 'Dashboard',
     'subtitle' => 'Welcome back, ' . $username . '.',
     'breadcrumb' => [
-        ['label' => 'Home', 'url' => url('/')],
-        ['label' => 'Dashboard', 'url' => null],
+        ['label' => 'Home', 'url' => null],
     ],
 ];
 

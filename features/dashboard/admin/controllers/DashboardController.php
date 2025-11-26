@@ -17,8 +17,7 @@ class DashboardController extends BaseController {
             'title' => 'Dashboard',
             'subtitle' => 'Hi, ' . $username . ' (Admin)',
             'breadcrumb' => [
-                ['label' => 'Home', 'url' => url('/')],
-                ['label' => 'Dashboard', 'url' => null]
+                ['label' => 'Home', 'url' => null]
             ]
         ];
 
@@ -44,8 +43,7 @@ class DashboardController extends BaseController {
             'title' => 'Dashboard',
             'subtitle' => 'Hi, ' . $username,
             'breadcrumb' => [
-                ['label' => 'Home', 'url' => url('/')],
-                ['label' => 'Dashboard', 'url' => null]
+                ['label' => 'Home', 'url' => null]
             ]
         ];
 
