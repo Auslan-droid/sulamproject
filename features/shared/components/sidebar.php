@@ -53,16 +53,58 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
           <i class="fas fa-pen"></i> Edit Profile
         </div>
       </a>
+      
+      <!-- Settings & Logout Side by Side -->
+      <div class="sidebar-actions">
+        <a href="<?php echo $base; ?>/settings">
+          <i class="fas fa-cog"></i> Settings
+        </a>
+        <a href="<?php echo $base; ?>/logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
     </div>
   </nav>
   
   <!-- Sidebar Footer -->
   <div class="sidebar-footer">
-    <a href="<?php echo $base; ?>/settings">
-      <i class="fas fa-cog"></i> Settings
-    </a>
-    <a href="<?php echo $base; ?>/logout">
-      <i class="fas fa-sign-out-alt"></i> Logout
-    </a>
+    
+    <!-- Contact Us Section -->
+    <div class="sidebar-contact">
+      <div class="sidebar-contact-title">Contact Us</div>
+      <div class="sidebar-contact-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>123 Masjid Street<br>Kuching, Sarawak</span>
+      </div>
+      <div class="sidebar-contact-item">
+        <i class="fa-solid fa-envelope"></i>
+        <a href="mailto:info@ourmasjid.local">info@ourmasjid.local</a>
+      </div>
+      <div class="sidebar-contact-item">
+        <i class="fa-solid fa-phone"></i>
+        <a href="tel:+60123456789">+60 12-345 6789</a>
+      </div>
+    </div>
+    
+    <!-- Social Media Links -->
+    <div class="sidebar-social">
+      <a href="#" class="sidebar-social-link" aria-label="Facebook" title="Facebook">
+        <i class="fa-brands fa-facebook"></i>
+      </a>
+      <a href="#" class="sidebar-social-link" aria-label="WhatsApp" title="WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+      <a href="#" class="sidebar-social-link" aria-label="Instagram" title="Instagram">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+      <a href="#" class="sidebar-social-link" aria-label="Telegram" title="Telegram">
+        <i class="fa-brands fa-telegram"></i>
+      </a>
+    </div>
+    
+    <!-- Copyright -->
+    <div class="sidebar-copyright">
+      <small>&copy; <?php echo date('Y'); ?> masjidkamek</small>
+    </div>
   </div>
 </aside>

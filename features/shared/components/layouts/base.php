@@ -22,7 +22,6 @@
 </head>
 <body>
     <?php echo $content ?? ''; ?>
-    <?php // Footer temporarily removed ?>
     
     <?php if (isset($additionalScripts)): ?>
         <?php foreach ($additionalScripts as $script): ?>
