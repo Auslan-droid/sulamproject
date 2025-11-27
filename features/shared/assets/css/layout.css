@@ -1,23 +1,24 @@
 /* Dashboard Layout */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .dashboard {
   display: flex;
-  gap: 1rem;
-  min-height: 100vh;
-  padding-left: 240px; /* account for fixed sidebar */
+  flex: 1;
+  gap: 0;
 }
 
 .sidebar {
   width: 240px;
   padding: 1rem;
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  overflow: auto;
   background: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 /* Brand Section */
@@ -191,6 +192,37 @@
   border-radius: 50%;
 }
 
+/* Sidebar Actions (Settings & Logout) */
+.sidebar-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.sidebar-actions a {
+  color: var(--sidebar-link);
+  text-decoration: none;
+  padding: 0.5rem 0.4rem;
+  border-radius: 8px;
+  transition: background .15s ease, color .15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.sidebar-actions a i {
+  font-size: 0.9rem;
+}
+
+.sidebar-actions a:hover {
+  background: var(--sidebar-link-hover-bg);
+  color: var(--sidebar-active-text);
+}
+
 /* Sidebar Footer */
 .sidebar-footer {
   margin-top: auto;
@@ -201,30 +233,102 @@
   gap: 0.4rem;
 }
 
-.sidebar-footer a {
+/* Sidebar Contact Section */
+.sidebar-contact {
+  margin-top: 0;
+  padding: 0.75rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.sidebar-contact-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sidebar-active-text);
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--sidebar-link);
+}
+
+.sidebar-contact-item i {
+  color: var(--sidebar-link);
+  margin-top: 0.125rem;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  width: 1rem;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.sidebar-contact-item a {
   color: var(--sidebar-link);
   text-decoration: none;
-  padding: 0.5rem 0.6rem;
-  border-radius: 8px;
-  transition: background .15s ease, color .15s ease;
+  transition: color 0.2s ease;
+}
+
+.sidebar-contact-item a:hover {
+  color: var(--sidebar-active-text);
+  text-decoration: underline;
+}
+
+/* Sidebar Social Links */
+.sidebar-social {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-social-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--sidebar-link);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0;
 }
 
-.sidebar-footer a i {
-  width: 1.2rem;
-  text-align: center;
-}
-
-.sidebar-footer a:hover {
-  background: var(--sidebar-link-hover-bg);
+.sidebar-social-link:hover {
+  background: rgba(255, 255, 255, 0.2);
   color: var(--sidebar-active-text);
+  transform: translateY(-2px);
+}
+
+/* Sidebar Copyright */
+.sidebar-copyright {
+  text-align: center;
+  padding: 0.5rem 0;
+  margin-top: 0.25rem;
+}
+
+.sidebar-copyright small {
+  font-size: 0.75rem;
+  color: var(--sidebar-link);
+  opacity: 0.7;
 }
 
 .content {
   flex: 1;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Page Header Component */
