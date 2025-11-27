@@ -8,7 +8,7 @@ requireAdmin();
 
 // Simple list of users with edit links
 $users = [];
-$res = $mysqli->query("SELECT id, name, username, email, roles, is_deceased FROM users ORDER BY id DESC");
+$res = $mysqli->query("SELECT users.id, users.name, users.username, users.email, users.roles, users.is_deceased, users.income, COUNT(next_of_kin.id) as dependent_count FROM users LEFT JOIN next_of_kin ON users.id = next_of_kin.user_id GROUP BY users.id ORDER BY users.id DESC");
 if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(); }
 
 // 1. Capture the inner content
@@ -19,7 +19,7 @@ ob_start();
   <table class="table">
     <thead>
       <tr>
-        <th>ID</th><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Deceased?</th><th>Action</th>
+        <th>ID</th><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Income Class</th><th>Dependents</th><th>Deceased?</th><th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -30,6 +30,23 @@ ob_start();
           <td><?php echo htmlspecialchars($u['username']); ?></td>
           <td><?php echo htmlspecialchars($u['email']); ?></td>
           <td><?php echo htmlspecialchars($u['roles']); ?></td>
+          <td>
+            <?php
+                $income = $u['income'];
+                $incomeClass = '-';
+                if ($income !== null && $income !== '') {
+                    if ($income < 5250) {
+                        $incomeClass = 'B40';
+                    } elseif ($income < 11820) {
+                        $incomeClass = 'M40';
+                    } else {
+                        $incomeClass = 'T20';
+                    }
+                }
+                echo $incomeClass;
+            ?>
+          </td>
+          <td><?php echo (int)$u['dependent_count']; ?></td>
           <td><?php echo $u['is_deceased'] ? 'Yes' : 'No'; ?></td>
           <td><a class="btn" href="<?php echo url('admin/user-edit?id=' . (int)$u['id']); ?>">Edit</a></td>
         </tr>

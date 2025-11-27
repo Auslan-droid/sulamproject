@@ -8,11 +8,15 @@ class UsersModel {
     }
 
     public function getUsers($role = null) {
-        $sql = "SELECT * FROM users";
+        $sql = "SELECT users.*, COUNT(next_of_kin.id) as dependent_count 
+                FROM users 
+                LEFT JOIN next_of_kin ON users.id = next_of_kin.user_id";
+        
         if ($role) {
-            $sql .= " WHERE roles = ?";
+            $sql .= " WHERE users.roles = ?";
         }
-        $sql .= " ORDER BY created_at DESC";
+        
+        $sql .= " GROUP BY users.id ORDER BY users.created_at DESC";
         
         $stmt = $this->db->prepare($sql);
         

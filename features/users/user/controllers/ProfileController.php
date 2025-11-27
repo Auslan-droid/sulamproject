@@ -25,7 +25,15 @@ class ProfileController extends BaseController {
             $this->notFound();
         }
 
-        return ['user' => $user];
+        // Fetch Next of Kin
+        $stmt = $this->mysqli->prepare('SELECT * FROM next_of_kin WHERE user_id=? ORDER BY created_at ASC');
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $nextOfKin = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return ['user' => $user, 'nextOfKin' => $nextOfKin];
     }
 
     public function update() {
