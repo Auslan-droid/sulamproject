@@ -25,6 +25,11 @@
             Email
             <input type="email" name="email" required>
         </label>
+
+        <label>
+            Phone Number
+            <input type="tel" name="phone_number" maxlength="20" placeholder="e.g. 0123456789">
+        </label>
         
         <label>
             Password
