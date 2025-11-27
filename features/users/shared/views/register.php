@@ -1,19 +1,20 @@
-<main class="centered small-card">
-    <h2>Register</h2>
-    
-    <?php if (!empty($message)): ?>
-        <div class="notice <?php echo strpos($message, 'successful') !== false ? 'success' : 'error'; ?>">
-            <?php echo e($message); ?>
-        </div>
-    <?php endif; ?>
-
-    <form method="post" action="<?php echo url('register'); ?>">
-        <?php echo csrfField(); ?>
+<main class="centered">
+    <div class="card small-card">
+        <h2>Register</h2>
         
-        <label>
-            Name
-            <input type="text" name="name" required autofocus maxlength="120">
-        </label>
+        <?php if (!empty($message)): ?>
+            <div class="notice <?php echo strpos($message, 'successful') !== false ? 'success' : 'error'; ?>">
+                <?php echo e($message); ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="post" action="<?php echo url('register'); ?>">
+            <?php echo csrfField(); ?>
+            
+            <label>
+                Name
+                <input type="text" name="name" required autofocus maxlength="120">
+            </label>
 
         <label>
             Username
@@ -46,4 +47,5 @@
             <a class="btn outline" href="/sulamproject/login">Back to Login</a>
         </div>
     </form>
+    </div>
 </main>

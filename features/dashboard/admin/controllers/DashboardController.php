@@ -13,9 +13,17 @@ class DashboardController extends BaseController {
         
         $username = $_SESSION['username'] ?? 'Admin';
         
+        $pageHeader = [
+            'title' => 'Dashboard',
+            'subtitle' => 'Hi, ' . $username . ' (Admin)',
+            'breadcrumb' => [
+                ['label' => 'Home', 'url' => null]
+            ]
+        ];
+
         ob_start();
         include __DIR__ . '/../views/admin-overview.php';
-        $dashboardContent = ob_get_clean();
+        $content = ob_get_clean();
         
         ob_start();
         include __DIR__ . '/../../../shared/components/layouts/app-layout.php';
@@ -31,9 +39,17 @@ class DashboardController extends BaseController {
         
         $username = $_SESSION['username'] ?? 'User';
         
+        $pageHeader = [
+            'title' => 'Dashboard',
+            'subtitle' => 'Hi, ' . $username,
+            'breadcrumb' => [
+                ['label' => 'Home', 'url' => null]
+            ]
+        ];
+
         ob_start();
         include __DIR__ . '/../../user/views/user-overview.php';
-        $dashboardContent = ob_get_clean();
+        $content = ob_get_clean();
         
         ob_start();
         include __DIR__ . '/../../../shared/components/layouts/app-layout.php';

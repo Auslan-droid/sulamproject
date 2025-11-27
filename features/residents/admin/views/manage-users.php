@@ -1,12 +1,14 @@
-<div class="small-card" style="max-width:980px; margin:0 auto; padding:1.2rem 1.4rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h3>Filter Users</h3>
-        <div>
-            <select onchange="window.location.href=this.value" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--card-bg); color: var(--text-color);">
-                <option value="?" <?php echo $currentRole === null ? 'selected' : ''; ?>>All Users</option>
-                <option value="?role=resident" <?php echo $currentRole === 'resident' ? 'selected' : ''; ?>>Residents</option>
-                <option value="?role=admin" <?php echo $currentRole === 'admin' ? 'selected' : ''; ?>>Admins</option>
-            </select>
+<div class="card page-card">
+    <div class="card card--outline" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Filter Users</h3>
+            <div>
+                <select onchange="window.location.href=this.value" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--card-bg); color: var(--text-color);">
+                    <option value="?" <?php echo $currentRole === null ? 'selected' : ''; ?>>All Users</option>
+                    <option value="?role=resident" <?php echo $currentRole === 'resident' ? 'selected' : ''; ?>>Residents</option>
+                    <option value="?role=admin" <?php echo $currentRole === 'admin' ? 'selected' : ''; ?>>Admins</option>
+                </select>
+            </div>
         </div>
     </div>
     
@@ -58,8 +60,18 @@
                                         text-decoration: none;
                                         border-radius: 4px;
                                         font-size: 0.85rem;
+                                        margin-right: 0.5rem;
                                     ">View Waris</a>
                                 <?php endif; ?>
+                                <a href="<?php echo url('admin/user-edit?id=' . $user['id']); ?>" style="
+                                    display: inline-block;
+                                    padding: 0.3rem 0.6rem;
+                                    background-color: var(--secondary-color, #6b7280);
+                                    color: white;
+                                    text-decoration: none;
+                                    border-radius: 4px;
+                                    font-size: 0.85rem;
+                                ">Edit</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

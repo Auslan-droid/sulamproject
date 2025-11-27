@@ -79,23 +79,83 @@ small {
   margin-top: -0.25rem;
 }
 
-/* Cards */
-.small-card {
+/* Cards - base + variants */
+.card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
   padding: 1.25rem;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.12s ease;
 }
 
+/* Elevated card: stronger shadow and subtle lift */
+.card.card--elevated {
+  box-shadow: 0 20px 50px rgba(2,34,21,0.18);
+  border: 2px solid rgba(6,46,29,0.15);
+  background: #ffffff;
+  padding: 1.5rem;
+}
+
+/* Muted card: lower contrast for subtle widgets */
+.card.card--muted {
+  background: #f5f5f4;
+  color: #78716c;
+  border: 1px solid rgba(120,113,108,0.2);
+  box-shadow: none;
+  padding: 0.9rem 1rem;
+}
+
+/* Accent card: uses a soft accent tint */
+.card.card--accent {
+  background: #e6f7f0;
+  border: 2px solid rgba(15,138,95,0.3);
+  box-shadow: 0 8px 20px rgba(15,138,95,0.08);
+  border-left: 5px solid var(--accent);
+  padding-left: 1.2rem;
+}
+
+/* Outline card: transparent surface with clear border */
+.card.card--outline {
+  background: transparent;
+  border: 2px dashed rgba(15,138,95,0.35);
+  box-shadow: none;
+}
+
+/* Small card: compact variant that composes base .card */
+.small-card {
+  max-width: 420px;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+}
+
+/* Page card: large container used for main content */
 .page-card {
   max-width: 960px;
   margin: 6vh auto;
   padding: 2rem;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
   border-radius: 16px;
   box-shadow: var(--shadow-lg);
+}
+
+/* Hover lift for actionable cards */
+.card:hover,
+.small-card:hover,
+.page-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(2,34,21,0.12);
+}
+
+/* Card headings & content spacing to improve visual distinction */
+.card h3, .card h4 {
+  margin: 0 0 0.6rem 0;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card p {
+  margin: 0 0 0.85rem 0;
+  color: rgba(8,63,47,0.86);
 }
 
 /* Buttons */
