@@ -80,10 +80,15 @@
                     </label>
                     
                     <label>
-                        Email
-                        <input type="email" name="email" required>
+                        Phone Number
+                        <input type="tel" name="phone_number" maxlength="20" placeholder="e.g. 0123456789">
                     </label>
                 </div>
+
+                <label>
+                    Email
+                    <input type="email" name="email" required>
+                </label>
                 
                 <div class="form-row">
                     <label>
