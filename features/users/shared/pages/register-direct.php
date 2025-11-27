@@ -97,7 +97,7 @@ $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
           <input type="email" name="email" maxlength="120" required>
         </label>
         <label>Phone Number
-          <input type="tel" name="phone_number" maxlength="20" placeholder="e.g. 0123456789">
+          <input type="tel" name="phone_number" maxlength="20">
         </label>
         <label>Password
           <input type="password" name="password" minlength="8" required>
