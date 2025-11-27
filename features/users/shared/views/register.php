@@ -16,31 +16,36 @@
                 <input type="text" name="name" required autofocus maxlength="120">
             </label>
 
-            <label>
-                Username
-                <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
-                       title="3-20 characters, letters, numbers, and underscore only">
-            </label>
-            
-            <label>
-                Email
-                <input type="email" name="email" required>
-            </label>
-            
-            <label>
-                Password
-                <input type="password" name="password" required minlength="8">
-            </label>
-            
-            <label>
-                Confirm Password
-                <input type="password" name="confirm_password" required minlength="8">
-            </label>
-            
-            <div class="actions">
-                <button class="btn" type="submit">Create Account</button>
-                <a class="btn outline" href="/sulamproject/login">Back to Login</a>
-            </div>
-        </form>
+        <label>
+            Username
+            <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
+                   title="3-20 characters, letters, numbers, and underscore only">
+        </label>
+        
+        <label>
+            Email
+            <input type="email" name="email" required>
+        </label>
+
+        <label>
+            Phone Number
+            <input type="tel" name="phone_number" maxlength="20" placeholder="e.g. 0123456789">
+        </label>
+        
+        <label>
+            Password
+            <input type="password" name="password" required minlength="8">
+        </label>
+        
+        <label>
+            Confirm Password
+            <input type="password" name="confirm_password" required minlength="8">
+        </label>
+        
+        <div class="actions">
+            <button class="btn" type="submit">Create Account</button>
+            <a class="btn outline" href="/sulamproject/login">Back to Login</a>
+        </div>
+    </form>
     </div>
 </main>
