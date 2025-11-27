@@ -72,23 +72,23 @@
                     <input type="text" name="name" required maxlength="120" <?php echo ($initialView === 'register') ? 'autofocus' : ''; ?>>
                 </label>
 
+                <label>
+                    Username
+                    <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
+                           title="3-20 characters, letters, numbers, and underscore only">
+                </label>
+                
                 <div class="form-row">
                     <label>
-                        Username
-                        <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
-                               title="3-20 characters, letters, numbers, and underscore only">
+                        Email
+                        <input type="email" name="email" required>
                     </label>
-                    
+
                     <label>
                         Phone Number
-                        <input type="tel" name="phone_number" maxlength="20" placeholder="e.g. 0123456789">
+                        <input type="tel" name="phone_number" maxlength="20">
                     </label>
                 </div>
-
-                <label>
-                    Email
-                    <input type="email" name="email" required>
-                </label>
                 
                 <div class="form-row">
                     <label>
