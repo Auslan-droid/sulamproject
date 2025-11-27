@@ -15,6 +15,23 @@ $pageHeader = [
     ],
 ];
 
+// Fetch active events uploaded by admin
+require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
+$events = [];
+try {
+    $stmt = $mysqli->prepare('SELECT id, title, description, event_date, event_time, location, image_path FROM events WHERE is_active = 1 ORDER BY COALESCE(event_date, CURRENT_DATE) DESC, id DESC');
+    if ($stmt) {
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $events[] = $row;
+        }
+        $stmt->close();
+    }
+} catch (Throwable $e) {
+    $eventsError = 'Failed to load events.';
+}
+
 // 1. Capture the inner content
 ob_start();
 require $ROOT . '/features/events/user/views/events.php';

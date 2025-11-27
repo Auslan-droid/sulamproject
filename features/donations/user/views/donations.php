@@ -1,3 +1,11 @@
+<?php if (!empty($donationsError)): ?>
+    <div class="card page-card">
+        <div class="notice error" style="margin-top: 1rem;">
+            <?php echo htmlspecialchars($donationsError); ?>
+        </div>
+    </div>
+<?php endif; ?>
+
 <div class="card page-card">
     <?php if (empty($donations)): ?>
         <div class="card card--elevated" style="margin-top: 2rem; text-align: center; padding: 3rem;">

@@ -15,7 +15,16 @@ $message = '';
 $messageClass = '';
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $result = $controller->handleCreate();
+    $action = $_POST['action'] ?? 'create';
+    if ($action === 'create') {
+        $result = $controller->handleCreate();
+    } elseif ($action === 'update' && isset($_POST['id'])) {
+        $result = $controller->handleUpdate((int)$_POST['id']);
+    } elseif ($action === 'delete' && isset($_POST['id'])) {
+        $result = $controller->handleDelete((int)$_POST['id']);
+    } else {
+        $result = ['message' => 'Invalid action.', 'messageClass' => 'notice error'];
+    }
     $message = $result['message'];
     $messageClass = $result['messageClass'];
 }
@@ -116,7 +125,7 @@ ob_start();
         <p>No events have been created yet.</p>
     </div>
   <?php else: ?>
-    <div class="events-grid">
+        <div class="events-grid">
       <?php foreach ($events as $e): ?>
         <div class="event-card">
           <div class="event-image-container">
@@ -171,6 +180,62 @@ ob_start();
             <div class="event-meta">
                 Created: <?php echo date('M j, Y', strtotime($e['created_at'])); ?>
             </div>
+
+            <?php if ($isAdmin): ?>
+            <div class="event-actions" style="margin-top: .75rem; display:flex; gap:.5rem;">
+                <button class="btn-secondary" type="button" onclick="toggleEditForm(<?php echo (int)$e['id']; ?>)">Edit</button>
+                <form method="post" onsubmit="return confirm('Delete this event?');">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="<?php echo (int)$e['id']; ?>">
+                    <button class="btn-secondary" type="submit">Delete</button>
+                </form>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="edit-form-<?php echo (int)$e['id']; ?>" style="display:none; margin-top: .75rem;">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" value="<?php echo (int)$e['id']; ?>">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" class="form-input" value="<?php echo htmlspecialchars($e['title']); ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="location" class="form-input" value="<?php echo htmlspecialchars($e['location'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" name="event_date" class="form-input" value="<?php echo htmlspecialchars($e['event_date'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time</label>
+                        <input type="time" name="event_time" class="form-input" value="<?php echo htmlspecialchars($e['event_time'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-textarea"><?php echo htmlspecialchars($e['description'] ?? ''); ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Replace Image</label>
+                        <input type="file" name="gamba" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Or Image URL</label>
+                        <input type="url" name="gamba_url" class="form-input" placeholder="https://...">
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Status</label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" name="is_active" value="1" id="isActive-<?php echo (int)$e['id']; ?>" <?php echo $e['is_active'] ? 'checked' : ''; ?>>
+                            <label for="isActive-<?php echo (int)$e['id']; ?>">Active</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions" style="text-align:right;">
+                    <button class="btn-primary" type="submit">Save Changes</button>
+                </div>
+            </form>
+            <?php endif; ?>
           </div>
         </div>
       <?php endforeach; ?>
@@ -192,3 +257,10 @@ $additionalStyles = [
 ];
 include $ROOT . '/features/shared/components/layouts/base.php';
 ?>
+<script>
+function toggleEditForm(id){
+    var f = document.getElementById('edit-form-' + id);
+    if(!f) return;
+    f.style.display = (f.style.display === 'none' || f.style.display === '') ? 'block' : 'none';
+}
+</script>
