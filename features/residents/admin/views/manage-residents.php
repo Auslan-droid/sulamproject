@@ -22,6 +22,8 @@
                         <th style="padding: 0.5rem;">Name</th>
                         <th style="padding: 0.5rem;">Username</th>
                         <th style="padding: 0.5rem;">Role</th>
+                        <th style="padding: 0.5rem;">Income Class</th>
+                        <th style="padding: 0.5rem;">Dependents</th>
                         <th style="padding: 0.5rem;">Email</th>
                         <th style="padding: 0.5rem;">Phone</th>
                         <th style="padding: 0.5rem;">Status</th>
@@ -44,6 +46,25 @@
                                 ">
                                     <?php echo e($user['roles']); ?>
                                 </span>
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <?php
+                                    $income = $user['income'];
+                                    $incomeClass = '-';
+                                    if ($income !== null && $income !== '') {
+                                        if ($income < 5250) {
+                                            $incomeClass = 'B40';
+                                        } elseif ($income < 11820) {
+                                            $incomeClass = 'M40';
+                                        } else {
+                                            $incomeClass = 'T20';
+                                        }
+                                    }
+                                    echo $incomeClass;
+                                ?>
+                            </td>
+                            <td style="padding: 0.5rem; text-align: center;">
+                                <?php echo isset($user['dependent_count']) ? $user['dependent_count'] : 0; ?>
                             </td>
                             <td style="padding: 0.5rem;"><?php echo e($user['email']); ?></td>
                             <td style="padding: 0.5rem;"><?php echo e($user['phone_number'] ?? '-'); ?></td>

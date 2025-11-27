@@ -2,6 +2,7 @@
 $ROOT = dirname(__DIR__, 4);
 require_once $ROOT . '/features/shared/lib/utilities/functions.php';
 require_once $ROOT . '/features/shared/lib/auth/session.php';
+
 initSecureSession();
 requireAuth();
 

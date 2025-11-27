@@ -1,73 +1,145 @@
-<div class="card small-card" style="max-width:800px;margin:0 auto;">
-    
-    <?php if (isset($success)): ?>
-        <div class="notice success" style="margin-bottom: 1rem;">
-            <?php echo htmlspecialchars($success); ?>
-        </div>
-    <?php endif; ?>
+<div class="profile-container">
+    <!-- Left Column: Profile Edit -->
+    <div class="card small-card profile-card">
+        <h3>Edit Profile</h3>
+        
+        <?php if (isset($success)): ?>
+            <div class="notice success" style="margin-bottom: 1rem;">
+                <?php echo htmlspecialchars($success); ?>
+            </div>
+        <?php endif; ?>
 
-    <?php if (isset($error)): ?>
-        <div class="notice error" style="margin-bottom: 1rem;">
-            <?php echo htmlspecialchars($error); ?>
-        </div>
-    <?php endif; ?>
+        <?php if (isset($error)): ?>
+            <div class="notice error" style="margin-bottom: 1rem;">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
 
-    <form method="post" class="form-grid">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" disabled class="form-control" style="background-color: #f5f5f5; cursor: not-allowed;">
-            <small class="text-muted">Username cannot be changed.</small>
+        <form method="post" class="form-grid">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" disabled class="form-control" style="background-color: #f5f5f5; cursor: not-allowed;">
+                <small class="text-muted">Username cannot be changed.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address <span class="required">*</span></label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                <input type="text" id="phone_number" name="phone_number" value="<?php echo htmlspecialchars($user['phone_number'] ?? ''); ?>" class="form-control">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" class="form-control"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="marital_status">Marital Status</label>
+                <select id="marital_status" name="marital_status" class="form-control">
+                    <option value="">Select Status</option>
+                    <?php 
+                    $statuses = ['single', 'married', 'divorced', 'widowed', 'others'];
+                    foreach ($statuses as $status): 
+                        $selected = ($user['marital_status'] ?? '') === $status ? 'selected' : '';
+                    ?>
+                        <option value="<?php echo $status; ?>" <?php echo $selected; ?>>
+                            <?php echo ucfirst($status); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="income">Monthly Income (MYR)</label>
+                <input type="number" id="income" name="income" step="0.01" value="<?php echo htmlspecialchars($user['income'] ?? ''); ?>" class="form-control">
+            </div>
+
+            <div class="form-actions full-width" style="margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="<?php echo url('dashboard'); ?>" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Right Column: Dependents -->
+    <div class="card small-card dependents-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3>Family Dependents (Next of Kin)</h3>
+            <a href="<?php echo url('features/users/waris/user/pages/dependent-form.php'); ?>" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-plus"></i> Add
+            </a>
         </div>
 
-        <div class="form-group">
-            <label for="name">Full Name <span class="required">*</span></label>
-            <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" required class="form-control">
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email Address <span class="required">*</span></label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" required class="form-control">
-        </div>
-
-        <div class="form-group">
-            <label for="phone_number">Phone Number</label>
-            <input type="text" id="phone_number" name="phone_number" value="<?php echo htmlspecialchars($user['phone_number'] ?? ''); ?>" class="form-control">
-        </div>
-
-        <div class="form-group full-width">
-            <label for="address">Address</label>
-            <textarea id="address" name="address" rows="3" class="form-control"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="marital_status">Marital Status</label>
-            <select id="marital_status" name="marital_status" class="form-control">
-                <option value="">Select Status</option>
-                <?php 
-                $statuses = ['single', 'married', 'divorced', 'widowed', 'others'];
-                foreach ($statuses as $status): 
-                    $selected = ($user['marital_status'] ?? '') === $status ? 'selected' : '';
-                ?>
-                    <option value="<?php echo $status; ?>" <?php echo $selected; ?>>
-                        <?php echo ucfirst($status); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="income">Monthly Income (MYR)</label>
-            <input type="number" id="income" name="income" step="0.01" value="<?php echo htmlspecialchars($user['income'] ?? ''); ?>" class="form-control">
-        </div>
-
-        <div class="form-actions full-width" style="margin-top: 1.5rem;">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a href="<?php echo url('dashboard'); ?>" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+        <?php if (empty($nextOfKin)): ?>
+            <p class="text-muted">No dependents added yet.</p>
+        <?php else: ?>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                            <th style="padding: 0.5rem;">Name</th>
+                            <th style="padding: 0.5rem;">Relationship</th>
+                            <th style="padding: 0.5rem;">Info</th>
+                            <th style="padding: 0.5rem;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($nextOfKin as $kin): ?>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 0.5rem;"><?php echo htmlspecialchars($kin['name']); ?></td>
+                                <td style="padding: 0.5rem;"><?php echo htmlspecialchars($kin['relationship'] ?? '-'); ?></td>
+                                <td style="padding: 0.5rem; font-size: 0.9rem;">
+                                    <?php 
+                                        $info = [];
+                                        if (!empty($kin['phone_number'])) $info[] = $kin['phone_number'];
+                                        if (!empty($kin['email'])) $info[] = $kin['email'];
+                                        echo implode('<br>', $info);
+                                    ?>
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    <a href="<?php echo url('features/users/waris/user/pages/dependent-form.php?id=' . $kin['id']); ?>" class="btn-text" title="Edit"><i class="fas fa-edit"></i></a>
+                                    <form action="<?php echo url('features/users/waris/user/pages/dependent-delete.php'); ?>" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                        <input type="hidden" name="id" value="<?php echo $kin['id']; ?>">
+                                        <button type="submit" class="btn-text text-danger" style="background:none; border:none; cursor:pointer;" title="Delete"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <style>
+    .profile-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .profile-card {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .dependents-card {
+        flex: 1;
+        min-width: 300px;
+    }
+
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -93,6 +165,11 @@
     }
     .required {
         color: red;
+    }
+    @media (max-width: 900px) {
+        .profile-container {
+            flex-direction: column;
+        }
     }
     @media (max-width: 600px) {
         .form-grid {
