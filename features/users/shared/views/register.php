@@ -1,25 +1,38 @@
-<main class="centered small-card">
-    <h2>Register</h2>
-    
-    <?php if (!empty($message)): ?>
-        <div class="notice <?php echo strpos($message, 'successful') !== false ? 'success' : 'error'; ?>">
-            <?php echo e($message); ?>
-        </div>
-    <?php endif; ?>
-
-    <form method="post" action="/sulamproject/register">
-        <?php echo csrfField(); ?>
+<main class="centered">
+    <div class="card small-card">
+        <h2>Register</h2>
         
+        <?php if (!empty($message)): ?>
+            <div class="notice <?php echo strpos($message, 'successful') !== false ? 'success' : 'error'; ?>">
+                <?php echo e($message); ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="post" action="<?php echo url('register'); ?>">
+            <?php echo csrfField(); ?>
+            
+            <label>
+                Name
+                <input type="text" name="name" required autofocus maxlength="120">
+            </label>
+
         <label>
             Username
-            <input type="text" name="username" required autofocus pattern="[a-zA-Z0-9_]{3,20}" 
+            <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
                    title="3-20 characters, letters, numbers, and underscore only">
         </label>
         
-        <label>
-            Email
-            <input type="email" name="email" required>
-        </label>
+        <div class="grid-2">
+            <label>
+                Email
+                <input type="email" name="email" required>
+            </label>
+
+            <label>
+                Phone Number
+                <input type="tel" name="phone_number" maxlength="20">
+            </label>
+        </div>
         
         <label>
             Password
@@ -36,4 +49,5 @@
             <a class="btn outline" href="/sulamproject/login">Back to Login</a>
         </div>
     </form>
+    </div>
 </main>

@@ -1,0 +1,56 @@
+<?php
+// Dependent Form Page (Add/Edit)
+$ROOT = dirname(__DIR__, 5);
+
+// Define APP_BASE_PATH for direct access
+if (!defined('APP_BASE_PATH')) {
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $featuresPos = strpos($scriptName, '/features/');
+    if ($featuresPos !== false) {
+        define('APP_BASE_PATH', substr($scriptName, 0, $featuresPos));
+    } else {
+        define('APP_BASE_PATH', '/sulamprojectex');
+    }
+}
+
+require_once $ROOT . '/features/shared/lib/auth/session.php';
+require_once $ROOT . '/features/shared/lib/utilities/functions.php';
+require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
+require_once __DIR__ . '/../controllers/DependentController.php';
+
+initSecureSession();
+requireAuth();
+
+$controller = new DependentController($mysqli);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = $controller->save();
+    if (isset($data['success'])) {
+        header('Location: ' . url('features/users/user/pages/profile.php'));
+        exit;
+    }
+} else {
+    $data = $controller->form();
+}
+
+extract($data);
+
+$pageHeader = [
+    'title' => isset($dependent['id']) ? 'Edit Dependent' : 'Add Dependent',
+    'breadcrumb' => [
+        ['label' => 'Home', 'url' => url('/')],
+        ['label' => 'Profile', 'url' => url('features/users/user/pages/profile.php')],
+        ['label' => isset($dependent['id']) ? 'Edit Dependent' : 'Add Dependent', 'url' => null],
+    ]
+];
+
+ob_start();
+include __DIR__ . '/../views/dependent-form.php';
+$content = ob_get_clean();
+
+ob_start();
+include $ROOT . '/features/shared/components/layouts/app-layout.php';
+$content = ob_get_clean();
+
+$pageTitle = isset($dependent['id']) ? 'Edit Dependent' : 'Add Dependent';
+include $ROOT . '/features/shared/components/layouts/base.php';

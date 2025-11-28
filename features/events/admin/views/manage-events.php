@@ -1,4 +1,4 @@
-<div class="small-card" style="max-width:980px; margin:0 auto; padding:1.2rem 1.4rem;">
+<div class="card page-card">
     <h2>Events Management</h2>
     <p style="color: var(--muted);">Create and manage community events.</p>
     

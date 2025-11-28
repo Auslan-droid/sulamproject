@@ -13,16 +13,24 @@ class DashboardController extends BaseController {
         
         $username = $_SESSION['username'] ?? 'Admin';
         
+        $pageHeader = [
+            'title' => 'Dashboard',
+            'subtitle' => 'Hi, ' . $username . ' (Admin)',
+            'breadcrumb' => [
+                ['label' => 'Home', 'url' => null]
+            ]
+        ];
+
         ob_start();
         include __DIR__ . '/../views/admin-overview.php';
-        $dashboardContent = ob_get_clean();
+        $content = ob_get_clean();
         
         ob_start();
-        include __DIR__ . '/../../../shared/components/layouts/dashboard-layout.php';
+        include __DIR__ . '/../../../shared/components/layouts/app-layout.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Dashboard';
-        $additionalStyles = ['/features/dashboard/admin/assets/admin-dashboard.css'];
+        $additionalStyles = [url('features/dashboard/admin/assets/admin-dashboard.css')];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
     
@@ -31,16 +39,24 @@ class DashboardController extends BaseController {
         
         $username = $_SESSION['username'] ?? 'User';
         
+        $pageHeader = [
+            'title' => 'Dashboard',
+            'subtitle' => 'Hi, ' . $username,
+            'breadcrumb' => [
+                ['label' => 'Home', 'url' => null]
+            ]
+        ];
+
         ob_start();
         include __DIR__ . '/../../user/views/user-overview.php';
-        $dashboardContent = ob_get_clean();
+        $content = ob_get_clean();
         
         ob_start();
-        include __DIR__ . '/../../../shared/components/layouts/dashboard-layout.php';
+        include __DIR__ . '/../../../shared/components/layouts/app-layout.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Dashboard';
-        $additionalStyles = ['/features/dashboard/user/assets/user-dashboard.css'];
+        $additionalStyles = [url('features/dashboard/user/assets/user-dashboard.css')];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
 }

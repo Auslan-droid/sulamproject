@@ -1,4 +1,10 @@
 /* Dashboard Admin Styles */
+
+/* Dashboard-specific card coloring */
+.page-card {
+  background: #eef6ec; /* soft green tint for dashboard */
+}
+
 .dashboard-card {
   /* Inherits from base.css, add admin-specific overrides here */
 }
