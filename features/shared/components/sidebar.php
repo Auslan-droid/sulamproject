@@ -77,11 +77,11 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
       <div class="sidebar-contact-title">Contact Us</div>
       <div class="sidebar-contact-item">
         <i class="fa-solid fa-location-dot"></i>
-        <span>123 Masjid Street<br>Kuching, Sarawak</span>
+        <span>Lorong Desa Ilmu 22<br>94300 Kota Samarahan, Sarawak</span>
       </div>
       <div class="sidebar-contact-item">
         <i class="fa-solid fa-envelope"></i>
-        <a href="mailto:info@ourmasjid.local">info@ourmasjid.local</a>
+        <a href="mailto:jkpmtdi@gmail.com">jkpmtdi@gmail.com</a>
       </div>
       <div class="sidebar-contact-item">
         <i class="fa-solid fa-phone"></i>
@@ -91,10 +91,10 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
     
     <!-- Social Media Links -->
     <div class="sidebar-social">
-      <a href="#" class="sidebar-social-link" aria-label="Facebook" title="Facebook">
+      <a href="https://www.facebook.com/MTDI94300/" class="sidebar-social-link" aria-label="Facebook" title="Facebook">
         <i class="fa-brands fa-facebook"></i>
       </a>
-      <a href="#" class="sidebar-social-link" aria-label="WhatsApp" title="WhatsApp">
+      <a href="https://chat.whatsapp.com/D589hP73ciZKgNPuDr1qR8" class="sidebar-social-link" aria-label="WhatsApp" title="WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
       </a>
       <a href="#" class="sidebar-social-link" aria-label="Instagram" title="Instagram">

@@ -13,4 +13,32 @@ class FinancialController {
             'data' => []
         ];
     }
+
+    public function paymentAccount() {
+        return [
+            'title' => 'Akaun Bayaran',
+            'data' => []
+        ];
+    }
+
+    public function depositAccount() {
+        return [
+            'title' => 'Akaun Terimaan',
+            'data' => []
+        ];
+    }
+
+    public function addPayment() {
+        return [
+            'title' => 'Add Payment',
+            'data' => []
+        ];
+    }
+
+    public function addDeposit() {
+        return [
+            'title' => 'Add Deposit',
+            'data' => []
+        ];
+    }
 }

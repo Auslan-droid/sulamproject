@@ -32,11 +32,11 @@
         <ul class="footer-contact">
           <li>
             <i class="fa-solid fa-location-dot"></i>
-            <span>123 Masjid Street<br>Kuching, Sarawak</span>
+            <span>Lorong Desa Ilmu 22<br>94300 Kota Samarahan, Sarawak</span>
           </li>
           <li>
             <i class="fa-solid fa-envelope"></i>
-            <a href="mailto:info@ourmasjid.local">info@ourmasjid.local</a>
+            <a href="mailto:jkpmtdi@gmail.com">jkpmtdi@gmail.com</a>
           </li>
           <li>
             <i class="fa-solid fa-phone"></i>
@@ -52,7 +52,7 @@
           <a href="#" class="social-link" aria-label="Facebook" title="Facebook">
             <i class="fa-brands fa-facebook"></i>
           </a>
-          <a href="#" class="social-link" aria-label="WhatsApp" title="WhatsApp">
+          <a href="https://chat.whatsapp.com/D589hP73ciZKgNPuDr1qR8" class="social-link" aria-label="WhatsApp" title="WhatsApp">
             <i class="fa-brands fa-whatsapp"></i>
           </a>
           <a href="#" class="social-link" aria-label="Instagram" title="Instagram">

@@ -100,6 +100,34 @@ $router->get('/financial', function() use ($ROOT) {
     require $ROOT . '/features/financial/admin/pages/financial-management.php';
 });
 
+$router->get('/financial/payment-account', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/payment-account.php';
+});
+
+$router->get('/financial/deposit-account', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/deposit-account.php';
+});
+
+$router->get('/financial/payment-account/add', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/payment-add.php';
+});
+
+$router->get('/financial/deposit-account/add', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/deposit-add.php';
+});
+
 $router->get('/donations', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
