@@ -29,6 +29,9 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
     <a href="<?php echo $base; ?>/users" class="<?php echo str_starts_with($path, "$base/users") ? 'active' : ''; ?>">
       <i class="fas fa-users-cog"></i> User Management
     </a>
+    <a href="<?php echo $base; ?>/financial" class="<?php echo str_starts_with($path, "$base/financial") ? 'active' : ''; ?>">
+      <i class="fas fa-file-invoice-dollar"></i> Financial
+    </a>
 
     <?php endif; ?>
     <a href="<?php echo $base; ?>/donations" class="<?php echo str_starts_with($path, "$base/donations") ? 'active' : ''; ?>">
