@@ -121,11 +121,67 @@ $router->get('/financial/payment-account/add', function() use ($ROOT) {
     require $ROOT . '/features/financial/admin/pages/payment-add.php';
 });
 
+$router->post('/financial/payment-account/add', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/payment-add.php';
+});
+
+$router->get('/financial/payment-account/edit', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/payment-edit.php';
+});
+
+$router->post('/financial/payment-account/edit', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/payment-edit.php';
+});
+
+$router->post('/financial/payment-account/delete', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/ajax/payment-delete.php';
+});
+
 $router->get('/financial/deposit-account/add', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
     requireAdmin();
     require $ROOT . '/features/financial/admin/pages/deposit-add.php';
+});
+
+$router->post('/financial/deposit-account/add', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/deposit-add.php';
+});
+
+$router->get('/financial/deposit-account/edit', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/deposit-edit.php';
+});
+
+$router->post('/financial/deposit-account/edit', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/deposit-edit.php';
+});
+
+$router->post('/financial/deposit-account/delete', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/ajax/deposit-delete.php';
 });
 
 $router->get('/donations', function() use ($ROOT) {

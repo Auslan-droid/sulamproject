@@ -1,5 +1,5 @@
 <?php
-// Add Payment Page
+// Edit Deposit Page
 $ROOT = dirname(__DIR__, 4);
 require_once $ROOT . '/features/shared/lib/auth/session.php';
 require_once $ROOT . '/features/shared/lib/utilities/functions.php';
@@ -8,43 +8,57 @@ require_once __DIR__ . '/../controllers/FinancialController.php';
 
 initSecureSession();
 requireAuth();
+requireAdmin();
+
+// Get ID from query string
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+if ($id <= 0) {
+    redirect('/financial/deposit-account');
+    exit;
+}
 
 // Instantiate Controller
 $controller = new FinancialController($mysqli);
 
-// Handle POST request (create)
+// Handle POST request (update)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $result = $controller->storePayment($_POST);
+    $result = $controller->updateDeposit($id, $_POST);
     if ($result['success']) {
-        redirect('/financial/payment-account');
+        redirect('/financial/deposit-account');
         exit;
     }
     // Validation failed - pass errors and old data to view
-    $data = $controller->addPayment();
+    $data = $controller->editDeposit($id);
     $data['errors'] = $result['errors'];
     $data['old'] = $result['old'];
 } else {
-    $data = $controller->addPayment();
+    $data = $controller->editDeposit($id);
+}
+
+// Check if record exists
+if (empty($data['record'])) {
+    redirect('/financial/deposit-account');
+    exit;
 }
 
 extract($data);
 
 // Define page header
 $pageHeader = [
-    'title' => 'Add Payment',
-    'subtitle' => 'Create a new payment record.',
+    'title' => 'Edit Deposit',
+    'subtitle' => 'Modify an existing deposit record.',
     'breadcrumb' => [
         ['label' => 'Home', 'url' => url('/')],
         ['label' => 'Financial', 'url' => url('financial')],
-        ['label' => 'Akaun Bayaran', 'url' => url('financial/payment-account')],
-        ['label' => 'Add', 'url' => null],
+        ['label' => 'Akaun Terimaan', 'url' => url('financial/deposit-account')],
+        ['label' => 'Edit', 'url' => null],
     ],
     'actions' => []
 ];
 
-// 1. Capture the inner content
+// 1. Capture the inner content (reuse the add form view)
 ob_start();
-include __DIR__ . '/../views/payment-add.php';
+include __DIR__ . '/../views/deposit-add.php';
 $content = ob_get_clean();
 
 // 2. Wrap with dashboard layout
@@ -53,6 +67,6 @@ include $ROOT . '/features/shared/components/layouts/app-layout.php';
 $content = ob_get_clean();
 
 // 3. Render with base layout
-$pageTitle = 'Add Payment';
+$pageTitle = 'Edit Deposit';
 include $ROOT . '/features/shared/components/layouts/base.php';
 ?>

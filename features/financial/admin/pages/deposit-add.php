@@ -11,7 +11,22 @@ requireAuth();
 
 // Instantiate Controller
 $controller = new FinancialController($mysqli);
-$data = $controller->addDeposit();
+
+// Handle POST request (create)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $result = $controller->storeDeposit($_POST);
+    if ($result['success']) {
+        redirect('/financial/deposit-account');
+        exit;
+    }
+    // Validation failed - pass errors and old data to view
+    $data = $controller->addDeposit();
+    $data['errors'] = $result['errors'];
+    $data['old'] = $result['old'];
+} else {
+    $data = $controller->addDeposit();
+}
+
 extract($data);
 
 // Define page header
