@@ -35,20 +35,52 @@ class EventsController {
                 $gamba = trim($_POST['gamba_url']);
             }
             
-            if ($title === '') { 
-                $message = 'Title is required.'; 
+            // Determine which columns exist in the events table and build INSERT accordingly
+            $existingCols = [];
+            $colRes = $this->mysqli->query("SHOW COLUMNS FROM events");
+            if ($colRes) {
+                while ($c = $colRes->fetch_assoc()) { $existingCols[] = $c['Field']; }
+                $colRes->close();
+            }
+
+            // If title column exists, require title
+            if (in_array('title', $existingCols) && $title === '') {
+                $message = 'Title is required.';
                 $messageClass = 'notice error';
             } else {
-                $stmt = $this->mysqli->prepare('INSERT INTO events (title, description, event_date, event_time, location, image_path, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)');
-                if ($stmt) { 
-                    $stmt->bind_param('ssssssi', $title, $desc, $date, $time, $location, $gamba, $isActive); 
-                    $stmt->execute(); 
-                    $stmt->close(); 
-                    $message = 'Event created successfully'; 
-                    $messageClass = 'notice success'; 
-                } else {
-                    $message = 'Database error: ' . $this->mysqli->error;
+                $insertCols = [];
+                $placeholders = [];
+                $types = '';
+                $values = [];
+
+                if (in_array('title', $existingCols)) { $insertCols[] = 'title'; $placeholders[] = '?'; $types .= 's'; $values[] = $title; }
+                if (in_array('description', $existingCols)) { $insertCols[] = 'description'; $placeholders[] = '?'; $types .= 's'; $values[] = $desc; }
+                if (in_array('event_date', $existingCols)) { $insertCols[] = 'event_date'; $placeholders[] = '?'; $types .= 's'; $values[] = $date; }
+                if (in_array('event_time', $existingCols)) { $insertCols[] = 'event_time'; $placeholders[] = '?'; $types .= 's'; $values[] = $time; }
+                if (in_array('location', $existingCols)) { $insertCols[] = 'location'; $placeholders[] = '?'; $types .= 's'; $values[] = $location; }
+                if (in_array('image_path', $existingCols)) { $insertCols[] = 'image_path'; $placeholders[] = '?'; $types .= 's'; $values[] = $gamba; }
+                if (in_array('is_active', $existingCols)) { $insertCols[] = 'is_active'; $placeholders[] = '?'; $types .= 'i'; $values[] = $isActive; }
+
+                if (empty($insertCols)) {
+                    $message = 'No writable columns found in events table.';
                     $messageClass = 'notice error';
+                } else {
+                    $sql = 'INSERT INTO events (' . implode(', ', $insertCols) . ') VALUES (' . implode(', ', $placeholders) . ')';
+                    $stmt = $this->mysqli->prepare($sql);
+                    if ($stmt) {
+                        // bind_param requires references
+                        $bindParams = [];
+                        $bindParams[] = & $types;
+                        for ($i = 0; $i < count($values); $i++) { $bindParams[] = & $values[$i]; }
+                        call_user_func_array([$stmt, 'bind_param'], $bindParams);
+                        $stmt->execute();
+                        $stmt->close();
+                        $message = 'Event created successfully';
+                        $messageClass = 'notice success';
+                    } else {
+                        $message = 'Database error: ' . $this->mysqli->error;
+                        $messageClass = 'notice error';
+                    }
                 }
             }
         }
@@ -58,12 +90,28 @@ class EventsController {
 
     public function getAllEvents() {
         $items = [];
-        $res = $this->mysqli->query('SELECT id, title, description, event_date, event_time, location, image_path, is_active, created_at FROM events ORDER BY event_date DESC, id DESC');
-        if ($res) { 
-            while ($row = $res->fetch_assoc()) { 
-                $items[] = $row; 
-            } 
-            $res->close(); 
+        // Build SELECT dynamically based on existing columns to avoid SQL errors
+        $existingCols = [];
+        $colRes = $this->mysqli->query("SHOW COLUMNS FROM events");
+        if ($colRes) {
+            while ($c = $colRes->fetch_assoc()) { $existingCols[] = $c['Field']; }
+            $colRes->close();
+        }
+
+        // Default set of columns we want to display (if present)
+        $desired = ['id', 'title', 'description', 'event_date', 'event_time', 'location', 'image_path', 'is_active', 'created_at'];
+        $selectCols = [];
+        foreach ($desired as $c) { if (in_array($c, $existingCols)) { $selectCols[] = $c; } }
+
+        if (empty($selectCols)) {
+            return $items;
+        }
+
+        $sql = 'SELECT ' . implode(', ', $selectCols) . ' FROM events ORDER BY ' . (in_array('event_date', $selectCols) ? 'event_date DESC, ' : '') . 'id DESC';
+        $res = $this->mysqli->query($sql);
+        if ($res) {
+            while ($row = $res->fetch_assoc()) { $items[] = $row; }
+            $res->close();
         }
         return $items;
     }
