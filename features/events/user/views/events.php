@@ -1,0 +1,131 @@
+<?php if (!empty($eventsError)): ?>
+    <div class="card page-card">
+        <div class="notice error" style="margin-top: 1rem;">
+            <?php echo htmlspecialchars($eventsError); ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($events) && count($events) > 0): ?>
+    <div class="card page-card">
+        <div class="card card--elevated" style="margin-top: 2rem;">
+            <h3>Upcoming Events</h3>
+            <p>Click to view the detail.</p>
+            <div class="card-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+                <?php foreach ($events as $e): ?>
+                    <div class="card card--elevated event-card"
+                         data-id="<?php echo (int)$e['id']; ?>"
+                         data-title="<?php echo htmlspecialchars($e['title']); ?>"
+                         data-description="<?php echo htmlspecialchars($e['description']); ?>"
+                         data-image="<?php echo !empty($e['image_path']) ? url('/' . htmlspecialchars($e['image_path'])) : ''; ?>"
+                         data-date="<?php echo htmlspecialchars($e['event_date'] ?? ''); ?>"
+                         data-time="<?php echo htmlspecialchars($e['event_time'] ?? ''); ?>"
+                         data-location="<?php echo htmlspecialchars($e['location'] ?? ''); ?>"
+                         style="cursor:pointer;">
+                        <?php if (!empty($e['image_path'])): ?>
+                            <img src="<?php echo url('/' . htmlspecialchars($e['image_path'])); ?>" alt="<?php echo htmlspecialchars($e['title']); ?>" style="width:100%; height:auto; object-fit:contain; border-radius: 6px 6px 0 0;" />
+                        <?php endif; ?>
+                        <div class="card-body" style="padding: 1rem;">
+                            <h4 style="margin: 0 0 .25rem;">
+                                <?php echo htmlspecialchars($e['title']); ?>
+                            </h4>
+                            <p style="margin: 0 0 .5rem; color:#555;">
+                                <?php echo nl2br(htmlspecialchars($e['description'])); ?>
+                            </p>
+                            <div style="font-size:.9rem; color:#666;">
+                                <?php if (!empty($e['event_date'])): ?>
+                                    <span><?php echo htmlspecialchars($e['event_date']); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($e['event_time'])): ?>
+                                    <span> • <?php echo htmlspecialchars($e['event_time']); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($e['location'])): ?>
+                                    <div><?php echo htmlspecialchars($e['location']); ?></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="eventModal" style="position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; padding:1rem; z-index:1000;">
+        <div style="background:#fff; max-width:900px; width:100%; border-radius:8px; overflow:hidden; box-shadow:0 10px 20px rgba(0,0,0,.2);">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid #eee;">
+                <h3 id="eventModalTitle" style="margin:0; font-size:1.25rem;"></h3>
+                <button id="eventModalClose" aria-label="Close" style="border:none; background:transparent; font-size:1.25rem; cursor:pointer;">×</button>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0;">
+                <div style="padding:1rem; border-right:1px solid #eee;">
+                    <img id="eventModalImage" src="" alt="" style="width:100%; height:auto; object-fit:contain;" />
+                </div>
+                <div style="padding:1rem;">
+                    <div id="eventModalDescription" style="color:#444; white-space:pre-wrap;"></div>
+                    <div style="margin-top:1rem; font-size:.95rem; color:#666;">
+                        <div id="eventModalMetaDate"></div>
+                        <div id="eventModalMetaLocation" style="margin-top:.25rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        const modal = document.getElementById('eventModal');
+        const mTitle = document.getElementById('eventModalTitle');
+        const mImg = document.getElementById('eventModalImage');
+        const mDesc = document.getElementById('eventModalDescription');
+        const mDate = document.getElementById('eventModalMetaDate');
+        const mLoc = document.getElementById('eventModalMetaLocation');
+        const mClose = document.getElementById('eventModalClose');
+
+        function openModal(data){
+            mTitle.textContent = data.title || '';
+            if (data.image) {
+                mImg.src = data.image;
+                mImg.style.display = '';
+            } else {
+                mImg.removeAttribute('src');
+                mImg.style.display = 'none';
+            }
+            mDesc.textContent = data.description || '';
+            const dateStr = [data.date || '', data.time || ''].filter(Boolean).join(' • ');
+            mDate.textContent = dateStr ? dateStr : '';
+            mLoc.textContent = data.location ? ('Location: ' + data.location) : '';
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(){
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.event-card').forEach(function(card){
+            card.addEventListener('click', function(){
+                openModal({
+                    title: card.getAttribute('data-title'),
+                    description: card.getAttribute('data-description'),
+                    image: card.getAttribute('data-image'),
+                    date: card.getAttribute('data-date'),
+                    time: card.getAttribute('data-time'),
+                    location: card.getAttribute('data-location')
+                });
+            });
+        });
+
+        mClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e){
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape') closeModal();
+        });
+    })();
+    </script>
+<?php else: ?>
+    <!-- No placeholder when no events -->
+<?php endif; ?>
