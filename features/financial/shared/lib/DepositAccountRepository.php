@@ -89,12 +89,23 @@ class DepositAccountRepository
      */
     public function create(array $data): int
     {
-        $columns = ['tx_date', 'description'];
-        $placeholders = ['?', '?'];
-        $types = 'ss';
+        $columns = [
+            'tx_date', 
+            'description', 
+            'receipt_number', 
+            'received_from', 
+            'payment_method', 
+            'payment_reference'
+        ];
+        $placeholders = ['?', '?', '?', '?', '?', '?'];
+        $types = 'ssssss';
         $values = [
             $data['tx_date'],
             $data['description'],
+            $data['receipt_number'] ?? null,
+            $data['received_from'] ?? null,
+            $data['payment_method'] ?? 'cash',
+            $data['payment_reference'] ?? null,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {
@@ -128,11 +139,22 @@ class DepositAccountRepository
      */
     public function update(int $id, array $data): bool
     {
-        $setClauses = ['tx_date = ?', 'description = ?'];
-        $types = 'ss';
+        $setClauses = [
+            'tx_date = ?', 
+            'description = ?',
+            'receipt_number = ?',
+            'received_from = ?',
+            'payment_method = ?',
+            'payment_reference = ?'
+        ];
+        $types = 'ssssss';
         $values = [
             $data['tx_date'],
             $data['description'],
+            $data['receipt_number'] ?? null,
+            $data['received_from'] ?? null,
+            $data['payment_method'] ?? 'cash',
+            $data['payment_reference'] ?? null,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {

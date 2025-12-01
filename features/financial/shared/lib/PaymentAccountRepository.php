@@ -93,12 +93,29 @@ class PaymentAccountRepository
      */
     public function create(array $data): int
     {
-        $columns = ['tx_date', 'description'];
-        $placeholders = ['?', '?'];
-        $types = 'ss';
+        $columns = [
+            'tx_date', 
+            'description', 
+            'voucher_number', 
+            'paid_to', 
+            'payee_ic', 
+            'payee_bank_name', 
+            'payee_bank_account', 
+            'payment_method', 
+            'payment_reference'
+        ];
+        $placeholders = ['?', '?', '?', '?', '?', '?', '?', '?', '?'];
+        $types = 'sssssssss';
         $values = [
             $data['tx_date'],
             $data['description'],
+            $data['voucher_number'] ?? null,
+            $data['paid_to'] ?? null,
+            $data['payee_ic'] ?? null,
+            $data['payee_bank_name'] ?? null,
+            $data['payee_bank_account'] ?? null,
+            $data['payment_method'] ?? 'cash',
+            $data['payment_reference'] ?? null,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {
@@ -132,11 +149,28 @@ class PaymentAccountRepository
      */
     public function update(int $id, array $data): bool
     {
-        $setClauses = ['tx_date = ?', 'description = ?'];
-        $types = 'ss';
+        $setClauses = [
+            'tx_date = ?', 
+            'description = ?',
+            'voucher_number = ?',
+            'paid_to = ?',
+            'payee_ic = ?',
+            'payee_bank_name = ?',
+            'payee_bank_account = ?',
+            'payment_method = ?',
+            'payment_reference = ?'
+        ];
+        $types = 'sssssssss';
         $values = [
             $data['tx_date'],
             $data['description'],
+            $data['voucher_number'] ?? null,
+            $data['paid_to'] ?? null,
+            $data['payee_ic'] ?? null,
+            $data['payee_bank_name'] ?? null,
+            $data['payee_bank_account'] ?? null,
+            $data['payment_method'] ?? 'cash',
+            $data['payment_reference'] ?? null,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {
