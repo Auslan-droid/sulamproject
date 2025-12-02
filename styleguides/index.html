@@ -172,6 +172,106 @@
         </div>
     </section>
 
+    <!-- TABLES -->
+    <section class="sg-section">
+        <div class="sg-title">Tables</div>
+        <p>Standard tables for displaying data. Use <code>.table</code> class. Wrap in <code>.table-responsive</code> for horizontal scrolling on small screens.</p>
+
+        <div class="sg-subtitle">Standard Table</div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>john@example.com</td>
+                        <td>Admin</td>
+                        <td><span class="notice success" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; display: inline-block; margin: 0;">Active</span></td>
+                        <td>
+                            <button class="btn outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>jane@example.com</td>
+                        <td>User</td>
+                        <td><span class="notice" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; display: inline-block; margin: 0;">Pending</span></td>
+                        <td>
+                            <button class="btn outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Bob Johnson</td>
+                        <td>bob@example.com</td>
+                        <td>User</td>
+                        <td><span class="notice error" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; display: inline-block; margin: 0;">Inactive</span></td>
+                        <td>
+                            <button class="btn outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sg-subtitle" style="margin-top: 2rem;">Striped & Hover Table</div>
+        <p>Add <code>.table-striped</code> for zebra-striping and <code>.table-hover</code> for hover effects.</p>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Widget A</td>
+                        <td>10</td>
+                        <td>$50.00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Widget B</td>
+                        <td>5</td>
+                        <td>$25.00</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Widget C</td>
+                        <td>20</td>
+                        <td>$100.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre>&lt;div class="table-responsive"&gt;
+    &lt;table class="table table-striped table-hover"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Header&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            &lt;tr&gt;
+                &lt;td&gt;Data&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+&lt;/div&gt;</pre>
+    </section>
+
     <!-- LINKS & TYPOGRAPHY UTILITIES -->
     <section class="sg-section">
         <div class="sg-title">Links & Typography Utilities</div>
