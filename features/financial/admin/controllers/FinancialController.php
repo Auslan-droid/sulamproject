@@ -133,6 +133,9 @@ class FinancialController {
     /**
      * Validate payment form data
      */
+    /**
+     * Validate payment form data
+     */
     private function validatePaymentData(array $data): array {
         $errors = [];
 
@@ -142,6 +145,15 @@ class FinancialController {
 
         if (empty($data['description'])) {
             $errors[] = 'Description (Butiran) is required.';
+        }
+
+        // New validations
+        if (empty($data['paid_to'])) {
+            $errors[] = 'Paid To (Dibayar Kepada) is required.';
+        }
+
+        if (empty($data['payment_method'])) {
+            $errors[] = 'Payment Method (Kaedah Pembayaran) is required.';
         }
 
         // Check that at least one category has a positive amount
@@ -276,6 +288,15 @@ class FinancialController {
 
         if (empty($data['description'])) {
             $errors[] = 'Description (Butiran) is required.';
+        }
+
+        // New validations
+        if (empty($data['received_from'])) {
+            $errors[] = 'Received From (Diterima Dari) is required.';
+        }
+
+        if (empty($data['payment_method'])) {
+            $errors[] = 'Payment Method (Kaedah Pembayaran) is required.';
         }
 
         // Check that at least one category has a positive amount
