@@ -71,3 +71,19 @@ CREATE TABLE IF NOT EXISTS `deaths` (
     KEY `idx_deaths_user_id` (`user_id`),
     CONSTRAINT `fk_deaths_user_boot` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Financial Settings for Opening Balances
+CREATE TABLE IF NOT EXISTS `financial_settings` (
+    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `fiscal_year` YEAR NOT NULL,
+    `opening_cash_balance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT 'Baki Awal di Tangan',
+    `opening_bank_balance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT 'Baki Awal di Bank',
+    `effective_date` DATE NOT NULL COMMENT 'Tarikh berkuatkuasa baki awal',
+    `notes` TEXT NULL,
+    `created_by` INT UNSIGNED NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY `uniq_fiscal_year` (`fiscal_year`),
+    INDEX `idx_effective_date` (`effective_date`),
+    CONSTRAINT `fk_financial_settings_user` FOREIGN KEY (`created_by`) REFERENCES `users`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -227,6 +227,21 @@ $router->get('/financial/statement', function() use ($ROOT) {
     require $ROOT . '/features/financial/admin/pages/financial-statement.php';
 });
 
+// Financial Settings (Opening Balances)
+$router->get('/financial/settings', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/financial-settings.php';
+});
+
+$router->post('/financial/settings', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/financial-settings.php';
+});
+
 $router->get('/donations', function() use ($ROOT) {
     initSecureSession();
     requireAuth();

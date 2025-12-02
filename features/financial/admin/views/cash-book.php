@@ -1,11 +1,60 @@
 <?php
 /**
  * Cash Book View
- * Variables expected: $transactions, $tunaiBalance, $bankBalance
+ * Variables expected: $transactions, $tunaiBalance, $bankBalance, $openingCash, $openingBank, $fiscalYear, $hasSettings
  */
 ?>
 
 <div class="content-container">
+    <!-- Opening Balance Alert (if not configured) -->
+    <?php if (!$hasSettings): ?>
+    <div class="alert alert-warning d-flex align-items-center mb-3">
+        <i class="fas fa-exclamation-triangle mr-2"></i>
+        <div>
+            <strong>Baki awal belum dikonfigurasi.</strong> 
+            Sila tetapkan baki awal untuk tahun kewangan <?php echo $fiscalYear; ?>.
+            <a href="<?php echo url('financial/settings'); ?>" class="alert-link ml-2">Tetapkan Sekarang →</a>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Balance Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Baki Tunai (Cash Balance)
+                    </div>
+                    <div class="h4 mb-0 font-weight-bold">RM <?php echo number_format($tunaiBalance, 2); ?></div>
+                    <small class="text-muted">Baki Awal: RM <?php echo number_format($openingCash, 2); ?></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-left-success h-100">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Baki Bank (Bank Balance)
+                    </div>
+                    <div class="h4 mb-0 font-weight-bold">RM <?php echo number_format($bankBalance, 2); ?></div>
+                    <small class="text-muted">Baki Awal: RM <?php echo number_format($openingBank, 2); ?></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-left-info h-100">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        Jumlah Baki (Total Balance)
+                    </div>
+                    <div class="h4 mb-0 font-weight-bold">RM <?php echo number_format($tunaiBalance + $bankBalance, 2); ?></div>
+                    <small class="text-muted">Tahun Kewangan: <?php echo $fiscalYear; ?></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Cash Book Table -->
     <div class="table-responsive">
         <table class="table table-hover table--cash-book" id="cashBookTable">
@@ -29,10 +78,28 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Opening Balance Row -->
+                    <tr class="table-secondary font-weight-bold">
+                        <td class="text-center">01/01/<?php echo $fiscalYear; ?></td>
+                        <td class="text-center"><span class="badge badge-secondary">BAKI AWAL</span></td>
+                        <td>Baki Bawa Ke Hadapan (Opening Balance)</td>
+                        <td class="table__cell--numeric">-</td>
+                        <td class="table__cell--numeric">-</td>
+                        <td class="table__cell--numeric">-</td>
+                        <td class="table__cell--numeric">-</td>
+                        <td class="table__cell--numeric text-primary"><?php echo number_format($openingCash, 2); ?></td>
+                        <td class="table__cell--numeric text-primary"><?php echo number_format($openingBank, 2); ?></td>
+                        <td class="table__cell--actions">
+                            <a href="<?php echo url('financial/settings'); ?>" class="btn btn-sm btn-outline-secondary" title="Edit Opening Balance">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                        </td>
+                    </tr>
+
                     <?php if (empty($transactions)): ?>
                         <tr>
-                            <td colspan="9" class="text-center py-4 text-muted">
-                                <i class="fas fa-info-circle mr-1"></i> No transactions found.
+                            <td colspan="10" class="text-center py-4 text-muted">
+                                <i class="fas fa-info-circle mr-1"></i> Tiada transaksi dijumpai untuk tahun <?php echo $fiscalYear; ?>.
                             </td>
                         </tr>
                     <?php else: ?>
@@ -103,14 +170,16 @@
                 </tbody>
                 <tfoot class="bg-light font-weight-bold">
                     <tr>
-                        <td colspan="3" class="text-right">Current Balance (Baki Semasa):</td>
+                        <td colspan="3" class="text-right">Baki Semasa (Current Balance):</td>
                         <td colspan="2" class="text-center text-primary">
                             RM <?php echo number_format($tunaiBalance, 2); ?>
                         </td>
                         <td colspan="2" class="text-center text-primary">
                             RM <?php echo number_format($bankBalance, 2); ?>
                         </td>
-                        <td colspan="3"></td>
+                        <td colspan="3" class="text-center">
+                            <strong>Jumlah: RM <?php echo number_format($tunaiBalance + $bankBalance, 2); ?></strong>
+                        </td>
                     </tr>
                 </tfoot>
             </table>

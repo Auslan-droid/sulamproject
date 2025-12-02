@@ -7,36 +7,56 @@
 $ROOT = dirname(__DIR__, 4);
 require_once $ROOT . '/features/financial/shared/lib/PaymentAccountRepository.php';
 require_once $ROOT . '/features/financial/shared/lib/DepositAccountRepository.php';
+require_once $ROOT . '/features/financial/shared/lib/FinancialSettingsRepository.php';
 
 class FinancialController {
     private mysqli $mysqli;
     private PaymentAccountRepository $paymentRepo;
     private DepositAccountRepository $depositRepo;
+    private FinancialSettingsRepository $settingsRepo;
 
     public function __construct(mysqli $mysqli) {
         $this->mysqli = $mysqli;
         $this->paymentRepo = new PaymentAccountRepository($mysqli);
         $this->depositRepo = new DepositAccountRepository($mysqli);
+        $this->settingsRepo = new FinancialSettingsRepository($mysqli);
     }
 
     public function index(): array {
+        // Get current balance summary for dashboard
+        $currentYear = (int)date('Y');
+        $balances = $this->settingsRepo->calculateClosingBalances($currentYear);
+        $settings = $this->settingsRepo->getCurrentSettings();
+        
         return [
             'title' => 'Financial Management',
-            'data' => []
+            'data' => [],
+            'balances' => $balances,
+            'settings' => $settings,
+            'fiscalYear' => $currentYear,
         ];
     }
 
     // ==================== CASH BOOK METHODS ====================
 
+
     /**
      * Display the Cash Book (Buku Tunai)
+     * @param int|null $fiscalYear Optional fiscal year filter (defaults to current year)
      */
-    public function cashBook(): array {
-        $transactions = $this->getCashBookData();
+    public function cashBook(?int $fiscalYear = null): array {
+        $fiscalYear = $fiscalYear ?? (int)date('Y');
         
-        // Calculate running balances
-        $tunaiBalance = 0.0;
-        $bankBalance = 0.0;
+        // Get opening balances from financial_settings
+        $settings = $this->settingsRepo->getByFiscalYear($fiscalYear);
+        $openingCash = (float)($settings['opening_cash_balance'] ?? 0);
+        $openingBank = (float)($settings['opening_bank_balance'] ?? 0);
+        
+        $transactions = $this->getCashBookData($fiscalYear);
+        
+        // Start with opening balances
+        $tunaiBalance = $openingCash;
+        $bankBalance = $openingBank;
         
         // We need to process from oldest to newest to calculate running balance correctly
         // The query returns oldest first (ASC)
@@ -69,17 +89,24 @@ class FinancialController {
             'title' => 'Buku Tunai',
             'transactions' => $transactions,
             'tunaiBalance' => $tunaiBalance,
-            'bankBalance' => $bankBalance
+            'bankBalance' => $bankBalance,
+            'openingCash' => $openingCash,
+            'openingBank' => $openingBank,
+            'fiscalYear' => $fiscalYear,
+            'hasSettings' => $settings !== null,
         ];
     }
 
     /**
      * Fetch combined transactions from deposits and payments
+     * @param int|null $fiscalYear Optional fiscal year filter
      */
-    private function getCashBookData(): array {
+    private function getCashBookData(?int $fiscalYear = null): array {
         // Build dynamic sum clauses
         $depositSum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", DepositAccountRepository::CATEGORY_COLUMNS));
         $paymentSum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", PaymentAccountRepository::CATEGORY_COLUMNS));
+
+        $yearFilter = $fiscalYear ? "WHERE YEAR(tx_date) = $fiscalYear" : "";
 
         $sql = "
             (SELECT 
@@ -90,7 +117,7 @@ class FinancialController {
                 ($depositSum) as amount, 
                 payment_method, 
                 'IN' as type 
-            FROM financial_deposit_accounts)
+            FROM financial_deposit_accounts $yearFilter)
             
             UNION ALL
             
@@ -102,7 +129,7 @@ class FinancialController {
                 ($paymentSum) as amount, 
                 payment_method, 
                 'OUT' as type 
-            FROM financial_payment_accounts)
+            FROM financial_payment_accounts $yearFilter)
             
             ORDER BY tx_date ASC, id ASC
         ";
@@ -653,5 +680,84 @@ class FinancialController {
             'by_method' => $byMethod,
             'total' => $grandTotal,
         ];
+    }
+
+    // ==================== FINANCIAL SETTINGS METHODS ====================
+
+    /**
+     * Get financial settings form data
+     */
+    public function financialSettings(): array {
+        $currentYear = (int)date('Y');
+        $settings = $this->settingsRepo->getCurrentSettings();
+        $allSettings = $this->settingsRepo->findAll();
+        
+        // Generate available fiscal years (current year ± 5 years)
+        $availableYears = [];
+        for ($y = $currentYear - 5; $y <= $currentYear + 1; $y++) {
+            $availableYears[] = $y;
+        }
+        
+        return [
+            'title' => 'Financial Settings',
+            'settings' => $settings,
+            'allSettings' => $allSettings,
+            'availableYears' => $availableYears,
+            'currentYear' => $currentYear,
+            'errors' => [],
+            'success' => false,
+        ];
+    }
+
+    /**
+     * Save financial settings (opening balances)
+     */
+    public function saveFinancialSettings(array $postData): array {
+        $errors = [];
+        
+        // Validate
+        if (empty($postData['fiscal_year'])) {
+            $errors[] = 'Fiscal year is required.';
+        }
+        
+        if (!isset($postData['opening_cash_balance']) || !is_numeric($postData['opening_cash_balance'])) {
+            $errors[] = 'Opening cash balance must be a valid number.';
+        }
+        
+        if (!isset($postData['opening_bank_balance']) || !is_numeric($postData['opening_bank_balance'])) {
+            $errors[] = 'Opening bank balance must be a valid number.';
+        }
+        
+        if (empty($postData['effective_date'])) {
+            $errors[] = 'Effective date is required.';
+        }
+        
+        if (!empty($errors)) {
+            return [
+                'success' => false,
+                'errors' => $errors,
+                'old' => $postData,
+            ];
+        }
+        
+        // Add created_by if user is logged in
+        if (isset($_SESSION['user_id'])) {
+            $postData['created_by'] = $_SESSION['user_id'];
+        }
+        
+        $success = $this->settingsRepo->save($postData);
+        
+        return [
+            'success' => $success,
+            'errors' => $success ? [] : ['Failed to save settings.'],
+        ];
+    }
+
+    /**
+     * Get balance summary for a fiscal year
+     */
+    public function getBalanceSummary(?int $fiscalYear = null): array {
+        $fiscalYear = $fiscalYear ?? (int)date('Y');
+        return $this->settingsRepo->calculateClosingBalances($fiscalYear);
     }
 }
