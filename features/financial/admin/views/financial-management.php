@@ -12,6 +12,9 @@
             <a href="<?php echo url('financial/deposit-account'); ?>" class="btn btn-success">
                 <i class="fas fa-hand-holding-usd"></i> Akaun Terimaan
             </a>
+            <a href="<?php echo url('financial/cash-book'); ?>" class="btn btn-info">
+                <i class="fas fa-book"></i> Buku Tunai
+            </a>
         </div>
     </div>
 </div>

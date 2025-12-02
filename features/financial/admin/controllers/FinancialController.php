@@ -26,6 +26,99 @@ class FinancialController {
         ];
     }
 
+    // ==================== CASH BOOK METHODS ====================
+
+    /**
+     * Display the Cash Book (Buku Tunai)
+     */
+    public function cashBook(): array {
+        $transactions = $this->getCashBookData();
+        
+        // Calculate running balances
+        $tunaiBalance = 0.0;
+        $bankBalance = 0.0;
+        
+        // We need to process from oldest to newest to calculate running balance correctly
+        // The query returns oldest first (ASC)
+        foreach ($transactions as &$tx) {
+            $amount = (float)$tx['amount'];
+            
+            if ($tx['type'] === 'IN') {
+                if ($tx['payment_method'] === 'cash') {
+                    $tunaiBalance += $amount;
+                } else {
+                    $bankBalance += $amount;
+                }
+            } else { // OUT
+                if ($tx['payment_method'] === 'cash') {
+                    $tunaiBalance -= $amount;
+                } else {
+                    $bankBalance -= $amount;
+                }
+            }
+            
+            $tx['tunai_balance'] = $tunaiBalance;
+            $tx['bank_balance'] = $bankBalance;
+        }
+        unset($tx); // Break reference
+
+        // For display, we might want newest first, but standard cash book is usually chronological.
+        // Let's keep it chronological (Oldest -> Newest) as per standard accounting.
+
+        return [
+            'title' => 'Buku Tunai',
+            'transactions' => $transactions,
+            'tunaiBalance' => $tunaiBalance,
+            'bankBalance' => $bankBalance
+        ];
+    }
+
+    /**
+     * Fetch combined transactions from deposits and payments
+     */
+    private function getCashBookData(): array {
+        // Build dynamic sum clauses
+        $depositSum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", DepositAccountRepository::CATEGORY_COLUMNS));
+        $paymentSum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", PaymentAccountRepository::CATEGORY_COLUMNS));
+
+        $sql = "
+            (SELECT 
+                id, 
+                tx_date, 
+                receipt_number as ref_no, 
+                description, 
+                ($depositSum) as amount, 
+                payment_method, 
+                'IN' as type 
+            FROM financial_deposit_accounts)
+            
+            UNION ALL
+            
+            (SELECT 
+                id, 
+                tx_date, 
+                voucher_number as ref_no, 
+                description, 
+                ($paymentSum) as amount, 
+                payment_method, 
+                'OUT' as type 
+            FROM financial_payment_accounts)
+            
+            ORDER BY tx_date ASC, id ASC
+        ";
+
+        $result = $this->mysqli->query($sql);
+        
+        $rows = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        
+        return $rows;
+    }
+
     // ==================== PAYMENT ACCOUNT METHODS ====================
 
     /**
