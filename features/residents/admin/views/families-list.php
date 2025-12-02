@@ -12,7 +12,7 @@
         <div class="notice">No families found.</div>
     <?php else: ?>
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover table--families">
                 <thead>
                     <tr>
                         <th>Head of Family</th>
@@ -57,53 +57,4 @@
     <?php endif; ?>
 </div>
 
-<style>
-    .table-responsive {
-        overflow-x: auto;
-    }
-    
-    /* Custom table styles for bigger/looser layout */
-    .table {
-        width: 100%;
-        border-collapse: separate; /* Allows border-spacing if needed, or use collapse */
-        border-spacing: 0;
-        margin-bottom: 1rem;
-    }
-    
-    .table th, .table td {
-        padding: 1.25rem 1.5rem; /* Generous padding for "not compact" look */
-        vertical-align: middle;
-        border-top: 1px solid #eee;
-        font-size: 1rem;
-    }
-
-    .table thead th {
-        vertical-align: bottom;
-        border-bottom: 2px solid #ddd;
-        font-weight: 600;
-        background-color: #f9fafb;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.05em;
-        color: var(--text-secondary);
-    }
-
-    .badge-sm {
-        font-size: 0.8rem;
-        padding: 0.25rem 0.6rem;
-    }
-    
-    @media print {
-        .actions, .sidebar, .page-header {
-            display: none !important;
-        }
-        .page-wrapper {
-            margin: 0;
-            padding: 0;
-        }
-        .content {
-            margin: 0;
-            padding: 0;
-        }
-    }
-</style>
+<link rel="stylesheet" href="/features/residents/admin/assets/css/residents.css">

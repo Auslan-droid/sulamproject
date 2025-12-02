@@ -72,6 +72,7 @@ $stmt->close();
 // 1. Capture the inner content
 ob_start();
 ?>
+<link rel="stylesheet" href="/features/users/waris/assets/css/waris.css">
 <div class="small-card" style="max-width:980px;margin:0 auto;">
   <h2>Waris (Inheritors)</h2>
   <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
@@ -104,26 +105,28 @@ ob_start();
   <?php if (empty($waris)): ?>
     <p>No waris yet.</p>
   <?php else: ?>
-    <table class="table">
-      <thead><tr><th>Name</th><th>Email</th><th>No Telefon</th><th>Alamat</th><th>Action</th></tr></thead>
-      <tbody>
-        <?php foreach ($waris as $w): ?>
-          <tr>
-            <td><?php echo htmlspecialchars($w['name']); ?></td>
-            <td><?php echo htmlspecialchars((string)$w['email']); ?></td>
-            <td><?php echo htmlspecialchars((string)$w['no_telefon']); ?></td>
-            <td><?php echo htmlspecialchars((string)$w['alamat']); ?></td>
-            <td>
-              <form method="post" onsubmit="return confirm('Delete this waris?');" style="display:inline;">
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="<?php echo (int)$w['id']; ?>">
-                <button class="btn outline" type="submit">Delete</button>
-              </form>
-            </td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table--compact">
+        <thead><tr><th>Name</th><th>Email</th><th>No Telefon</th><th>Alamat</th><th class="table__cell--actions">Action</th></tr></thead>
+        <tbody>
+          <?php foreach ($waris as $w): ?>
+            <tr>
+              <td><?php echo htmlspecialchars($w['name']); ?></td>
+              <td><?php echo htmlspecialchars((string)$w['email']); ?></td>
+              <td><?php echo htmlspecialchars((string)$w['no_telefon']); ?></td>
+              <td><?php echo htmlspecialchars((string)$w['alamat']); ?></td>
+              <td class="table__cell--actions">
+                <form method="post" onsubmit="return confirm('Delete this waris?');" style="display:inline;">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="id" value="<?php echo (int)$w['id']; ?>">
+                  <button class="btn outline" type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
   <?php endif; ?>
 </div>
 <?php

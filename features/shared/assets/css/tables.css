@@ -43,3 +43,25 @@
 .table-hover tbody tr:hover {
   background-color: rgba(15, 138, 95, 0.05);
 }
+
+/* Table utilities */
+.table__cell--actions {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table__cell--numeric {
+  text-align: right;
+}
+
+.table--compact th,
+.table--compact td {
+  padding: 0.5rem 0.75rem;
+}
+
+/* Wide table responsive wrapper for financial/report tables */
+.table-responsive--wide {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+}

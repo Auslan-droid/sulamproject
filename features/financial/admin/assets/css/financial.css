@@ -1,0 +1,54 @@
+/* Financial Admin Table Modifiers */
+
+/* Cash Book Table */
+.table--cash-book {
+  min-width: 1400px;
+  font-size: 0.9rem;
+}
+
+.table--cash-book th,
+.table--cash-book td {
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+}
+
+.table--cash-book thead th {
+  font-size: 0.85rem;
+}
+
+.table--cash-book .text-success {
+  color: #10b981;
+}
+
+.table--cash-book .text-danger {
+  color: #ef4444;
+}
+
+.table--cash-book tfoot {
+  background-color: #f9fafb;
+  font-weight: bold;
+}
+
+/* Payment Account Table */
+.table--payment-account {
+  min-width: 2200px;
+  font-size: 0.9rem;
+}
+
+.table--payment-account th,
+.table--payment-account td {
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+}
+
+/* Deposit Account Table */
+.table--deposit-account {
+  min-width: 2000px;
+  font-size: 0.9rem;
+}
+
+.table--deposit-account th,
+.table--deposit-account td {
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+}

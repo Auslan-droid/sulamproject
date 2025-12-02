@@ -17,18 +17,18 @@
             <p>No residents found.</p>
         <?php else: ?>
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Username</th>
                             <th>Role</th>
                             <th>Income Class</th>
-                            <th class="text-center">Dependents</th>
+                            <th class="table__cell--numeric">Dependents</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th class="table__cell--actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,7 +57,7 @@
                                         echo $incomeClass;
                                     ?>
                                 </td>
-                                <td class="text-center">
+                                <td class="table__cell--numeric">
                                     <?php echo isset($user['dependent_count']) ? $user['dependent_count'] : 0; ?>
                                 </td>
                                 <td><?php echo e($user['email']); ?></td>
@@ -65,7 +65,7 @@
                                 <td>
                                     <?php echo $user['is_deceased'] ? '<span style="color:red;">Deceased</span>' : 'Active'; ?>
                                 </td>
-                                <td>
+                                <td class="table__cell--actions">
                                     <?php if ($user['roles'] === 'resident'): ?>
                                         <a href="/admin/waris?user_id=<?php echo $user['id']; ?>" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">View Waris</a>
                                     <?php endif; ?>
@@ -78,44 +78,3 @@
         <?php endif; ?>
     </div>
 </div>
-
-<style>
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 1rem;
-    }
-    .table th, .table td {
-        padding: 0.75rem;
-        vertical-align: middle;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .table th {
-        text-align: left;
-        font-weight: 600;
-        color: var(--text-secondary);
-        border-bottom: 2px solid var(--border-color);
-    }
-    .text-center {
-        text-align: center;
-    }
-    .badge {
-        display: inline-block;
-        padding: 0.25em 0.6em;
-        font-size: 75%;
-        font-weight: 700;
-        line-height: 1;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: baseline;
-        border-radius: 0.25rem;
-    }
-    .badge-primary {
-        color: #fff;
-        background-color: var(--primary-color, #4f46e5);
-    }
-    .badge-secondary {
-        color: #374151;
-        background-color: #f3f4f6;
-    }
-</style>

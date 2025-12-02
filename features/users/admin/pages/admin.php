@@ -14,45 +14,48 @@ if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(
 // 1. Capture the inner content
 ob_start();
 ?>
+<link rel="stylesheet" href="/features/users/admin/assets/css/users.css">
 <div class="small-card" style="max-width:1100px;margin:0 auto;">
   <h2>Manage Users</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Income Class</th><th>Dependents</th><th>Deceased?</th><th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($users as $u): ?>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover table--users">
+      <thead>
         <tr>
-          <td><?php echo (int)$u['id']; ?></td>
-          <td><?php echo htmlspecialchars($u['name']); ?></td>
-          <td><?php echo htmlspecialchars($u['username']); ?></td>
-          <td><?php echo htmlspecialchars($u['email']); ?></td>
-          <td><?php echo htmlspecialchars($u['roles']); ?></td>
-          <td>
-            <?php
-                $income = $u['income'];
-                $incomeClass = '-';
-                if ($income !== null && $income !== '') {
-                    if ($income < 5250) {
-                        $incomeClass = 'B40';
-                    } elseif ($income < 11820) {
-                        $incomeClass = 'M40';
-                    } else {
-                        $incomeClass = 'T20';
-                    }
-                }
-                echo $incomeClass;
-            ?>
-          </td>
-          <td><?php echo (int)$u['dependent_count']; ?></td>
-          <td><?php echo $u['is_deceased'] ? 'Yes' : 'No'; ?></td>
-          <td><a class="btn" href="<?php echo url('admin/user-edit?id=' . (int)$u['id']); ?>">Edit</a></td>
+          <th>ID</th><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Income Class</th><th class="table__cell--numeric">Dependents</th><th>Deceased?</th><th class="table__cell--actions">Action</th>
         </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <?php foreach ($users as $u): ?>
+          <tr>
+            <td><?php echo (int)$u['id']; ?></td>
+            <td><?php echo htmlspecialchars($u['name']); ?></td>
+            <td><?php echo htmlspecialchars($u['username']); ?></td>
+            <td><?php echo htmlspecialchars($u['email']); ?></td>
+            <td><?php echo htmlspecialchars($u['roles']); ?></td>
+            <td>
+              <?php
+                  $income = $u['income'];
+                  $incomeClass = '-';
+                  if ($income !== null && $income !== '') {
+                      if ($income < 5250) {
+                          $incomeClass = 'B40';
+                      } elseif ($income < 11820) {
+                          $incomeClass = 'M40';
+                      } else {
+                          $incomeClass = 'T20';
+                      }
+                  }
+                  echo $incomeClass;
+              ?>
+            </td>
+            <td class="table__cell--numeric"><?php echo (int)$u['dependent_count']; ?></td>
+            <td><?php echo $u['is_deceased'] ? 'Yes' : 'No'; ?></td>
+            <td class="table__cell--actions"><a class="btn" href="<?php echo url('admin/user-edit?id=' . (int)$u['id']); ?>">Edit</a></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
 </div>
 <?php
 $content = ob_get_clean();

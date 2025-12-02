@@ -1,0 +1,38 @@
+/* Residents Admin Table Modifiers */
+
+.table--families {
+  border-spacing: 0;
+}
+
+.table--families th,
+.table--families td {
+  padding: 1.25rem 1.5rem;
+  font-size: 1rem;
+}
+
+.table--families thead th {
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  background-color: #f9fafb;
+}
+
+.table--families .badge-sm {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+}
+
+/* Print styles for families list */
+@media print {
+  .actions, .sidebar, .page-header {
+    display: none !important;
+  }
+  .page-wrapper {
+    margin: 0;
+    padding: 0;
+  }
+  .content {
+    margin: 0;
+    padding: 0;
+  }
+}

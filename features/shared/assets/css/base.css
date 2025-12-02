@@ -1,12 +1,26 @@
 /* =========================================
    SulamProject Base Styles
    ========================================= 
-   This file imports all modular CSS components.
-   Order matters: reset → typography → components → layout → responsive
-   Variables are imported first in base.php before this file.
+   Single entry point for all CSS.
+   @import statements MUST come first, before any other CSS rules.
    ========================================= */
 
-/* Reset & Base */
+/* Import all component stylesheets */
+@import 'typography.css';
+@import 'links.css';
+@import 'buttons.css';
+@import 'badges.css';
+@import 'forms.css';
+@import 'tables.css';
+@import 'icons.css';
+@import 'cards.css';
+@import 'notices.css';
+@import 'toasts.css';
+@import 'layout.css';
+@import 'footer.css';
+@import 'responsive.css';
+
+/* Reset & Base Styles */
 * {
   box-sizing: border-box;
 }
@@ -18,16 +32,12 @@ html, body {
   color: var(--text-primary);
 }
 
-/* Component Imports (in logical order) */
-@import url('typography.css');
-@import url('links.css');
-@import url('buttons.css');
-@import url('forms.css');
-@import url('tables.css');
-@import url('icons.css');
-@import url('cards.css');
-@import url('notices.css');
-@import url('toasts.css');
-@import url('layout.css');
-@import url('footer.css');
-@import url('responsive.css');
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+

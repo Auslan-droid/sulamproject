@@ -175,7 +175,7 @@
     <!-- TABLES -->
     <section class="sg-section">
         <div class="sg-title">Tables</div>
-        <p>Standard tables for displaying data. Use <code>.table</code> class. Wrap in <code>.table-responsive</code> for horizontal scrolling on small screens.</p>
+        <p>Standard tables for displaying data. Use <code>.table</code> class. Wrap in <code>.table-responsive</code> for horizontal scrolling when needed. For inherently wide financial reports, add <code>.table-responsive--wide</code> on the wrapper.</p>
 
         <div class="sg-subtitle">Standard Table</div>
         <div class="table-responsive">
@@ -270,6 +270,111 @@
         &lt;/tbody&gt;
     &lt;/table&gt;
 &lt;/div&gt;</pre>
+
+        <div class="sg-subtitle" style="margin-top: 2rem;">Wide Financial Table (scrollable)</div>
+        <p>Use <code>.table-responsive table-responsive--wide</code> with a financial modifier such as <code>.table--payment-account</code> for many-column reports that should scroll horizontally inside a card.</p>
+        <div class="table-responsive table-responsive--wide" style="max-width: 100%; border: 1px dashed var(--border-subtle);">
+            <table class="table table-hover table--payment-account">
+                <thead>
+                    <tr>
+                        <th>Tarikh</th>
+                        <th>Butiran</th>
+                        <th class="table__cell--numeric">Kategori A</th>
+                        <th class="table__cell--numeric">Kategori B</th>
+                        <th class="table__cell--numeric">Kategori C</th>
+                        <th class="table__cell--numeric">Jumlah</th>
+                        <th class="table__cell--actions">Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023-10-25</td>
+                        <td>Pembelian Al-Quran</td>
+                        <td class="table__cell--numeric">RM 0.00</td>
+                        <td class="table__cell--numeric">RM 500.00</td>
+                        <td class="table__cell--numeric">RM 0.00</td>
+                        <td class="table__cell--numeric">RM 500.00</td>
+                        <td class="table__cell--actions">
+                            <button class="btn outline" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2023-10-26</td>
+                        <td>Bayaran Bil Elektrik</td>
+                        <td class="table__cell--numeric">RM 250.00</td>
+                        <td class="table__cell--numeric">RM 0.00</td>
+                        <td class="table__cell--numeric">RM 0.00</td>
+                        <td class="table__cell--numeric">RM 250.00</td>
+                        <td class="table__cell--actions">
+                            <button class="btn outline" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <pre>&lt;div class="table-responsive table-responsive--wide"&gt;
+    &lt;table class="table table-hover table--payment-account"&gt;
+        &lt;thead&gt;...&lt;/thead&gt;
+        &lt;tbody&gt;...&lt;/tbody&gt;
+    &lt;/table&gt;
+&lt;/div&gt;</pre>
+
+        <div class="sg-subtitle" style="margin-top: 2rem;">Table Utilities</div>
+        <p>Use utility classes for common table cell patterns:</p>
+        <ul style="margin-bottom: 1rem;">
+            <li><code>.table__cell--actions</code> - Centers and prevents wrapping in action columns</li>
+            <li><code>.table__cell--numeric</code> - Right-aligns numeric values</li>
+            <li><code>.table--compact</code> - Reduces padding for denser tables</li>
+        </ul>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table--compact">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="table__cell--numeric">Amount</th>
+                        <th class="table__cell--numeric">Balance</th>
+                        <th class="table__cell--actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Transaction A</td>
+                        <td class="table__cell--numeric">125.50</td>
+                        <td class="table__cell--numeric">1,250.00</td>
+                        <td class="table__cell--actions">
+                            <button class="btn outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Transaction B</td>
+                        <td class="table__cell--numeric">87.25</td>
+                        <td class="table__cell--numeric">1,162.75</td>
+                        <td class="table__cell--actions">
+                            <button class="btn outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <pre>&lt;table class="table table-striped table-hover table--compact"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Name&lt;/th&gt;
+            &lt;th class="table__cell--numeric"&gt;Amount&lt;/th&gt;
+            &lt;th class="table__cell--actions"&gt;Actions&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Transaction A&lt;/td&gt;
+            &lt;td class="table__cell--numeric"&gt;125.50&lt;/td&gt;
+            &lt;td class="table__cell--actions"&gt;
+                &lt;button class="btn"&gt;Edit&lt;/button&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</pre>
     </section>
 
     <!-- LINKS & TYPOGRAPHY UTILITIES -->

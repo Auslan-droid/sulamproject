@@ -11,20 +11,32 @@ Tables are styled centrally in `features/shared/assets/css/tables.css`, imported
 - `.table` – base table: 100% width, collapsed borders, vertical separators, consistent padding, header background, and text colors.
 - `.table-striped` – zebra striping for table body rows.
 - `.table-hover` – hover background for table body rows.
-- `.table-responsive` – wrapper for horizontal scroll on narrow screens.
+- `.table-responsive` – wrapper for horizontal scroll when the table is wider than its container.
+- `.table-responsive--wide` – **financial/report variant** wrapper that always allows horizontal scrolling inside cards for very wide tables.
 
-**Standard markup pattern:**
+**Standard markup pattern (normal tables):**
 
 ```html
 <div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead>...</thead>
-        <tbody>...</tbody>
-    </table>
+  <table class="table table-striped table-hover">
+    <thead>...</thead>
+    <tbody>...</tbody>
+  </table>
 </div>
 ```
 
-Any page that includes `base.css` automatically has access to these classes.
+**Wide financial/report tables:**
+
+```html
+<div class="table-responsive table-responsive--wide">
+  <table class="table table-hover table--payment-account">
+    <thead>...</thead>
+    <tbody>...</tbody>
+  </table>
+</div>
+```
+
+`table-responsive--wide` is intended for inherently wide, many-column tables (cash book, payment account, deposit account). It guarantees horizontal scrolling *inside* the card while keeping the card width stable.
 
 ## 2. Global Table Utilities
 
@@ -132,9 +144,9 @@ When you touch an existing table, apply these mapping rules:
      ```
 
 3. **Apply modifiers for special layouts**
-   - Wide financial tables:
+   - Wide financial tables (cash book, payment account, deposit account):
      ```html
-     <div class="table-responsive">
+     <div class="table-responsive table-responsive--wide">
          <table class="table table-hover table--payment-account">
              ...
          </table>
@@ -143,7 +155,14 @@ When you touch an existing table, apply these mapping rules:
    - In financial admin CSS:
      ```css
      .table--payment-account {
-       min-width: 2200px; /* example */
+       min-width: 2000px; /* tune to actual columns */
+       font-size: 0.9rem;
+     }
+
+     .table--payment-account th,
+     .table--payment-account td {
+       padding: 0.5rem 0.75rem;
+       white-space: nowrap;
      }
      ```
 

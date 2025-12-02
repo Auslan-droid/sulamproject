@@ -271,6 +271,40 @@ select:focus {
   background-color: rgba(15, 138, 95, 0.05);
 }
 
+/* Table utilities */
+.table__cell--actions {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table__cell--numeric {
+  text-align: right;
+}
+
+.table--compact th,
+.table--compact td {
+  padding: 0.5rem 0.75rem;
+}
+
+/* Wide table responsive wrapper for financial/report tables */
+.table-responsive--wide {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+}
+
+/* Financial table modifiers for styleguide demo */
+.table--payment-account {
+  min-width: 1200px;
+  font-size: 0.9rem;
+}
+
+.table--payment-account th,
+.table--payment-account td {
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+}
+
 /* Notices */
 .notice {
   background: rgba(6, 114, 156, 0.04);
