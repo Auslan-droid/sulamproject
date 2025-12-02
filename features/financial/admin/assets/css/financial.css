@@ -1,5 +1,7 @@
-/* Import Bento Grid for Financial Dashboard */
+/* Shared layout utilities */
 @import '../../../../shared/assets/css/bento-grid.css';
+/* Shared stat cards for balances (cash book, etc.) */
+@import '../../../../shared/assets/css/stat-cards.css';
 
 /* Financial Admin Table Modifiers */
 

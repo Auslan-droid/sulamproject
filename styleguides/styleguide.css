@@ -158,6 +158,8 @@ small {
   color: rgba(8,63,47,0.86);
 }
 
+/* Stat card styles now live in shared CSS: features/shared/assets/css/stat-cards.css */
+
 /* Buttons */
 .btn {
   background: var(--accent);

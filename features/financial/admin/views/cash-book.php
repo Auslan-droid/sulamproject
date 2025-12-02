@@ -18,40 +18,22 @@
     </div>
     <?php endif; ?>
 
-    <!-- Balance Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card border-left-primary h-100">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Baki Tunai (Cash Balance)
-                    </div>
-                    <div class="h4 mb-0 font-weight-bold">RM <?php echo number_format($tunaiBalance, 2); ?></div>
-                    <small class="text-muted">Baki Awal: RM <?php echo number_format($openingCash, 2); ?></small>
-                </div>
-            </div>
+    <!-- Balance Summary Stat Cards -->
+    <div class="stat-cards">
+        <div class="stat-card stat-card--cash">
+            <div class="stat-card__label">Baki Tunai (Cash Balance)</div>
+            <div class="stat-card__value">RM <?php echo number_format($tunaiBalance, 2); ?></div>
+            <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingCash, 2); ?></div>
         </div>
-        <div class="col-md-4">
-            <div class="card border-left-success h-100">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                        Baki Bank (Bank Balance)
-                    </div>
-                    <div class="h4 mb-0 font-weight-bold">RM <?php echo number_format($bankBalance, 2); ?></div>
-                    <small class="text-muted">Baki Awal: RM <?php echo number_format($openingBank, 2); ?></small>
-                </div>
-            </div>
+        <div class="stat-card stat-card--bank">
+            <div class="stat-card__label">Baki Bank (Bank Balance)</div>
+            <div class="stat-card__value">RM <?php echo number_format($bankBalance, 2); ?></div>
+            <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingBank, 2); ?></div>
         </div>
-        <div class="col-md-4">
-            <div class="card border-left-info h-100">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                        Jumlah Baki (Total Balance)
-                    </div>
-                    <div class="h4 mb-0 font-weight-bold">RM <?php echo number_format($tunaiBalance + $bankBalance, 2); ?></div>
-                    <small class="text-muted">Tahun Kewangan: <?php echo $fiscalYear; ?></small>
-                </div>
-            </div>
+        <div class="stat-card stat-card--total">
+            <div class="stat-card__label">Jumlah Baki (Total Balance)</div>
+            <div class="stat-card__value">RM <?php echo number_format($tunaiBalance + $bankBalance, 2); ?></div>
+            <div class="stat-card__meta">Tahun Kewangan: <?php echo $fiscalYear; ?></div>
         </div>
     </div>
 
@@ -185,5 +167,3 @@
             </table>
         </div>
 </div>
-
-<link rel="stylesheet" href="/features/financial/admin/assets/css/financial.css">

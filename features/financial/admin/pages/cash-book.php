@@ -30,6 +30,11 @@ $pageHeader = [
     ]
 ];
 
+// Add page-specific CSS (including stat cards via financial.css)
+$additionalStyles = [
+    url('features/financial/admin/assets/css/financial.css'),
+];
+
 // 1. Capture the inner content
 ob_start();
 include __DIR__ . '/../views/cash-book.php';

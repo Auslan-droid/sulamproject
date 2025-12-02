@@ -1,0 +1,57 @@
+/* Stat cards (for financial summaries like cash/bank balance) */
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  color: var(--muted);
+}
+
+.stat-card__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  color: var(--text-primary);
+}
+
+.stat-card__meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.stat-card--cash {
+  border-left: 4px solid #16a34a;
+}
+
+.stat-card--bank {
+  border-left: 4px solid #0ea5e9;
+}
+
+.stat-card--total {
+  border-left: 4px solid #6366f1;
+}
+
+@media (max-width: 768px) {
+  .stat-cards {
+    grid-template-columns: 1fr;
+  }
+}
