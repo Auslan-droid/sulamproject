@@ -9,6 +9,9 @@
   display: flex;
   flex: 1;
   gap: 0;
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar {
@@ -19,6 +22,11 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Brand Section */
@@ -330,7 +338,9 @@
   display: flex;
   flex-direction: column;
   min-width: 0; /* Allow flex item to shrink below content size */
-  overflow: hidden; /* Prevent content from expanding parent */
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Content Container - Wraps page content for independent scrolling */
