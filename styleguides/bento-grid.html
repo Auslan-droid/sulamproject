@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Grid Styleguide</title>
+    <!-- Strictly importing ONLY the bento-grid style as requested -->
+    <link rel="stylesheet" href="bento-grid.css">
+</head>
+<body>
+
+    <header>
+        <h1>Bento Grid System</h1>
+        <p class="subtitle">A responsive, modular grid layout system inspired by bento boxes. 
+        This page uses a self-contained stylesheet.</p>
+    </header>
+
+    <div class="bento-grid">
+        
+        <!-- Item 1: Main Feature (Spans 2 cols, 2 rows) -->
+        <div class="bento-card col-span-2 row-span-2 card-feature" style="background: linear-gradient(135deg, #0f8a5f, #0a2e21); color: white;">
+            <div style="padding: 1rem;">
+                <div class="icon" style="background: rgba(255,255,255,0.2); color: white;">★</div>
+                <h2 style="font-size: 2rem; margin: 1rem 0;">Primary Focus</h2>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">
+                    This is a "Hero" bento card. It spans two columns and two rows, making it the focal point of the grid. Ideal for welcome messages or primary KPIs.
+                </p>
+            </div>
+            <div style="margin-top: auto;">
+                <button style="background: white; color: #0a2e21; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">Get Started</button>
+            </div>
+        </div>
+
+        <!-- Item 2: Key Stat -->
+        <div class="bento-card card-stat">
+            <div class="value">85%</div>
+            <div class="label">Completion Rate</div>
+        </div>
+
+        <!-- Item 3: Simple Feature -->
+        <div class="bento-card card-feature">
+            <div class="icon">⚡</div>
+            <h3>Fast Action</h3>
+            <p>Quickly access common tasks from this panel.</p>
+        </div>
+
+        <!-- Item 4: List / Feed (Spans 1 col, 2 rows) -->
+        <div class="bento-card row-span-2 card-list">
+            <h3>Recent Activity</h3>
+            <div class="list-item">
+                <div class="avatar"></div>
+                <div class="content">
+                    <strong>New Resident</strong><br>
+                    <span style="color: #888;">2 mins ago</span>
+                </div>
+            </div>
+            <div class="list-item">
+                <div class="avatar"></div>
+                <div class="content">
+                    <strong>Donation Recd</strong><br>
+                    <span style="color: #888;">1 hour ago</span>
+                </div>
+            </div>
+            <div class="list-item">
+                <div class="avatar"></div>
+                <div class="content">
+                    <strong>Event Update</strong><br>
+                    <span style="color: #888;">3 hours ago</span>
+                </div>
+            </div>
+            <div class="list-item">
+                <div class="avatar"></div>
+                <div class="content">
+                    <strong>System Alert</strong><br>
+                    <span style="color: #888;">Yesterday</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 5: Graph (Spans 2 cols) -->
+        <div class="bento-card col-span-2 card-graph">
+            <h3>Weekly Contributions</h3>
+            <div class="graph-placeholder">
+                <div class="graph-bar" style="left: 10%; height: 40%;"></div>
+                <div class="graph-bar" style="left: 30%; height: 70%;"></div>
+                <div class="graph-bar" style="left: 50%; height: 50%;"></div>
+                <div class="graph-bar" style="left: 70%; height: 85%;"></div>
+                <div class="graph-bar" style="left: 90%; height: 60%;"></div>
+            </div>
+        </div>
+
+        <!-- Item 6: Media / Image -->
+        <div class="bento-card card-media">
+            <!-- Using a placeholder color instead of external image to ensure self-containment/no broken links -->
+            <div style="width: 100%; height: 100%; background-color: #ddd; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #aaa;">
+                📷
+            </div>
+            <div class="overlay">
+                <h3>Gallery</h3>
+                <p>View recent photos</p>
+            </div>
+        </div>
+
+        <!-- Item 7: Simple Text -->
+        <div class="bento-card">
+            <h3>Notes</h3>
+            <p>Don't forget to review the quarterly reports before the meeting on Friday.</p>
+        </div>
+
+        <!-- Item 8: Wide Banner (Spans Full Width) -->
+        <div class="bento-card col-span-full" style="flex-direction: row; align-items: center; justify-content: space-between; background: #e6f7f0; border-color: #0f8a5f;">
+            <div>
+                <h3 style="color: #0f8a5f;">System Status</h3>
+                <p style="margin: 0; color: #0a2e21;">All systems operational. Next maintenance scheduled for Sunday.</p>
+            </div>
+            <div style="width: 12px; height: 12px; background: #10b981; border-radius: 50%; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);"></div>
+        </div>
+
+    </div>
+
+</body>
+</html>
