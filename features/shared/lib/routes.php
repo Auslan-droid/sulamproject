@@ -213,6 +213,20 @@ $router->get('/financial/voucher-print', function() use ($ROOT) {
     require $ROOT . '/features/financial/admin/pages/voucher-print.php';
 });
 
+$router->get('/financial/statement-print', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/financial-statement-print.php';
+});
+
+$router->get('/financial/statement', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/financial-statement.php';
+});
+
 $router->get('/donations', function() use ($ROOT) {
     initSecureSession();
     requireAuth();

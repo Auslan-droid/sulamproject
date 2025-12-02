@@ -421,4 +421,237 @@ class FinancialController {
     public function getDepositRepository(): DepositAccountRepository {
         return $this->depositRepo;
     }
+
+    // ==================== FINANCIAL STATEMENT METHODS ====================
+
+    /**
+     * Generate Financial Statement (Penyata Terimaan dan Bayaran)
+     * 
+     * @param string $startDate Start date (YYYY-MM-DD)
+     * @param string $endDate End date (YYYY-MM-DD)
+     * @return array
+     */
+    public function financialStatement(string $startDate, string $endDate): array {
+        // A. Calculate Opening Balance (Baki Awal) - transactions before start_date
+        $openingBalance = $this->calculateOpeningBalance($startDate);
+
+        // B. Calculate Current Period Totals
+        $currentDeposits = $this->getDepositTotals($startDate, $endDate);
+        $currentPayments = $this->getPaymentTotals($startDate, $endDate);
+
+        // C. Calculate Closing Balance (Baki Akhir)
+        $closingCash = $openingBalance['cash'] + $currentDeposits['by_method']['cash'] - $currentPayments['by_method']['cash'];
+        $closingBank = $openingBalance['bank'] + $currentDeposits['by_method']['bank'] - $currentPayments['by_method']['bank'];
+
+        // Calculate surplus/deficit
+        $totalTerimaan = $currentDeposits['total'];
+        $totalBayaran = $currentPayments['total'];
+        $surplusDeficit = $totalTerimaan - $totalBayaran;
+
+        return [
+            'title' => 'Penyata Terimaan dan Bayaran',
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'openingBalance' => $openingBalance,
+            'deposits' => $currentDeposits,
+            'payments' => $currentPayments,
+            'totalTerimaan' => $totalTerimaan,
+            'totalBayaran' => $totalBayaran,
+            'surplusDeficit' => $surplusDeficit,
+            'closingBalance' => [
+                'cash' => $closingCash,
+                'bank' => $closingBank,
+                'total' => $closingCash + $closingBank,
+            ],
+            'depositCategoryLabels' => DepositAccountRepository::CATEGORY_LABELS,
+            'paymentCategoryLabels' => PaymentAccountRepository::CATEGORY_LABELS,
+        ];
+    }
+
+    /**
+     * Calculate opening balance (transactions before start date)
+     */
+    private function calculateOpeningBalance(string $startDate): array {
+        // Sum deposits before start_date by payment method
+        $depositSumClause = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", DepositAccountRepository::CATEGORY_COLUMNS));
+        
+        $sqlDeposits = "
+            SELECT 
+                payment_method,
+                SUM($depositSumClause) as total
+            FROM financial_deposit_accounts
+            WHERE tx_date < ?
+            GROUP BY payment_method
+        ";
+
+        $stmt = $this->mysqli->prepare($sqlDeposits);
+        $stmt->bind_param('s', $startDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $depositCash = 0.0;
+        $depositBank = 0.0;
+        while ($row = $result->fetch_assoc()) {
+            if ($row['payment_method'] === 'cash') {
+                $depositCash = (float)$row['total'];
+            } else {
+                $depositBank += (float)$row['total'];
+            }
+        }
+        $stmt->close();
+
+        // Sum payments before start_date by payment method
+        $paymentSumClause = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", PaymentAccountRepository::CATEGORY_COLUMNS));
+        
+        $sqlPayments = "
+            SELECT 
+                payment_method,
+                SUM($paymentSumClause) as total
+            FROM financial_payment_accounts
+            WHERE tx_date < ?
+            GROUP BY payment_method
+        ";
+
+        $stmt = $this->mysqli->prepare($sqlPayments);
+        $stmt->bind_param('s', $startDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $paymentCash = 0.0;
+        $paymentBank = 0.0;
+        while ($row = $result->fetch_assoc()) {
+            if ($row['payment_method'] === 'cash') {
+                $paymentCash = (float)$row['total'];
+            } else {
+                $paymentBank += (float)$row['total'];
+            }
+        }
+        $stmt->close();
+
+        return [
+            'cash' => $depositCash - $paymentCash,
+            'bank' => $depositBank - $paymentBank,
+            'total' => ($depositCash - $paymentCash) + ($depositBank - $paymentBank),
+        ];
+    }
+
+    /**
+     * Get deposit totals for the period, grouped by category and payment method
+     */
+    private function getDepositTotals(string $startDate, string $endDate): array {
+        $categoryColumns = DepositAccountRepository::CATEGORY_COLUMNS;
+        
+        // Build SELECT clause for category sums
+        $selectClauses = [];
+        foreach ($categoryColumns as $col) {
+            $selectClauses[] = "SUM(COALESCE($col, 0)) as $col";
+        }
+        $selectClause = implode(', ', $selectClauses);
+
+        // Get totals by category
+        $sql = "SELECT $selectClause FROM financial_deposit_accounts WHERE tx_date BETWEEN ? AND ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param('ss', $startDate, $endDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $categoryTotals = $result->fetch_assoc();
+        $stmt->close();
+
+        // Calculate grand total
+        $grandTotal = 0.0;
+        foreach ($categoryColumns as $col) {
+            $grandTotal += (float)($categoryTotals[$col] ?? 0);
+        }
+
+        // Get totals by payment method
+        $depositSumClause = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", $categoryColumns));
+        $sqlMethod = "
+            SELECT 
+                payment_method,
+                SUM($depositSumClause) as total
+            FROM financial_deposit_accounts
+            WHERE tx_date BETWEEN ? AND ?
+            GROUP BY payment_method
+        ";
+        $stmt = $this->mysqli->prepare($sqlMethod);
+        $stmt->bind_param('ss', $startDate, $endDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $byMethod = ['cash' => 0.0, 'bank' => 0.0];
+        while ($row = $result->fetch_assoc()) {
+            if ($row['payment_method'] === 'cash') {
+                $byMethod['cash'] = (float)$row['total'];
+            } else {
+                $byMethod['bank'] += (float)$row['total'];
+            }
+        }
+        $stmt->close();
+
+        return [
+            'by_category' => $categoryTotals,
+            'by_method' => $byMethod,
+            'total' => $grandTotal,
+        ];
+    }
+
+    /**
+     * Get payment totals for the period, grouped by category and payment method
+     */
+    private function getPaymentTotals(string $startDate, string $endDate): array {
+        $categoryColumns = PaymentAccountRepository::CATEGORY_COLUMNS;
+        
+        // Build SELECT clause for category sums
+        $selectClauses = [];
+        foreach ($categoryColumns as $col) {
+            $selectClauses[] = "SUM(COALESCE($col, 0)) as $col";
+        }
+        $selectClause = implode(', ', $selectClauses);
+
+        // Get totals by category
+        $sql = "SELECT $selectClause FROM financial_payment_accounts WHERE tx_date BETWEEN ? AND ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param('ss', $startDate, $endDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $categoryTotals = $result->fetch_assoc();
+        $stmt->close();
+
+        // Calculate grand total
+        $grandTotal = 0.0;
+        foreach ($categoryColumns as $col) {
+            $grandTotal += (float)($categoryTotals[$col] ?? 0);
+        }
+
+        // Get totals by payment method
+        $paymentSumClause = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", $categoryColumns));
+        $sqlMethod = "
+            SELECT 
+                payment_method,
+                SUM($paymentSumClause) as total
+            FROM financial_payment_accounts
+            WHERE tx_date BETWEEN ? AND ?
+            GROUP BY payment_method
+        ";
+        $stmt = $this->mysqli->prepare($sqlMethod);
+        $stmt->bind_param('ss', $startDate, $endDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $byMethod = ['cash' => 0.0, 'bank' => 0.0];
+        while ($row = $result->fetch_assoc()) {
+            if ($row['payment_method'] === 'cash') {
+                $byMethod['cash'] = (float)$row['total'];
+            } else {
+                $byMethod['bank'] += (float)$row['total'];
+            }
+        }
+        $stmt->close();
+
+        return [
+            'by_category' => $categoryTotals,
+            'by_method' => $byMethod,
+            'total' => $grandTotal,
+        ];
+    }
 }

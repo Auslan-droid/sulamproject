@@ -5,7 +5,7 @@
     <div class="card-body">
         <p>Welcome to the Financial Management module.</p>
         
-        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
             <a href="<?php echo url('financial/payment-account'); ?>" class="btn btn-primary">
                 <i class="fas fa-file-invoice-dollar"></i> Akaun Bayaran
             </a>
@@ -14,6 +14,9 @@
             </a>
             <a href="<?php echo url('financial/cash-book'); ?>" class="btn btn-info">
                 <i class="fas fa-book"></i> Buku Tunai
+            </a>
+            <a href="<?php echo url('financial/statement'); ?>" class="btn btn-warning">
+                <i class="fas fa-chart-bar"></i> Penyata Kewangan
             </a>
         </div>
     </div>
