@@ -26,6 +26,7 @@ function formatAmount($value) {
                 <thead>
                     <tr>
                         <th>Tarikh</th>
+                        <th>No. Baucar</th>
                         <th>Butiran</th>
                         <?php foreach ($categoryLabels as $col => $label): ?>
                             <th><?php echo htmlspecialchars($label); ?></th>
@@ -38,6 +39,13 @@ function formatAmount($value) {
                     <?php foreach ($payments as $row): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['tx_date']); ?></td>
+                        <td>
+                            <?php if (!empty($row['voucher_number'])): ?>
+                                <span class="badge badge-light border"><?php echo htmlspecialchars($row['voucher_number']); ?></span>
+                            <?php else: ?>
+                                <span class="text-muted">-</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo htmlspecialchars($row['description']); ?></td>
                         <?php 
                         $rowTotal = 0;

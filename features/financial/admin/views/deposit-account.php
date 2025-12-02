@@ -26,6 +26,7 @@ function formatDepositAmount($value) {
                 <thead>
                     <tr>
                         <th>Tarikh</th>
+                        <th>No. Resit</th>
                         <th>Butiran</th>
                         <?php foreach ($categoryLabels as $col => $label): ?>
                             <th><?php echo htmlspecialchars($label); ?></th>
@@ -38,6 +39,13 @@ function formatDepositAmount($value) {
                     <?php foreach ($deposits as $row): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['tx_date']); ?></td>
+                        <td>
+                            <?php if (!empty($row['receipt_number'])): ?>
+                                <span class="badge badge-light border"><?php echo htmlspecialchars($row['receipt_number']); ?></span>
+                            <?php else: ?>
+                                <span class="text-muted">-</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo htmlspecialchars($row['description']); ?></td>
                         <?php 
                         $rowTotal = 0;
