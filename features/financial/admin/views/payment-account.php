@@ -57,6 +57,9 @@ function formatAmount($value) {
                         <?php endforeach; ?>
                         <td class="table__cell--numeric" style="font-weight: bold;"><?php echo formatAmount($rowTotal); ?></td>
                         <td class="table__cell--actions">
+                            <a href="<?php echo url('financial/voucher-print?id=' . $row['id']); ?>" class="btn btn-sm btn-outline-primary" title="Print Voucher" target="_blank">
+                                <i class="fas fa-print"></i>
+                            </a>
                             <a href="<?php echo url('financial/payment-account/edit?id=' . $row['id']); ?>" class="btn btn-sm btn-secondary" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>

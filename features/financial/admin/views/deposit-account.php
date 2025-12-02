@@ -57,6 +57,9 @@ function formatDepositAmount($value) {
                         <?php endforeach; ?>
                         <td class="table__cell--numeric" style="font-weight: bold;"><?php echo formatDepositAmount($rowTotal); ?></td>
                         <td class="table__cell--actions">
+                            <a href="<?php echo url('financial/receipt-print?id=' . $row['id']); ?>" class="btn btn-sm btn-outline-primary" title="Print Receipt" target="_blank">
+                                <i class="fas fa-print"></i>
+                            </a>
                             <a href="<?php echo url('financial/deposit-account/edit?id=' . $row['id']); ?>" class="btn btn-sm btn-secondary" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>

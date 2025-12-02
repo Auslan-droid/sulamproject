@@ -198,6 +198,21 @@ $router->post('/financial/deposit-account/delete', function() use ($ROOT) {
     require $ROOT . '/features/financial/admin/ajax/deposit-delete.php';
 });
 
+// Financial print routes
+$router->get('/financial/receipt-print', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/receipt-print.php';
+});
+
+$router->get('/financial/voucher-print', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/voucher-print.php';
+});
+
 $router->get('/donations', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
