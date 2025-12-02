@@ -93,6 +93,13 @@ $router->get('/users', function() use ($ROOT) {
     require $ROOT . '/features/residents/admin/pages/user-management.php';
 });
 
+$router->get('/families', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/residents/admin/pages/families.php';
+});
+
 $router->get('/financial', function() use ($ROOT) {
     initSecureSession();
     requireAuth();

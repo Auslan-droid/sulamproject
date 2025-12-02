@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../../../shared/controllers/BaseController.php';
 
-class DependentController extends BaseController {
+class NextOfKinController extends BaseController {
     private $mysqli;
 
     public function __construct($mysqli) {
@@ -15,22 +15,22 @@ class DependentController extends BaseController {
         $userId = $this->currentUser['id'];
         $id = $_GET['id'] ?? null;
         
-        $dependent = [];
+        $nextOfKin = [];
         
         if ($id) {
-            $stmt = $this->mysqli->prepare('SELECT * FROM dependent WHERE id=? AND user_id=? LIMIT 1');
+            $stmt = $this->mysqli->prepare('SELECT * FROM next_of_kin WHERE id=? AND user_id=? LIMIT 1');
             $stmt->bind_param('ii', $id, $userId);
             $stmt->execute();
             $result = $stmt->get_result();
-            $dependent = $result->fetch_assoc();
+            $nextOfKin = $result->fetch_assoc();
             $stmt->close();
             
-            if (!$dependent) {
+            if (!$nextOfKin) {
                 $this->notFound();
             }
         }
 
-        return ['dependent' => $dependent];
+        return ['nextOfKin' => $nextOfKin];
     }
 
     public function save() {
@@ -45,13 +45,13 @@ class DependentController extends BaseController {
         $address = trim($_POST['address'] ?? '');
 
         if (empty($name)) {
-            return ['error' => 'Name is required.', 'dependent' => $_POST];
+            return ['error' => 'Name is required.', 'nextOfKin' => $_POST];
         }
 
         if ($id) {
             // Update
             // Verify ownership first
-            $check = $this->mysqli->prepare('SELECT id FROM dependent WHERE id=? AND user_id=?');
+            $check = $this->mysqli->prepare('SELECT id FROM next_of_kin WHERE id=? AND user_id=?');
             $check->bind_param('ii', $id, $userId);
             $check->execute();
             if (!$check->get_result()->fetch_assoc()) {
@@ -59,11 +59,11 @@ class DependentController extends BaseController {
             }
             $check->close();
 
-            $stmt = $this->mysqli->prepare('UPDATE dependent SET name=?, relationship=?, email=?, phone_number=?, address=? WHERE id=?');
+            $stmt = $this->mysqli->prepare('UPDATE next_of_kin SET name=?, relationship=?, email=?, phone_number=?, address=? WHERE id=?');
             $stmt->bind_param('sssssi', $name, $relationship, $email, $phone_number, $address, $id);
         } else {
             // Insert
-            $stmt = $this->mysqli->prepare('INSERT INTO dependent (user_id, name, relationship, email, phone_number, address) VALUES (?, ?, ?, ?, ?, ?)');
+            $stmt = $this->mysqli->prepare('INSERT INTO next_of_kin (user_id, name, relationship, email, phone_number, address) VALUES (?, ?, ?, ?, ?, ?)');
             $stmt->bind_param('isssss', $userId, $name, $relationship, $email, $phone_number, $address);
         }
 
@@ -73,7 +73,7 @@ class DependentController extends BaseController {
         } else {
             $error = $stmt->error;
             $stmt->close();
-            return ['error' => 'Save failed: ' . $error, 'dependent' => $_POST];
+            return ['error' => 'Save failed: ' . $error, 'nextOfKin' => $_POST];
         }
     }
 
@@ -83,12 +83,13 @@ class DependentController extends BaseController {
         $id = $_POST['id'] ?? null;
 
         if ($id) {
-            $stmt = $this->mysqli->prepare('DELETE FROM dependent WHERE id=? AND user_id=?');
+            $stmt = $this->mysqli->prepare('DELETE FROM next_of_kin WHERE id=? AND user_id=?');
             $stmt->bind_param('ii', $id, $userId);
             $stmt->execute();
             $stmt->close();
         }
         
-        return ['success' => true];
+        header('Location: ' . url('features/users/user/pages/profile.php'));
+        exit;
     }
 }

@@ -70,54 +70,95 @@
         </form>
     </div>
 
-    <!-- Right Column: Dependents -->
-    <div class="card small-card dependents-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h3>Family Dependents (Next of Kin)</h3>
-            <a href="<?php echo url('features/users/waris/user/pages/dependent-form.php'); ?>" class="btn btn-primary btn-sm">
-                <i class="fa-solid fa-plus"></i> Add
-            </a>
+    <!-- Right Column: Dependents & Next of Kin -->
+    <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 2rem;">
+        
+        <!-- Dependents Card -->
+        <div class="card small-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3>Family Dependents</h3>
+                <a href="<?php echo url('features/users/waris/user/pages/dependent-form.php'); ?>" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-plus"></i> Add
+                </a>
+            </div>
+
+            <?php if (empty($dependents)): ?>
+                <p class="text-muted">No dependents added yet.</p>
+            <?php else: ?>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                                <th style="padding: 0.5rem;">Name</th>
+                                <th style="padding: 0.5rem;">Relationship</th>
+                                <th style="padding: 0.5rem;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($dependents as $dep): ?>
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 0.5rem;"><?php echo htmlspecialchars($dep['name']); ?></td>
+                                    <td style="padding: 0.5rem;"><?php echo htmlspecialchars($dep['relationship'] ?? '-'); ?></td>
+                                    <td style="padding: 0.5rem;">
+                                        <a href="<?php echo url('features/users/waris/user/pages/dependent-form.php?id=' . $dep['id']); ?>" class="btn-text" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <form action="<?php echo url('features/users/waris/user/pages/dependent-delete.php'); ?>" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                            <input type="hidden" name="id" value="<?php echo $dep['id']; ?>">
+                                            <button type="submit" class="btn-text text-danger" style="background:none; border:none; cursor:pointer;" title="Delete"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
 
-        <?php if (empty($nextOfKin)): ?>
-            <p class="text-muted">No dependents added yet.</p>
-        <?php else: ?>
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="text-align: left; border-bottom: 2px solid #eee;">
-                            <th style="padding: 0.5rem;">Name</th>
-                            <th style="padding: 0.5rem;">Relationship</th>
-                            <th style="padding: 0.5rem;">Info</th>
-                            <th style="padding: 0.5rem;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($nextOfKin as $kin): ?>
-                            <tr style="border-bottom: 1px solid #eee;">
-                                <td style="padding: 0.5rem;"><?php echo htmlspecialchars($kin['name']); ?></td>
-                                <td style="padding: 0.5rem;"><?php echo htmlspecialchars($kin['relationship'] ?? '-'); ?></td>
-                                <td style="padding: 0.5rem; font-size: 0.9rem;">
-                                    <?php 
-                                        $info = [];
-                                        if (!empty($kin['phone_number'])) $info[] = $kin['phone_number'];
-                                        if (!empty($kin['email'])) $info[] = $kin['email'];
-                                        echo implode('<br>', $info);
-                                    ?>
-                                </td>
-                                <td style="padding: 0.5rem;">
-                                    <a href="<?php echo url('features/users/waris/user/pages/dependent-form.php?id=' . $kin['id']); ?>" class="btn-text" title="Edit"><i class="fas fa-edit"></i></a>
-                                    <form action="<?php echo url('features/users/waris/user/pages/dependent-delete.php'); ?>" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure?');">
-                                        <input type="hidden" name="id" value="<?php echo $kin['id']; ?>">
-                                        <button type="submit" class="btn-text text-danger" style="background:none; border:none; cursor:pointer;" title="Delete"><i class="fas fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+        <!-- Next of Kin Card -->
+        <div class="card small-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3>Next of Kin (Emergency)</h3>
+                <a href="<?php echo url('features/users/waris/user/pages/next-of-kin-form.php'); ?>" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-plus"></i> Add
+                </a>
             </div>
-        <?php endif; ?>
+
+            <?php if (empty($nextOfKin)): ?>
+                <p class="text-muted">No next of kin added yet.</p>
+            <?php else: ?>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                                <th style="padding: 0.5rem;">Name</th>
+                                <th style="padding: 0.5rem;">Relationship</th>
+                                <th style="padding: 0.5rem;">Contact</th>
+                                <th style="padding: 0.5rem;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($nextOfKin as $kin): ?>
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 0.5rem;"><?php echo htmlspecialchars($kin['name']); ?></td>
+                                    <td style="padding: 0.5rem;"><?php echo htmlspecialchars($kin['relationship'] ?? '-'); ?></td>
+                                    <td style="padding: 0.5rem; font-size: 0.9rem;">
+                                        <?php echo htmlspecialchars($kin['phone_number'] ?? '-'); ?>
+                                    </td>
+                                    <td style="padding: 0.5rem;">
+                                        <a href="<?php echo url('features/users/waris/user/pages/next-of-kin-form.php?id=' . $kin['id']); ?>" class="btn-text" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <form action="<?php echo url('features/users/waris/user/pages/next-of-kin-delete.php'); ?>" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                            <input type="hidden" name="id" value="<?php echo $kin['id']; ?>">
+                                            <button type="submit" class="btn-text text-danger" style="background:none; border:none; cursor:pointer;" title="Delete"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+
     </div>
 </div>
 

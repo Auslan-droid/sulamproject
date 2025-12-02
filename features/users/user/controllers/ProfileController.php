@@ -25,6 +25,14 @@ class ProfileController extends BaseController {
             $this->notFound();
         }
 
+        // Fetch Dependents
+        $stmt = $this->mysqli->prepare('SELECT * FROM dependent WHERE user_id=? ORDER BY created_at ASC');
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $dependents = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
         // Fetch Next of Kin
         $stmt = $this->mysqli->prepare('SELECT * FROM next_of_kin WHERE user_id=? ORDER BY created_at ASC');
         $stmt->bind_param('i', $userId);
@@ -33,7 +41,7 @@ class ProfileController extends BaseController {
         $nextOfKin = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
 
-        return ['user' => $user, 'nextOfKin' => $nextOfKin];
+        return ['user' => $user, 'dependents' => $dependents, 'nextOfKin' => $nextOfKin];
     }
 
     public function update() {

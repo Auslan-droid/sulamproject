@@ -8,7 +8,7 @@ requireAdmin();
 
 // Simple list of users with edit links
 $users = [];
-$res = $mysqli->query("SELECT users.id, users.name, users.username, users.email, users.roles, users.is_deceased, users.income, COUNT(next_of_kin.id) as dependent_count FROM users LEFT JOIN next_of_kin ON users.id = next_of_kin.user_id GROUP BY users.id ORDER BY users.id DESC");
+$res = $mysqli->query("SELECT users.id, users.name, users.username, users.email, users.roles, users.is_deceased, users.income, COUNT(dependent.id) as dependent_count FROM users LEFT JOIN dependent ON users.id = dependent.user_id GROUP BY users.id ORDER BY users.id DESC");
 if ($res) { while ($row = $res->fetch_assoc()) { $users[] = $row; } $res->close(); }
 
 // 1. Capture the inner content
