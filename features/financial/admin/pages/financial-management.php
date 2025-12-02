@@ -27,6 +27,11 @@ $pageHeader = [
     ]
 ];
 
+// Add page-specific CSS
+$additionalStyles = [
+    url('features/financial/admin/assets/css/financial.css')
+];
+
 // 1. Capture the inner content
 ob_start();
 include __DIR__ . '/../views/financial-management.php';

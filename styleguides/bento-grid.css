@@ -4,24 +4,26 @@
  */
 
 :root {
-  /* Color Palette - Standalone definition based on project's nature theme */
-  --bg-color: #f8faf9;
-  --text-main: #0a2e21;
+  /* Color Palette - Matching SulamProject Design System */
+  --bg-color: #ffffff;
+  --text-main: #083f2f;
   --text-muted: #4b7660;
   --card-bg: #ffffff;
   --accent-color: #0f8a5f;
+  --accent-hover: #0d7550;
   --accent-light: #e6f7f0;
-  --border-color: rgba(15, 138, 95, 0.1);
+  --border-color: rgba(6,95,70,0.08);
+  --card-border: rgba(6,95,70,0.08);
   
   /* Spacing & Radius */
-  --gap: 24px;
-  --radius: 24px;
-  --padding: 24px;
+  --gap: 1rem;
+  --radius: 13px;
+  --padding: 1.25rem;
   
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 20px 40px -4px rgba(0, 0, 0, 0.12);
+  /* Shadows - Professional depth */
+  --shadow-sm: 0 6px 18px rgba(0,0,0,0.12);
+  --shadow-md: 0 10px 24px rgba(0,0,0,0.16);
+  --shadow-hover: 0 18px 40px rgba(2,34,21,0.14);
 }
 
 * {
@@ -82,21 +84,21 @@ p.subtitle {
 
 .bento-card {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius);
   padding: var(--padding);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.12s ease;
   box-shadow: var(--shadow-sm);
 }
 
 .bento-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
-  border-color: rgba(15, 138, 95, 0.2);
+  border-color: rgba(15, 138, 95, 0.15);
   z-index: 1;
 }
 
@@ -104,28 +106,79 @@ p.subtitle {
    Spanning Utilities (The "Bento" Magic)
    ========================================= */
 
-/* Spans 2 columns */
-.col-span-2 {
+/* Column Spans */
+.col-span-1 { grid-column: span 1; }
+.col-span-2 { grid-column: span 2; }
+.col-span-3 { grid-column: span 3; }
+.col-span-4 { grid-column: span 4; }
+.col-span-full { grid-column: 1 / -1; }
+
+/* Row Spans */
+.row-span-1 { grid-row: span 1; }
+.row-span-2 { grid-row: span 2; }
+.row-span-3 { grid-row: span 3; }
+.row-span-4 { grid-row: span 4; }
+
+/* =========================================
+   Preset Card Sizes - Quick Utilities
+   ========================================= */
+
+/* Small Cards (1x1) */
+.bento-1x1 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* Medium Cards */
+.bento-2x1 {
   grid-column: span 2;
+  grid-row: span 1;
 }
 
-/* Spans 3 columns */
-.col-span-3 {
-  grid-column: span 3;
-}
-
-/* Spans 2 rows */
-.row-span-2 {
+.bento-1x2 {
+  grid-column: span 1;
   grid-row: span 2;
 }
 
-/* Full width box */
-.col-span-full {
+/* Large Cards */
+.bento-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.bento-3x1 {
+  grid-column: span 3;
+  grid-row: span 1;
+}
+
+.bento-1x3 {
+  grid-column: span 1;
+  grid-row: span 3;
+}
+
+/* Extra Large Cards */
+.bento-3x2 {
+  grid-column: span 3;
+  grid-row: span 2;
+}
+
+.bento-2x3 {
+  grid-column: span 2;
+  grid-row: span 3;
+}
+
+.bento-4x2 {
+  grid-column: span 4;
+  grid-row: span 2;
+}
+
+/* Full Width */
+.bento-full {
   grid-column: 1 / -1;
 }
 
 /* =========================================
-   Content Variants
+   Content Variants - Preset Layouts
    ========================================= */
 
 /* Variant: Feature (Icon + Title) */
@@ -138,7 +191,7 @@ p.subtitle {
   height: 48px;
   background: var(--accent-light);
   color: var(--accent-color);
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,6 +202,8 @@ p.subtitle {
 .card-feature h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+  color: var(--text-main);
+  font-weight: 700;
 }
 
 .card-feature p {
@@ -156,30 +211,83 @@ p.subtitle {
   color: var(--text-muted);
 }
 
+/* Variant: Balance/Hero Card */
+.card-balance .card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.card-balance .balance-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent-color);
+  margin: 1.5rem 0;
+}
+
+.card-balance .balance-change {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-balance .balance-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.card-balance .breakdown-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-balance .breakdown-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-balance .breakdown-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
 /* Variant: Statistic (Big Number) */
 .card-stat {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: var(--text-main); /* Dark Variant */
-  color: #ffffff;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+  background: var(--card-bg);
+  color: var(--text-main);
 }
 
 .card-stat .value {
-  font-size: 4rem;
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 700;
   line-height: 1;
-  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--accent-color);
+  margin: 0.5rem 0;
 }
 
 .card-stat .label {
-  font-size: 1rem;
-  opacity: 0.8;
-  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 600;
 }
 
 /* Variant: Image / Media */
@@ -269,6 +377,142 @@ p.subtitle {
 }
 
 /* =========================================
+   Utility Classes - Common Elements
+   ========================================= */
+
+/* Icons */
+.bento-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-light);
+  color: var(--accent-color);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.bento-icon-sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 1.25rem;
+}
+
+/* Badge/Pills */
+.bento-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.bento-badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.bento-badge-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.bento-badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.bento-badge-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Typography Helpers */
+.bento-title {
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bento-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.bento-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent-color);
+}
+
+.bento-value-lg {
+  font-size: 2.5rem;
+}
+
+.bento-value-sm {
+  font-size: 1.5rem;
+}
+
+/* Flexbox Helpers */
+.bento-flex {
+  display: flex;
+}
+
+.bento-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bento-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bento-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Spacing Helpers */
+.bento-gap-sm { gap: 0.5rem; }
+.bento-gap { gap: 1rem; }
+.bento-gap-lg { gap: 1.5rem; }
+
+/* Button Styles */
+.bento-btn {
+  background: white;
+  border: 2px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.bento-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: rgba(15, 138, 95, 0.2);
+}
+
+/* =========================================
    Responsive Breakpoints
    ========================================= */
 
@@ -283,10 +527,18 @@ p.subtitle {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  /* Reset spans on mobile for simpler flow, 
-     or keep them if they fit the 2-col grid well */
-  .col-span-3 {
+  /* Reset spans on tablet */
+  .col-span-3,
+  .col-span-4,
+  .bento-3x1,
+  .bento-3x2,
+  .bento-4x2 {
     grid-column: span 2;
+  }
+  
+  .bento-2x3,
+  .bento-1x3 {
+    grid-row: span 2;
   }
 }
 

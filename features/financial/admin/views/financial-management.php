@@ -6,142 +6,102 @@
 ?>
 
 <div class="content-container">
-    <!-- Balance Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Baki Tunai (Cash)
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                RM <?php echo number_format($balances['closing_cash'] ?? 0, 2); ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                    <hr class="my-2">
-                    <small class="text-muted">
-                        Baki Awal: RM <?php echo number_format($balances['opening_cash'] ?? 0, 2); ?>
-                    </small>
+    <!-- Bento Grid Dashboard -->
+    <div class="bento-grid">
+        
+        <!-- Total Balance Hero Card (2×2) -->
+        <div class="bento-card bento-2x2 card-balance">
+            <div class="card-header">
+                <div class="bento-icon">💰</div>
+                <div>
+                    <div class="bento-label">JUMLAH BAKI KESELURUHAN</div>
+                    <p style="margin: 0; font-size: 0.85rem; font-weight: 500;">Tahun <?php echo $fiscalYear; ?></p>
+                </div>
+            </div>
+            <div class="balance-value">RM <?php echo number_format($balances['total_balance'] ?? 0, 2); ?></div>
+            <div class="balance-breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Tunai</div>
+                    <div class="breakdown-value">RM <?php echo number_format($balances['closing_cash'] ?? 0, 2); ?></div>
+                    <small style="color: var(--muted); font-size: 0.75rem;">Baki Awal: RM <?php echo number_format($balances['opening_cash'] ?? 0, 2); ?></small>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Bank</div>
+                    <div class="breakdown-value">RM <?php echo number_format($balances['closing_bank'] ?? 0, 2); ?></div>
+                    <small style="color: var(--muted); font-size: 0.75rem;">Baki Awal: RM <?php echo number_format($balances['opening_bank'] ?? 0, 2); ?></small>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Baki Bank
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                RM <?php echo number_format($balances['closing_bank'] ?? 0, 2); ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-university fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                    <hr class="my-2">
-                    <small class="text-muted">
-                        Baki Awal: RM <?php echo number_format($balances['opening_bank'] ?? 0, 2); ?>
-                    </small>
+        <!-- Terimaan Stat Card (1×1) -->
+        <div class="bento-card bento-1x1 card-stat">
+            <div class="bento-flex bento-gap-sm" style="margin-bottom: 0.75rem;">
+                <div class="bento-icon bento-icon-sm" style="background: #d1fae5; color: #065f46;">
+                    <i class="fas fa-arrow-down"></i>
                 </div>
+                <div class="bento-label">Terimaan</div>
+            </div>
+            <div class="bento-value-sm" style="color: #065f46; margin-bottom: 0.5rem;">
+                RM <?php echo number_format(($balances['total_cash_in'] ?? 0) + ($balances['total_bank_in'] ?? 0), 2); ?>
+            </div>
+            <div style="color: var(--muted); font-size: 0.85rem;">
+                Tunai: RM <?php echo number_format($balances['total_cash_in'] ?? 0, 2); ?><br>
+                Bank: RM <?php echo number_format($balances['total_bank_in'] ?? 0, 2); ?>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Jumlah Terimaan
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                RM <?php echo number_format(($balances['total_cash_in'] ?? 0) + ($balances['total_bank_in'] ?? 0), 2); ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-arrow-down fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                    <hr class="my-2">
-                    <small class="text-muted">
-                        Tunai: RM <?php echo number_format($balances['total_cash_in'] ?? 0, 2); ?> | 
-                        Bank: RM <?php echo number_format($balances['total_bank_in'] ?? 0, 2); ?>
-                    </small>
+        <!-- Bayaran Stat Card (1×1) -->
+        <div class="bento-card bento-1x1 card-stat">
+            <div class="bento-flex bento-gap-sm" style="margin-bottom: 0.75rem;">
+                <div class="bento-icon bento-icon-sm" style="background: #fee2e2; color: #991b1b;">
+                    <i class="fas fa-arrow-up"></i>
                 </div>
+                <div class="bento-label">Bayaran</div>
+            </div>
+            <div class="bento-value-sm" style="color: #991b1b; margin-bottom: 0.5rem;">
+                RM <?php echo number_format(($balances['total_cash_out'] ?? 0) + ($balances['total_bank_out'] ?? 0), 2); ?>
+            </div>
+            <div style="color: var(--muted); font-size: 0.85rem;">
+                Tunai: RM <?php echo number_format($balances['total_cash_out'] ?? 0, 2); ?><br>
+                Bank: RM <?php echo number_format($balances['total_bank_out'] ?? 0, 2); ?>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Jumlah Bayaran
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                RM <?php echo number_format(($balances['total_cash_out'] ?? 0) + ($balances['total_bank_out'] ?? 0), 2); ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-arrow-up fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                    <hr class="my-2">
-                    <small class="text-muted">
-                        Tunai: RM <?php echo number_format($balances['total_cash_out'] ?? 0, 2); ?> | 
-                        Bank: RM <?php echo number_format($balances['total_bank_out'] ?? 0, 2); ?>
-                    </small>
-                </div>
+        <!-- Quick Actions (2×2) -->
+        <div class="bento-card bento-2x2">
+            <h3 class="bento-title">⚡ Menu Pantas</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; flex: 1;">
+                <a href="<?php echo url('financial/deposit-account'); ?>" class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2rem;"><i class="fas fa-hand-holding-usd"></i></span>
+                    <span style="font-size: 0.95rem;">Akaun Terimaan</span>
+                </a>
+                <a href="<?php echo url('financial/payment-account'); ?>" class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2rem;"><i class="fas fa-file-invoice-dollar"></i></span>
+                    <span style="font-size: 0.95rem;">Akaun Bayaran</span>
+                </a>
+                <a href="<?php echo url('financial/cash-book'); ?>" class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2rem;"><i class="fas fa-book"></i></span>
+                    <span style="font-size: 0.95rem;">Buku Tunai</span>
+                </a>
+                <a href="<?php echo url('financial/statement'); ?>" class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2rem;"><i class="fas fa-chart-bar"></i></span>
+                    <span style="font-size: 0.95rem;">Penyata Kewangan</span>
+                </a>
             </div>
         </div>
-    </div>
 
-    <!-- Total Balance Card -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card bg-gradient-primary text-white shadow">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h4 class="mb-0">Jumlah Baki Keseluruhan (Total Balance) - Tahun <?php echo $fiscalYear; ?></h4>
-                        </div>
-                        <div class="col-auto">
-                            <h2 class="mb-0">RM <?php echo number_format($balances['total_balance'] ?? 0, 2); ?></h2>
-                        </div>
-                    </div>
+        <!-- Settings Card (2×1) -->
+        <div class="bento-card bento-2x1">
+            <div class="bento-flex-between">
+                <div>
+                    <h3 class="bento-title" style="margin: 0 0 0.5rem 0;">⚙️ Tetapan Kewangan</h3>
+                    <p style="margin: 0; color: var(--muted); font-size: 0.875rem;">Urus baki awal dan tahun kewangan</p>
                 </div>
+                <a href="<?php echo url('financial/settings'); ?>" class="bento-badge bento-badge-info" style="cursor: pointer; padding: 8px 16px; text-decoration: none;">
+                    Tetapan <i class="fas fa-arrow-right" style="margin-left: 0.25rem;"></i>
+                </a>
             </div>
         </div>
-    </div>
 
-    <!-- Quick Links -->
-    <h5 class="mb-3">Menu Pantas</h5>
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-        <a href="<?php echo url('financial/deposit-account'); ?>" class="btn btn-success">
-            <i class="fas fa-hand-holding-usd"></i> Akaun Terimaan
-        </a>
-        <a href="<?php echo url('financial/payment-account'); ?>" class="btn btn-danger">
-            <i class="fas fa-file-invoice-dollar"></i> Akaun Bayaran
-        </a>
-        <a href="<?php echo url('financial/cash-book'); ?>" class="btn btn-info">
-            <i class="fas fa-book"></i> Buku Tunai
-        </a>
-        <a href="<?php echo url('financial/statement'); ?>" class="btn btn-warning">
-            <i class="fas fa-chart-bar"></i> Penyata Kewangan
-        </a>
-        <a href="<?php echo url('financial/settings'); ?>" class="btn btn-secondary">
-            <i class="fas fa-cog"></i> Tetapan Kewangan
-        </a>
     </div>
 </div>

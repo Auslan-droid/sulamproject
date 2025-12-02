@@ -1,63 +1,8 @@
-/* 
- * Bento Grid Styleguide - Standalone Styles
- * No external imports.
- */
-
-:root {
-  /* Color Palette - Standalone definition based on project's nature theme */
-  --bg-color: #f8faf9;
-  --text-main: #0a2e21;
-  --text-muted: #4b7660;
-  --card-bg: #ffffff;
-  --accent-color: #0f8a5f;
-  --accent-light: #e6f7f0;
-  --border-color: rgba(15, 138, 95, 0.1);
-  
-  /* Spacing & Radius */
-  --gap: 24px;
-  --radius: 24px;
-  --padding: 24px;
-  
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 20px 40px -4px rgba(0, 0, 0, 0.12);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  padding: 40px;
-}
-
-header {
-  max-width: 1200px;
-  margin: 0 auto 60px;
-  text-align: center;
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 1rem;
-  color: var(--text-main);
-}
-
-p.subtitle {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  max-width: 600px;
-  margin: 0 auto;
-}
+/* =========================================
+   BENTO GRID SYSTEM - Modular Layout System
+   ========================================= 
+   Reusable grid layout for dashboard cards
+   ========================================= */
 
 /* =========================================
    Bento Grid Layout
@@ -65,148 +10,202 @@ p.subtitle {
 
 .bento-grid {
   display: grid;
-  /* Auto-fit grid columns: roughly 4 columns on desktop */
   grid-template-columns: repeat(4, 1fr);
-  /* Auto-rows allows implicit rows to size based on content or fixed height */
   grid-auto-rows: minmax(180px, auto);
-  gap: var(--gap);
-  max-width: 1200px;
+  gap: 1rem;
   margin: 0 auto;
-  /* Dense packing fills holes if possible */
-  grid-auto-flow: dense; 
+  grid-auto-flow: dense;
 }
 
 /* =========================================
-   Card Styles
+   Card Base
    ========================================= */
 
 .bento-card {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  padding: var(--padding);
+  border: 1px solid var(--card-border);
+  border-radius: 13px;
+  padding: 1.25rem;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.12s ease;
   box-shadow: var(--shadow-sm);
 }
 
 .bento-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
-  border-color: rgba(15, 138, 95, 0.2);
+  border-color: rgba(15, 138, 95, 0.15);
   z-index: 1;
 }
 
+.bento-card h3, 
+.bento-card h4 {
+  margin: 0 0 0.6rem 0;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.bento-card p {
+  margin: 0 0 0.85rem 0;
+  color: rgba(8,63,47,0.86);
+}
+
+.bento-card small { 
+  color: var(--muted); 
+}
+
 /* =========================================
-   Spanning Utilities (The "Bento" Magic)
+   Preset Card Sizes - Quick Utilities
    ========================================= */
 
-/* Spans 2 columns */
-.col-span-2 {
+/* Small Cards (1x1) */
+.bento-1x1 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* Medium Cards */
+.bento-2x1 {
   grid-column: span 2;
+  grid-row: span 1;
 }
 
-/* Spans 3 columns */
-.col-span-3 {
-  grid-column: span 3;
-}
-
-/* Spans 2 rows */
-.row-span-2 {
+.bento-1x2 {
+  grid-column: span 1;
   grid-row: span 2;
 }
 
-/* Full width box */
-.col-span-full {
+/* Large Cards */
+.bento-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.bento-3x1 {
+  grid-column: span 3;
+  grid-row: span 1;
+}
+
+.bento-1x3 {
+  grid-column: span 1;
+  grid-row: span 3;
+}
+
+/* Extra Large Cards */
+.bento-3x2 {
+  grid-column: span 3;
+  grid-row: span 2;
+}
+
+.bento-2x3 {
+  grid-column: span 2;
+  grid-row: span 3;
+}
+
+.bento-4x2 {
+  grid-column: span 4;
+  grid-row: span 2;
+}
+
+/* Full Width */
+.bento-full {
   grid-column: 1 / -1;
 }
 
+/* Manual Control */
+.col-span-1 { grid-column: span 1; }
+.col-span-2 { grid-column: span 2; }
+.col-span-3 { grid-column: span 3; }
+.col-span-4 { grid-column: span 4; }
+.col-span-full { grid-column: 1 / -1; }
+
+.row-span-1 { grid-row: span 1; }
+.row-span-2 { grid-row: span 2; }
+.row-span-3 { grid-row: span 3; }
+.row-span-4 { grid-row: span 4; }
+
 /* =========================================
-   Content Variants
+   Content Variants - Preset Layouts
    ========================================= */
 
-/* Variant: Feature (Icon + Title) */
-.card-feature {
-  justify-content: space-between;
-}
-
-.card-feature .icon {
-  width: 48px;
-  height: 48px;
-  background: var(--accent-light);
-  color: var(--accent-color);
-  border-radius: 12px;
+/* Variant: Balance/Hero Card */
+.card-balance .card-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-subtle);
 }
 
-.card-feature h3 {
+.card-balance .balance-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  margin: 1.5rem 0;
+}
+
+.card-balance .balance-change {
+  color: var(--muted);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-balance .balance-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.card-balance .breakdown-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-balance .breakdown-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-balance .breakdown-value {
   font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.card-feature p {
-  font-size: 0.95rem;
-  color: var(--text-muted);
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 /* Variant: Statistic (Big Number) */
 .card-stat {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: var(--text-main); /* Dark Variant */
-  color: #ffffff;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
 }
 
 .card-stat .value {
-  font-size: 4rem;
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 700;
   line-height: 1;
-  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--accent);
+  margin: 0.5rem 0;
 }
 
 .card-stat .label {
-  font-size: 1rem;
-  opacity: 0.8;
-  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-/* Variant: Image / Media */
-.card-media {
-  padding: 0; /* No padding for full bleed */
-}
-
-.card-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.5s ease;
-}
-
-.card-media:hover img {
-  transform: scale(1.05);
-}
-
-.card-media .overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: var(--padding);
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
+  font-weight: 600;
 }
 
 /* Variant: List / Feed */
@@ -218,7 +217,7 @@ p.subtitle {
   display: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid var(--bg-color);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .list-item:last-child {
@@ -238,34 +237,142 @@ p.subtitle {
   font-size: 0.9rem;
 }
 
-/* Variant: Graph Placeholder */
-.card-graph {
+/* =========================================
+   Utility Classes - Common Elements
+   ========================================= */
+
+/* Icons */
+.bento-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-light, #e6f7f0);
+  color: var(--accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.bento-icon-sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 1.25rem;
+}
+
+/* Badge/Pills */
+.bento-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.bento-badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.bento-badge-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.bento-badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.bento-badge-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Typography Helpers */
+.bento-title {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bento-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.bento-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.bento-value-lg {
+  font-size: 2.5rem;
+}
+
+.bento-value-sm {
+  font-size: 1.5rem;
+}
+
+/* Flexbox Helpers */
+.bento-flex {
+  display: flex;
+}
+
+.bento-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bento-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bento-flex-col {
   display: flex;
   flex-direction: column;
 }
 
-.graph-placeholder {
-  flex: 1;
-  margin-top: 1rem;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 39px,
-    var(--bg-color) 39px,
-    var(--bg-color) 40px
-  );
-  border-bottom: 2px solid var(--border-color);
-  border-left: 2px solid var(--border-color);
-  position: relative;
+/* Spacing Helpers */
+.bento-gap-sm { gap: 0.5rem; }
+.bento-gap { gap: 1rem; }
+.bento-gap-lg { gap: 1.5rem; }
+
+/* Button Styles */
+.bento-btn {
+  background: white;
+  border: 2px solid var(--card-border);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
 }
 
-.graph-bar {
-  position: absolute;
-  bottom: 0;
-  width: 20px;
-  background: var(--accent-color);
-  border-radius: 4px 4px 0 0;
-  opacity: 0.8;
+.bento-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: rgba(15, 138, 95, 0.2);
+  text-decoration: none;
 }
 
 /* =========================================
@@ -283,10 +390,18 @@ p.subtitle {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  /* Reset spans on mobile for simpler flow, 
-     or keep them if they fit the 2-col grid well */
-  .col-span-3 {
+  /* Reset spans on tablet */
+  .col-span-3,
+  .col-span-4,
+  .bento-3x1,
+  .bento-3x2,
+  .bento-4x2 {
     grid-column: span 2;
+  }
+  
+  .bento-2x3,
+  .bento-1x3 {
+    grid-row: span 2;
   }
 }
 
