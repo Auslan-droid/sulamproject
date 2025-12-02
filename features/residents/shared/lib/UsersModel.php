@@ -7,7 +7,7 @@ class UsersModel {
         $this->db = $mysqli;
     }
 
-    public function getUsers($role = null) {
+    public function getUsers($role = null): array {
         $sql = "SELECT users.*, COUNT(dependent.id) as dependent_count 
                 FROM users 
                 LEFT JOIN dependent ON users.id = dependent.user_id";
@@ -29,16 +29,23 @@ class UsersModel {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getFamilies() {
+    public function getFamilies(): array {
         // 1. Get all users (potential heads of families)
-        // We reuse getUsers but maybe we want to filter by role 'resident' if admins aren't considered "families" in this context.
-        // For now, let's get all users.
-        $users = $this->getUsers(); 
+        $allUsers = $this->getUsers(); 
+
+        if (!is_array($allUsers)) {
+            return [];
+        }
+
+        // Filter out admins
+        $users = array_filter($allUsers, function($user) {
+            return isset($user['roles']) && $user['roles'] !== 'admin';
+        });
 
         // 2. Get all dependents
         $sql = "SELECT * FROM dependent ORDER BY user_id, created_at";
         $result = $this->db->query($sql);
-        $allDependents = $result->fetch_all(MYSQLI_ASSOC);
+        $allDependents = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 
         // 3. Group dependents by user_id
         $dependentsByUserId = [];
@@ -50,7 +57,8 @@ class UsersModel {
         foreach ($users as &$user) {
             $user['dependents'] = $dependentsByUserId[$user['id']] ?? [];
         }
+        unset($user); // Break the reference
 
-        return $users;
+        return array_values($users);
     }
 }

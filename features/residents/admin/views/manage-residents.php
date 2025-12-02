@@ -16,78 +16,106 @@
         <?php if (empty($users)): ?>
             <p>No residents found.</p>
         <?php else: ?>
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="text-align: left; border-bottom: 2px solid var(--border-color);">
-                        <th style="padding: 0.5rem;">Name</th>
-                        <th style="padding: 0.5rem;">Username</th>
-                        <th style="padding: 0.5rem;">Role</th>
-                        <th style="padding: 0.5rem;">Income Class</th>
-                        <th style="padding: 0.5rem;">Dependents</th>
-                        <th style="padding: 0.5rem;">Email</th>
-                        <th style="padding: 0.5rem;">Phone</th>
-                        <th style="padding: 0.5rem;">Status</th>
-                        <th style="padding: 0.5rem;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user): ?>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 0.5rem;"><?php echo e($user['name']); ?></td>
-                            <td style="padding: 0.5rem;"><?php echo e($user['username']); ?></td>
-                            <td style="padding: 0.5rem;">
-                                <span style="
-                                    background-color: <?php echo $user['roles'] === 'admin' ? '#eef2ff' : '#f3f4f6'; ?>;
-                                    color: <?php echo $user['roles'] === 'admin' ? '#4f46e5' : '#374151'; ?>;
-                                    padding: 0.2rem 0.5rem;
-                                    border-radius: 4px;
-                                    font-size: 0.85rem;
-                                    text-transform: capitalize;
-                                ">
-                                    <?php echo e($user['roles']); ?>
-                                </span>
-                            </td>
-                            <td style="padding: 0.5rem;">
-                                <?php
-                                    $income = $user['income'];
-                                    $incomeClass = '-';
-                                    if ($income !== null && $income !== '') {
-                                        if ($income < 5250) {
-                                            $incomeClass = 'B40';
-                                        } elseif ($income < 11820) {
-                                            $incomeClass = 'M40';
-                                        } else {
-                                            $incomeClass = 'T20';
-                                        }
-                                    }
-                                    echo $incomeClass;
-                                ?>
-                            </td>
-                            <td style="padding: 0.5rem; text-align: center;">
-                                <?php echo isset($user['dependent_count']) ? $user['dependent_count'] : 0; ?>
-                            </td>
-                            <td style="padding: 0.5rem;"><?php echo e($user['email']); ?></td>
-                            <td style="padding: 0.5rem;"><?php echo e($user['phone_number'] ?? '-'); ?></td>
-                            <td style="padding: 0.5rem;">
-                                <?php echo $user['is_deceased'] ? '<span style="color:red;">Deceased</span>' : 'Active'; ?>
-                            </td>
-                            <td style="padding: 0.5rem;">
-                                <?php if ($user['roles'] === 'resident'): ?>
-                                    <a href="/admin/waris?user_id=<?php echo $user['id']; ?>" style="
-                                        display: inline-block;
-                                        padding: 0.3rem 0.6rem;
-                                        background-color: var(--primary-color, #4f46e5);
-                                        color: white;
-                                        text-decoration: none;
-                                        border-radius: 4px;
-                                        font-size: 0.85rem;
-                                    ">View Waris</a>
-                                <?php endif; ?>
-                            </td>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Income Class</th>
+                            <th class="text-center">Dependents</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $user): ?>
+                            <tr>
+                                <td><?php echo e($user['name']); ?></td>
+                                <td><?php echo e($user['username']); ?></td>
+                                <td>
+                                    <span class="badge <?php echo $user['roles'] === 'admin' ? 'badge-primary' : 'badge-secondary'; ?>">
+                                        <?php echo e($user['roles']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php
+                                        $income = $user['income'];
+                                        $incomeClass = '-';
+                                        if ($income !== null && $income !== '') {
+                                            if ($income < 5250) {
+                                                $incomeClass = 'B40';
+                                            } elseif ($income < 11820) {
+                                                $incomeClass = 'M40';
+                                            } else {
+                                                $incomeClass = 'T20';
+                                            }
+                                        }
+                                        echo $incomeClass;
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo isset($user['dependent_count']) ? $user['dependent_count'] : 0; ?>
+                                </td>
+                                <td><?php echo e($user['email']); ?></td>
+                                <td><?php echo e($user['phone_number'] ?? '-'); ?></td>
+                                <td>
+                                    <?php echo $user['is_deceased'] ? '<span style="color:red;">Deceased</span>' : 'Active'; ?>
+                                </td>
+                                <td>
+                                    <?php if ($user['roles'] === 'resident'): ?>
+                                        <a href="/admin/waris?user_id=<?php echo $user['id']; ?>" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">View Waris</a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php endif; ?>
     </div>
 </div>
+
+<style>
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+    }
+    .table th, .table td {
+        padding: 0.75rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .table th {
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-secondary);
+        border-bottom: 2px solid var(--border-color);
+    }
+    .text-center {
+        text-align: center;
+    }
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.6em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+    }
+    .badge-primary {
+        color: #fff;
+        background-color: var(--primary-color, #4f46e5);
+    }
+    .badge-secondary {
+        color: #374151;
+        background-color: #f3f4f6;
+    }
+</style>
