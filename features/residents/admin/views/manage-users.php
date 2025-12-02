@@ -1,27 +1,28 @@
-<!-- Filter Bar -->
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-subtle);">
-    <div>
-        <strong style="color: var(--text-primary); margin-right: 0.75rem;">Filter by Role:</strong>
-        <select onchange="window.location.href=this.value" class="form-select" style="display: inline-block; width: auto; min-width: 200px;">
-            <option value="?" <?php echo $currentRole === null ? 'selected' : ''; ?>>All Users</option>
-            <option value="?role=resident" <?php echo $currentRole === 'resident' ? 'selected' : ''; ?>>Residents</option>
-            <option value="?role=admin" <?php echo $currentRole === 'admin' ? 'selected' : ''; ?>>Admins</option>
-        </select>
+<div class="content-container">
+    <!-- Filter Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-subtle);">
+        <div>
+            <strong style="color: var(--text-primary); margin-right: 0.75rem;">Filter by Role:</strong>
+            <select onchange="window.location.href=this.value" class="form-select" style="display: inline-block; width: auto; min-width: 200px;">
+                <option value="?" <?php echo $currentRole === null ? 'selected' : ''; ?>>All Users</option>
+                <option value="?role=resident" <?php echo $currentRole === 'resident' ? 'selected' : ''; ?>>Residents</option>
+                <option value="?role=admin" <?php echo $currentRole === 'admin' ? 'selected' : ''; ?>>Admins</option>
+            </select>
+        </div>
+        <div style="color: var(--muted); font-size: 0.9rem;">
+            <?php echo count($users); ?> user<?php echo count($users) !== 1 ? 's' : ''; ?> found
+        </div>
     </div>
-    <div style="color: var(--muted); font-size: 0.9rem;">
-        <?php echo count($users); ?> user<?php echo count($users) !== 1 ? 's' : ''; ?> found
-    </div>
-</div>
 
-<!-- Users Table -->
-<?php if (empty($users)): ?>
-    <div class="notice" style="text-align: center; padding: 3rem;">
-        <i class="fas fa-users" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem;"></i>
-        <p style="font-size: 1.1rem; color: var(--muted);">No users found.</p>
-    </div>
-<?php else: ?>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
+    <!-- Users Table -->
+    <?php if (empty($users)): ?>
+        <div class="notice" style="text-align: center; padding: 3rem;">
+            <i class="fas fa-users" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem;"></i>
+            <p style="font-size: 1.1rem; color: var(--muted);">No users found.</p>
+        </div>
+    <?php else: ?>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -78,6 +79,7 @@
                     </tr>
                 <?php endforeach; ?>
             </tbody>
-        </table>
-    </div>
-<?php endif; ?>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>

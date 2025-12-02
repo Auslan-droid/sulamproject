@@ -5,10 +5,10 @@
  */
 ?>
 
-<div class="card page-card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover table--cash-book" id="cashBookTable">
+<div class="content-container">
+    <!-- Cash Book Table -->
+    <div class="table-responsive">
+        <table class="table table-hover table--cash-book" id="cashBookTable">
                 <thead class="thead-light">
                     <tr>
                         <th rowspan="2" class="align-middle text-center" style="width: 100px;">Tarikh<br>(Date)</th>
@@ -115,7 +115,6 @@
                 </tfoot>
             </table>
         </div>
-    </div>
 </div>
 
 <link rel="stylesheet" href="/features/financial/admin/assets/css/financial.css">

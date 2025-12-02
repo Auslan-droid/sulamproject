@@ -329,6 +329,16 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  min-width: 0; /* Allow flex item to shrink below content size */
+  overflow: hidden; /* Prevent content from expanding parent */
+}
+
+/* Content Container - Wraps page content for independent scrolling */
+.content-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  flex: 1; /* Take remaining space after page header */
+  min-height: 0; /* Allow scrolling within flex container */
 }
 
 /* Page Header Component */

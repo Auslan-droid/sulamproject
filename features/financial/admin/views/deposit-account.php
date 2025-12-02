@@ -12,14 +12,15 @@ function formatDepositAmount($value) {
     return '-';
 }
 ?>
-<div class="card page-card">
-    <div class="card-header">
-        <h3>Akaun Terimaan (Deposit Account)</h3>
-    </div>
-    <div class="card-body">
-        <?php if (empty($deposits)): ?>
-            <p class="text-muted">No deposit records found. <a href="<?php echo url('financial/deposit-account/add'); ?>">Add a new record</a>.</p>
-        <?php else: ?>
+
+<div class="content-container">
+    <!-- Deposit Account Table -->
+    <?php if (empty($deposits)): ?>
+        <div class="notice" style="text-align: center; padding: 3rem;">
+            <i class="fas fa-hand-holding-usd" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem;"></i>
+            <p style="font-size: 1.1rem; color: var(--muted);">No deposit records found. <a href="<?php echo url('financial/deposit-account/add'); ?>">Add a new record</a>.</p>
+        </div>
+    <?php else: ?>
         <div class="table-responsive table-responsive--wide">
             <table class="table table-hover table--deposit-account">
                 <thead>
@@ -63,8 +64,7 @@ function formatDepositAmount($value) {
                 </tbody>
             </table>
         </div>
-        <?php endif; ?>
-    </div>
+    <?php endif; ?>
 </div>
 
 <link rel="stylesheet" href="/features/financial/admin/assets/css/financial.css">

@@ -1,15 +1,17 @@
-<div class="card page-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h2>Family Registry</h2>
-        <div class="actions">
-            <button onclick="window.print()" class="btn btn-secondary btn-sm">
-                <i class="fas fa-print"></i> Print List
-            </button>
-        </div>
+<div class="content-container">
+    <!-- Actions Bar -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+        <button onclick="window.print()" class="btn btn-secondary btn-sm">
+            <i class="fas fa-print"></i> Print List
+        </button>
     </div>
 
+    <!-- Families Table -->
     <?php if (empty($families)): ?>
-        <div class="notice">No families found.</div>
+        <div class="notice" style="text-align: center; padding: 3rem;">
+            <i class="fas fa-users" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem;"></i>
+            <p style="font-size: 1.1rem; color: var(--muted);">No families found.</p>
+        </div>
     <?php else: ?>
         <div class="table-responsive">
             <table class="table table-striped table-hover table--families">
