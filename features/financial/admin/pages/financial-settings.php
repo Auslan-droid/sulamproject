@@ -54,6 +54,10 @@ include __DIR__ . '/../views/financial-settings.php';
 $content = ob_get_clean();
 
 // 2. Wrap with dashboard layout
+$additionalStyles = [
+    url('features/financial/admin/assets/css/financial-settings.css')
+];
+
 ob_start();
 include $ROOT . '/features/shared/components/layouts/app-layout.php';
 $content = ob_get_clean();
