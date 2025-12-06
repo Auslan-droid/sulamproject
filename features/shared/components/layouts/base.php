@@ -16,6 +16,7 @@
 <body>
     <?php echo $content ?? ''; ?>
     
+    <script src="<?php echo url('features/shared/assets/js/double-scrollbar.js'); ?>"></script>
     <?php if (isset($additionalScripts)): ?>
         <?php foreach ($additionalScripts as $script): ?>
             <script src="<?php echo e($script); ?>"></script>
