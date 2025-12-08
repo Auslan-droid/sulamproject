@@ -122,6 +122,167 @@ small {
   box-shadow: none;
 }
 
+/* Filter card: modern collapsible filter panel with sections */
+.card.card--filter {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+/* Filter Header */
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(to right, #f8fffe, #ffffff);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.filter-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent), #16a34a);
+  color: white;
+  border-radius: 10px;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(15, 138, 95, 0.2);
+}
+
+.filter-title {
+  flex: 1;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.filter-collapse-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-collapse-toggle:hover {
+  background: rgba(15, 138, 95, 0.08);
+  color: var(--accent);
+}
+
+/* Filter Section */
+.filter-section {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.filter-section:last-child {
+  border-bottom: none;
+}
+
+.filter-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.filter-section-header:hover {
+  background: #f8fafc;
+}
+
+.filter-section-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.filter-section-icon {
+  color: var(--muted);
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.filter-section-header.collapsed .filter-section-icon {
+  transform: rotate(-90deg);
+}
+
+.filter-section-content {
+  padding: 0 1.5rem 1.25rem 1.5rem;
+}
+
+/* Filter Pills */
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.filter-pill--selected {
+  background: linear-gradient(135deg, rgba(15, 138, 95, 0.12), rgba(22, 163, 74, 0.08));
+  color: var(--accent);
+  border: 1px solid rgba(15, 138, 95, 0.2);
+}
+
+.filter-pill-remove {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 138, 95, 0.15);
+  border: none;
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.filter-pill-remove:hover {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.1);
+}
+
+.filter-pill:not(.filter-pill--selected) {
+  cursor: pointer;
+}
+
+.filter-pill:not(.filter-pill--selected):hover {
+  background: #e2e8f0;
+  color: var(--text-primary);
+}
+
 /* Small card: compact variant that composes base .card */
 .small-card {
   max-width: 420px;

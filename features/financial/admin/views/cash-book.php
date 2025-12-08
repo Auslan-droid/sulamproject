@@ -6,10 +6,51 @@
 ?>
 
 <div class="content-container">
+    <!-- Opening Balance Alert (if not configured) -->
+    <?php if (!$hasSettings): ?>
+    <div class="notice warning">
+        <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
+        <strong>Baki awal belum dikonfigurasi.</strong> 
+        Sila tetapkan baki awal untuk tahun kewangan <?php echo $fiscalYear; ?>.
+        <a href="<?php echo url('financial/settings'); ?>" style="margin-left: 0.5rem; color: inherit; text-decoration: underline;">Tetapkan Sekarang →</a>
+    </div>
+    <?php endif; ?>
+
+    <?php
+    // Calculate display balances based on filtered view
+    $displayCash = $openingCash;
+    $displayBank = $openingBank;
+    
+    if (!empty($transactions)) {
+        //If transactions exist, the last row represents the closing balance for this view period
+        $lastTx = end($transactions);
+        $displayCash = $lastTx['tunai_balance'];
+        $displayBank = $lastTx['bank_balance'];
+    }
+    ?>
+
+    <!-- Balance Summary Stat Cards -->
+    <div class="stat-cards">
+        <div class="stat-card stat-card--cash">
+            <div class="stat-card__label">Baki Tunai <?php echo $month ? "($months[$month])" : "(Tahun $fiscalYear)"; ?></div>
+            <div class="stat-card__value">RM <?php echo number_format($displayCash, 2); ?></div>
+            <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingCash, 2); ?></div>
+        </div>
+        <div class="stat-card stat-card--bank">
+            <div class="stat-card__label">Baki Bank <?php echo $month ? "($months[$month])" : "(Tahun $fiscalYear)"; ?></div>
+            <div class="stat-card__value">RM <?php echo number_format($displayBank, 2); ?></div>
+            <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingBank, 2); ?></div>
+        </div>
+        <div class="stat-card stat-card--total">
+            <div class="stat-card__label">Jumlah Baki (Total Balance)</div>
+            <div class="stat-card__value">RM <?php echo number_format($displayCash + $displayBank, 2); ?></div>
+            <div class="stat-card__meta">Tempoh: <?php echo $month ? "$months[$month] $fiscalYear" : $fiscalYear; ?></div>
+        </div>
+    </div>
+
     <!-- Filter Form -->
-    <div class="card card--outline mb-4">
-        <div class="card-body py-4 px-4">
-            <form method="GET" class="form-inline align-items-center">
+    <div class="card card--filter">
+        <form method="GET" class="form-inline align-items-center">
                 <div class="form-group mb-0 mr-4">
                     <label class="mr-2 text-muted text-uppercase small" style="font-size: 0.75rem;">Tahun</label>
                     <select name="year" class="form-control custom-select shadow-sm" style="min-width: 120px;" onchange="this.form.submit()">
@@ -44,52 +85,7 @@
                 <button type="submit" class="btn btn-primary shadow-sm px-4">
                     <i class="fas fa-filter mr-2"></i> Tapis
                 </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Opening Balance Alert (if not configured) -->
-    <?php if (!$hasSettings): ?>
-    <div class="alert alert-warning d-flex align-items-center mb-3">
-        <i class="fas fa-exclamation-triangle mr-2"></i>
-        <div>
-            <strong>Baki awal belum dikonfigurasi.</strong> 
-            Sila tetapkan baki awal untuk tahun kewangan <?php echo $fiscalYear; ?>.
-            <a href="<?php echo url('financial/settings'); ?>" class="alert-link ml-2">Tetapkan Sekarang →</a>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <?php
-    // Calculate display balances based on filtered view
-    $displayCash = $openingCash;
-    $displayBank = $openingBank;
-    
-    if (!empty($transactions)) {
-        //If transactions exist, the last row represents the closing balance for this view period
-        $lastTx = end($transactions);
-        $displayCash = $lastTx['tunai_balance'];
-        $displayBank = $lastTx['bank_balance'];
-    }
-    ?>
-
-    <!-- Balance Summary Stat Cards -->
-    <div class="stat-cards">
-        <div class="stat-card stat-card--cash">
-            <div class="stat-card__label">Baki Tunai <?php echo $month ? "($months[$month])" : "(Tahun $fiscalYear)"; ?></div>
-            <div class="stat-card__value">RM <?php echo number_format($displayCash, 2); ?></div>
-            <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingCash, 2); ?></div>
-        </div>
-        <div class="stat-card stat-card--bank">
-            <div class="stat-card__label">Baki Bank <?php echo $month ? "($months[$month])" : "(Tahun $fiscalYear)"; ?></div>
-            <div class="stat-card__value">RM <?php echo number_format($displayBank, 2); ?></div>
-            <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingBank, 2); ?></div>
-        </div>
-        <div class="stat-card stat-card--total">
-            <div class="stat-card__label">Jumlah Baki (Total Balance)</div>
-            <div class="stat-card__value">RM <?php echo number_format($displayCash + $displayBank, 2); ?></div>
-            <div class="stat-card__meta">Tempoh: <?php echo $month ? "$months[$month] $fiscalYear" : $fiscalYear; ?></div>
-        </div>
+        </form>
     </div>
 
     <!-- Cash Book Table -->

@@ -496,6 +496,90 @@
             </div>
         </div>
 
+        <div class="sg-subtitle" style="margin-top: 2rem;">Filter Card</div>
+        <p>Used for advanced filter panels with collapsible sections, multi-select options, and pill-style selected tags.</p>
+        
+        <div class="card card--filter" style="max-width: 600px;">
+            <div class="filter-header">
+                <div class="filter-icon">
+                    <i class="fas fa-sliders-h"></i>
+                </div>
+                <h4 class="filter-title">Filters</h4>
+                <button class="filter-collapse-toggle" aria-label="Collapse filter">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-section-header" data-toggle="collapse">
+                    <span class="filter-section-title">Month</span>
+                    <i class="fas fa-chevron-down filter-section-icon"></i>
+                </div>
+                <div class="filter-section-content">
+                    <div class="filter-pills">
+                        <span class="filter-pill filter-pill--selected">
+                            January
+                            <button class="filter-pill-remove" aria-label="Remove January">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </span>
+                        <span class="filter-pill filter-pill--selected">
+                            February
+                            <button class="filter-pill-remove" aria-label="Remove February">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-section-header" data-toggle="collapse">
+                    <span class="filter-section-title">Category</span>
+                    <i class="fas fa-chevron-down filter-section-icon"></i>
+                </div>
+                <div class="filter-section-content">
+                    <div class="filter-pills">
+                        <span class="filter-pill filter-pill--selected">
+                            Donations
+                            <button class="filter-pill-remove" aria-label="Remove Donations">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </span>
+                        <span class="filter-pill filter-pill--selected">
+                            Expenses
+                            <button class="filter-pill-remove" aria-label="Remove Expenses">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <pre>&lt;div class="card card--filter"&gt;
+    &lt;div class="filter-header"&gt;
+        &lt;div class="filter-icon"&gt;&lt;i class="fas fa-sliders-h"&gt;&lt;/i&gt;&lt;/div&gt;
+        &lt;h4 class="filter-title"&gt;Filters&lt;/h4&gt;
+        &lt;button class="filter-collapse-toggle"&gt;&lt;i class="fas fa-chevron-up"&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="filter-section"&gt;
+        &lt;div class="filter-section-header"&gt;
+            &lt;span class="filter-section-title"&gt;Month&lt;/span&gt;
+            &lt;i class="fas fa-chevron-down filter-section-icon"&gt;&lt;/i&gt;
+        &lt;/div&gt;
+        &lt;div class="filter-section-content"&gt;
+            &lt;div class="filter-pills"&gt;
+                &lt;span class="filter-pill filter-pill--selected"&gt;
+                    January
+                    &lt;button class="filter-pill-remove"&gt;&lt;i class="fas fa-times"&gt;&lt;/i&gt;&lt;/button&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+
         <div class="sg-subtitle" style="margin-top: 2rem;">Small Card (compact)</div>
         <p>Used for login forms, small widgets, or focused content.</p>
         <div class="card small-card" style="max-width: 400px;">
