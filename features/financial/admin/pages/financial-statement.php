@@ -24,6 +24,9 @@ $pageHeader = [
         ['label' => 'Home', 'url' => url('/')],
         ['label' => 'Financial', 'url' => url('financial')],
         ['label' => 'Penyata Kewangan', 'url' => null],
+    ],
+    'actions' => [
+        ['label' => 'Back', 'icon' => 'fa-arrow-left', 'url' => url('financial'), 'class' => 'btn-secondary'],
     ]
 ];
 

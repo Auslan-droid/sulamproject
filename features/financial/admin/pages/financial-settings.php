@@ -45,7 +45,9 @@ $pageHeader = [
         ['label' => 'Financial', 'url' => url('financial')],
         ['label' => 'Settings', 'url' => null],
     ],
-    'actions' => []
+    'actions' => [
+        ['label' => 'Back', 'icon' => 'fa-arrow-left', 'url' => url('financial'), 'class' => 'btn-secondary'],
+    ]
 ];
 
 // 1. Capture the inner content

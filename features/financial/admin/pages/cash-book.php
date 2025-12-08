@@ -26,7 +26,7 @@ $pageHeader = [
         ['label' => 'Buku Tunai', 'url' => null],
     ],
     'actions' => [
-        // We can add "Print Statement" here later
+        ['label' => 'Back', 'icon' => 'fa-arrow-left', 'url' => url('financial'), 'class' => 'btn-secondary'],
     ]
 ];
 
