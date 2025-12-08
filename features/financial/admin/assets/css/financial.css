@@ -57,3 +57,34 @@
   padding: 0.5rem 0.75rem;
   white-space: nowrap;
 }
+
+
+
+/* Sticky Column Utility */
+.sticky-col-left {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  /* z-index must be higher than:
+     1. Normal content (0)
+     2. Sticky headers from tables.css (10)
+  */
+  z-index: 20;
+  background-color: #fff;
+  border-right: 2px solid #e5e7eb;
+  /* Visual separator */
+}
+
+/* Ensure header sits above body cells AND above other sticky headers */
+th.sticky-col-left {
+  /* tables.css sets th to z-index: 10. We need to be higher. */
+  z-index: 30;
+  background-color: #f8f9fa;
+  /* Match typical header bg */
+}
+
+/* Maintain hover effect on sticky cells */
+.table-hover tbody tr:hover .sticky-col-left {
+  background-color: #f3f4f6;
+  /* Adjust per theme - should match hover color */
+}

@@ -27,7 +27,7 @@ function formatAmount($value) {
                     <tr>
                         <th>Tarikh</th>
                         <th>No. Baucar</th>
-                        <th>Butiran</th>
+                        <th class="sticky-col-left">Butiran</th>
                         <?php foreach ($categoryLabels as $col => $label): ?>
                             <th><?php echo htmlspecialchars($label); ?></th>
                         <?php endforeach; ?>
@@ -46,7 +46,7 @@ function formatAmount($value) {
                                 <span class="text-muted">-</span>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo htmlspecialchars($row['description']); ?></td>
+                        <td class="sticky-col-left"><?php echo htmlspecialchars($row['description']); ?></td>
                         <?php 
                         $rowTotal = 0;
                         foreach ($categoryColumns as $col): 
@@ -78,4 +78,4 @@ function formatAmount($value) {
     <?php endif; ?>
 </div>
 
-<link rel="stylesheet" href="/features/financial/admin/assets/css/financial.css">
+<link rel="stylesheet" href="<?php echo url('features/financial/admin/assets/css/financial.css'); ?>">
