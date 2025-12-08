@@ -1,0 +1,417 @@
+/* =========================================
+   BENTO GRID SYSTEM - Modular Layout System
+   ========================================= 
+   Reusable grid layout for dashboard cards
+   ========================================= */
+
+/* =========================================
+   Bento Grid Layout
+   ========================================= */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 1rem;
+  margin: 0 auto;
+  grid-auto-flow: dense;
+}
+
+/* =========================================
+   Card Base
+   ========================================= */
+
+.bento-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 13px;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.12s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.bento-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(15, 138, 95, 0.15);
+  z-index: 1;
+}
+
+.bento-card h3, 
+.bento-card h4 {
+  margin: 0 0 0.6rem 0;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.bento-card p {
+  margin: 0 0 0.85rem 0;
+  color: rgba(8,63,47,0.86);
+}
+
+.bento-card small { 
+  color: var(--muted); 
+}
+
+/* =========================================
+   Preset Card Sizes - Quick Utilities
+   ========================================= */
+
+/* Small Cards (1x1) */
+.bento-1x1 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* Medium Cards */
+.bento-2x1 {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.bento-1x2 {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+/* Large Cards */
+.bento-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.bento-3x1 {
+  grid-column: span 3;
+  grid-row: span 1;
+}
+
+.bento-1x3 {
+  grid-column: span 1;
+  grid-row: span 3;
+}
+
+/* Extra Large Cards */
+.bento-3x2 {
+  grid-column: span 3;
+  grid-row: span 2;
+}
+
+.bento-2x3 {
+  grid-column: span 2;
+  grid-row: span 3;
+}
+
+.bento-4x2 {
+  grid-column: span 4;
+  grid-row: span 2;
+}
+
+/* Full Width */
+.bento-full {
+  grid-column: 1 / -1;
+}
+
+/* Manual Control */
+.col-span-1 { grid-column: span 1; }
+.col-span-2 { grid-column: span 2; }
+.col-span-3 { grid-column: span 3; }
+.col-span-4 { grid-column: span 4; }
+.col-span-full { grid-column: 1 / -1; }
+
+.row-span-1 { grid-row: span 1; }
+.row-span-2 { grid-row: span 2; }
+.row-span-3 { grid-row: span 3; }
+.row-span-4 { grid-row: span 4; }
+
+/* =========================================
+   Content Variants - Preset Layouts
+   ========================================= */
+
+/* Variant: Balance/Hero Card */
+.card-balance .card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.card-balance .balance-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  margin: 1.5rem 0;
+}
+
+.card-balance .balance-change {
+  color: var(--muted);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-balance .balance-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.card-balance .breakdown-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-balance .breakdown-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-balance .breakdown-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Variant: Statistic (Big Number) */
+.card-stat {
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.card-stat .value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  margin: 0.5rem 0;
+}
+
+.card-stat .label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* Variant: List / Feed */
+.card-list h3 {
+  margin-bottom: 1rem;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item .avatar {
+  width: 32px;
+  height: 32px;
+  background: #ddd;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.list-item .content {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   Utility Classes - Common Elements
+   ========================================= */
+
+/* Icons */
+.bento-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-light, #e6f7f0);
+  color: var(--accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.bento-icon-sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 1.25rem;
+}
+
+/* Badge/Pills */
+.bento-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.bento-badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.bento-badge-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.bento-badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.bento-badge-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Typography Helpers */
+.bento-title {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bento-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.bento-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.bento-value-lg {
+  font-size: 2.5rem;
+}
+
+.bento-value-sm {
+  font-size: 1.5rem;
+}
+
+/* Flexbox Helpers */
+.bento-flex {
+  display: flex;
+}
+
+.bento-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bento-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bento-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Spacing Helpers */
+.bento-gap-sm { gap: 0.5rem; }
+.bento-gap { gap: 1rem; }
+.bento-gap-lg { gap: 1.5rem; }
+
+/* Button Styles */
+.bento-btn {
+  background: white;
+  border: 2px solid var(--card-border);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.bento-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: rgba(15, 138, 95, 0.2);
+  text-decoration: none;
+}
+
+/* =========================================
+   Responsive Breakpoints
+   ========================================= */
+
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Reset spans on tablet */
+  .col-span-3,
+  .col-span-4,
+  .bento-3x1,
+  .bento-3x2,
+  .bento-4x2 {
+    grid-column: span 2;
+  }
+  
+  .bento-2x3,
+  .bento-1x3 {
+    grid-row: span 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .bento-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .bento-card {
+    min-height: 200px;
+  }
+}

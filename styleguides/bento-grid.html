@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Grid Styleguide</title>
+    <!-- Strictly importing ONLY the bento-grid style as requested -->
+    <link rel="stylesheet" href="bento-grid.css">
+</head>
+<body>
+
+    <header>
+        <h1>Pengurusan Kewangan Masjid</h1>
+        <p class="subtitle">Sistem pengurusan kewangan masjid dengan paparan ringkas bagi baki, terimaan, bayaran dan aliran tunai. 
+        Pantauan kesihatan kewangan dan transaksi secara real-time.</p>
+    </header>
+
+    <div class="bento-grid">
+        
+        <!-- 1: Cash Balance Hero Card (2×2) - Using new class system -->
+        <div class="bento-card bento-2x2 card-balance">
+            <div class="card-header">
+                <div class="bento-icon">💰</div>
+                <div>
+                    <div class="bento-label">JUMLAH BAKI</div>
+                    <p style="color: #083f2f; margin: 0; font-size: 0.85rem; font-weight: 500;">Total Balance</p>
+                </div>
+            </div>
+            <div class="balance-value">RM 48,350.00</div>
+            <div class="balance-change">
+                <span class="bento-badge bento-badge-success">↑ 12.5%</span>
+                <span>dari bulan lepas</span>
+            </div>
+            <div class="balance-breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Tunai</div>
+                    <div class="breakdown-value">RM 8,350</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Bank</div>
+                    <div class="breakdown-value">RM 40,000</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2: Cash In Stat - Using new class system -->
+        <div class="bento-card bento-1x1 card-stat">
+            <div class="bento-flex bento-gap-sm" style="margin-bottom: 0.75rem;">
+                <div class="bento-icon bento-icon-sm" style="background: #d1fae5; color: #065f46;">📥</div>
+                <div class="bento-label">Terimaan (Dec)</div>
+            </div>
+            <div class="bento-value-sm" style="color: #065f46; margin-bottom: 0.5rem;">RM 15,200</div>
+            <div style="color: #4b7660; font-size: 0.85rem;">↑ 8 resit</div>
+        </div>
+
+        <!-- 3: Cash Out Stat - Using new class system -->
+        <div class="bento-card bento-1x1 card-stat">
+            <div class="bento-flex bento-gap-sm" style="margin-bottom: 0.75rem;">
+                <div class="bento-icon bento-icon-sm" style="background: #fee2e2; color: #991b1b;">📤</div>
+                <div class="bento-label">Bayaran (Dec)</div>
+            </div>
+            <div class="bento-value-sm" style="color: #991b1b; margin-bottom: 0.5rem;">RM 9,800</div>
+            <div style="color: #4b7660; font-size: 0.85rem;">↓ 12 baucar</div>
+        </div>
+
+        <!-- 4: Quick Actions (2×2) - Using new class system -->
+        <div class="bento-card bento-2x2">
+            <h3 class="bento-title">⚡ Tindakan Pantas</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; height: 100%;">
+                <button class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2.5rem;">📝</span>
+                    <span style="font-size: 0.95rem;">Rekod Terimaan</span>
+                    <span class="bento-label" style="margin-top: 0.25rem;">Resit Rasmi</span>
+                </button>
+                <button class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2.5rem;">💸</span>
+                    <span style="font-size: 0.95rem;">Rekod Bayaran</span>
+                    <span class="bento-label" style="margin-top: 0.25rem;">Baucar Pembayaran</span>
+                </button>
+                <button class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2.5rem;">📊</span>
+                    <span style="font-size: 0.95rem;">Jana Laporan</span>
+                    <span class="bento-label" style="margin-top: 0.25rem;">Penyata & Eksport</span>
+                </button>
+                <button class="bento-btn" style="padding: 1.5rem;">
+                    <span style="font-size: 2.5rem;">⚙️</span>
+                    <span style="font-size: 0.95rem;">Tetapan</span>
+                    <span class="bento-label" style="margin-top: 0.25rem;">Baki Awal & FY</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 6: Cash Book Summary (2×2) -->
+        <div class="bento-card col-span-2 row-span-2">
+            <h3 style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; color: #083f2f; font-weight: 700; font-size: 1rem;">
+                <span>📖 Ringkasan Buku Tunai</span>
+                <button style="background: #e6f7f0; color: #0f8a5f; border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; font-weight: 600;">Lihat Penuh</button>
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: #f8faf9; text-align: left;">
+                            <th style="padding: 8px; font-weight: 600; color: #4b7660; font-size: 0.75rem;">Tarikh</th>
+                            <th style="padding: 8px; font-weight: 600; color: #4b7660; font-size: 0.75rem;">Resit/Baucar</th>
+                            <th style="padding: 8px; font-weight: 600; color: #4b7660; font-size: 0.75rem;">Kaedah</th>
+                            <th style="padding: 8px; font-weight: 600; color: #4b7660; text-align: right; font-size: 0.75rem;">Amaun</th>
+                            <th style="padding: 8px; font-weight: 600; color: #4b7660; text-align: right; font-size: 0.75rem;">Baki</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid rgba(6,95,70,0.06);">
+                            <td style="padding: 8px; color: #4b7660;">2 Dec</td>
+                            <td style="padding: 8px; color: #083f2f; font-weight: 500;">RR/2025/089</td>
+                            <td style="padding: 8px;"><span style="background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Bank</span></td>
+                            <td style="padding: 8px; text-align: right; color: #065f46; font-weight: 600;">+500.00</td>
+                            <td style="padding: 8px; text-align: right; font-weight: 600; color: #083f2f;">48,350.00</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(6,95,70,0.06);">
+                            <td style="padding: 8px; color: #4b7660;">2 Dec</td>
+                            <td style="padding: 8px; color: #083f2f; font-weight: 500;">BP/2025/124</td>
+                            <td style="padding: 8px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Tunai</span></td>
+                            <td style="padding: 8px; text-align: right; color: #991b1b; font-weight: 600;">-250.00</td>
+                            <td style="padding: 8px; text-align: right; font-weight: 600; color: #083f2f;">47,850.00</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(6,95,70,0.06);">
+                            <td style="padding: 8px; color: #4b7660;">1 Dec</td>
+                            <td style="padding: 8px; color: #083f2f; font-weight: 500;">RR/2025/088</td>
+                            <td style="padding: 8px;"><span style="background: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Cek</span></td>
+                            <td style="padding: 8px; text-align: right; color: #065f46; font-weight: 600;">+1,200.00</td>
+                            <td style="padding: 8px; text-align: right; font-weight: 600; color: #083f2f;">48,100.00</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(6,95,70,0.06);">
+                            <td style="padding: 8px; color: #4b7660;">1 Dec</td>
+                            <td style="padding: 8px; color: #083f2f; font-weight: 500;">BP/2025/123</td>
+                            <td style="padding: 8px;"><span style="background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Bank</span></td>
+                            <td style="padding: 8px; text-align: right; color: #991b1b; font-weight: 600;">-800.00</td>
+                            <td style="padding: 8px; text-align: right; font-weight: 600; color: #083f2f;">46,900.00</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; color: #4b7660;">30 Nov</td>
+                            <td style="padding: 8px; color: #083f2f; font-weight: 500;">RR/2025/087</td>
+                            <td style="padding: 8px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Tunai</span></td>
+                            <td style="padding: 8px; text-align: right; color: #065f46; font-weight: 600;">+350.00</td>
+                            <td style="padding: 8px; text-align: right; font-weight: 600; color: #083f2f;">47,700.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 7: Financial Health Pie Chart (1×2) -->
+        <div class="bento-card row-span-2" style="display: flex; flex-direction: column; align-items: center;">
+            <h3 style="margin-bottom: 1rem; align-self: flex-start;">📊 Deposits by Category</h3>
+            <div style="width: 180px; height: 180px; border-radius: 50%; background: conic-gradient(from 0deg, #10b981 0deg 144deg, #3b82f6 144deg 252deg, #f59e0b 252deg 324deg, #8b5cf6 324deg 360deg); margin: 1rem 0;"></div>
+            <div style="width: 100%; font-size: 0.85rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 12px; height: 12px; background: #10b981; border-radius: 2px;"></div>
+                        <span>Sumbangan</span>
+                    </div>
+                    <span style="font-weight: 600;">40%</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 2px;"></div>
+                        <span>Geran</span>
+                    </div>
+                    <span style="font-weight: 600;">30%</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px;"></div>
+                        <span>Tabung</span>
+                    </div>
+                    <span style="font-weight: 600;">20%</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 12px; height: 12px; background: #8b5cf6; border-radius: 2px;"></div>
+                        <span>Other</span>
+                    </div>
+                    <span style="font-weight: 600;">10%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8: Monthly Trend Chart -->
+        <div class="bento-card card-graph">
+            <h3 style="margin-bottom: 1rem;">📈 6-Month Trend</h3>
+            <div class="graph-placeholder" style="height: 120px;">
+                <div class="graph-bar" style="left: 5%; height: 45%; background: #10b981;"></div>
+                <div class="graph-bar" style="left: 20%; height: 65%; background: #10b981;"></div>
+                <div class="graph-bar" style="left: 35%; height: 55%; background: #10b981;"></div>
+                <div class="graph-bar" style="left: 50%; height: 75%; background: #10b981;"></div>
+                <div class="graph-bar" style="left: 65%; height: 60%; background: #10b981;"></div>
+                <div class="graph-bar" style="left: 80%; height: 85%; background: #10b981;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: #888;">
+                <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+            </div>
+        </div>
+
+        <!-- 10: Settings/Actions Bar (2×1) -->
+        <div class="bento-card col-span-2" style="flex-direction: row; align-items: center; justify-content: space-between; background: #f8faf9; border-color: #e5e7eb;">
+            <div style="display: flex; gap: 1rem;">
+                <button style="background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: 600; color: #374151;">⚙️ Opening Balances</button>
+                <button style="background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: 600; color: #374151;">📅 FY: 2025</button>
+                <button style="background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: 600; color: #374151;">💾 Export</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);"></div>
+                <span style="font-size: 0.9rem; color: #059669; font-weight: 600;">System Healthy</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

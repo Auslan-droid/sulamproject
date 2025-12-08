@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Grid - Simple Example</title>
+    <link rel="stylesheet" href="bento-grid.css">
+</head>
+<body>
+
+    <header>
+        <h1>Bento Grid - Simple Example</h1>
+        <p class="subtitle">This example shows how easy it is to create cards with just class names!</p>
+    </header>
+
+    <div class="bento-grid">
+        
+        <!-- Example 1: Hero Balance Card (2×2) -->
+        <div class="bento-card bento-2x2 card-balance">
+            <div class="card-header">
+                <div class="bento-icon">💰</div>
+                <div>
+                    <div class="bento-label">JUMLAH BAKI</div>
+                    <p style="margin: 0;">Total Balance</p>
+                </div>
+            </div>
+            <div class="balance-value">RM 48,350.00</div>
+            <div class="balance-change">
+                <span class="bento-badge bento-badge-success">↑ 12.5%</span>
+                <span>dari bulan lepas</span>
+            </div>
+            <div class="balance-breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Tunai</div>
+                    <div class="breakdown-value">RM 8,350</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Bank</div>
+                    <div class="breakdown-value">RM 40,000</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example 2: Small Stat Card (1×1) -->
+        <div class="bento-card bento-1x1">
+            <div class="bento-icon bento-icon-sm" style="background: #d1fae5; color: #065f46;">📥</div>
+            <div class="bento-value-sm" style="color: #065f46; margin: 0.75rem 0;">RM 15,200</div>
+            <div class="bento-label">Terimaan (Dec)</div>
+        </div>
+
+        <!-- Example 3: Another Stat Card (1×1) -->
+        <div class="bento-card bento-1x1">
+            <div class="bento-icon bento-icon-sm" style="background: #fee2e2; color: #991b1b;">📤</div>
+            <div class="bento-value-sm" style="color: #991b1b; margin: 0.75rem 0;">RM 9,800</div>
+            <div class="bento-label">Bayaran (Dec)</div>
+        </div>
+
+        <!-- Example 4: Horizontal Card (2×1) -->
+        <div class="bento-card bento-2x1">
+            <div class="bento-flex-between">
+                <div>
+                    <h3 class="bento-title" style="margin: 0 0 0.5rem 0;">📊 Quick Stats</h3>
+                    <p style="margin: 0; color: #4b7660;">8 transactions today</p>
+                </div>
+                <div class="bento-badge bento-badge-info">Active</div>
+            </div>
+        </div>
+
+        <!-- Example 5: Action Grid (2×2) -->
+        <div class="bento-card bento-2x2">
+            <h3 class="bento-title">⚡ Quick Actions</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1;">
+                <button class="bento-btn">
+                    <span style="font-size: 2rem;">📝</span>
+                    <span>New Receipt</span>
+                </button>
+                <button class="bento-btn">
+                    <span style="font-size: 2rem;">💸</span>
+                    <span>New Payment</span>
+                </button>
+                <button class="bento-btn">
+                    <span style="font-size: 2rem;">📊</span>
+                    <span>Reports</span>
+                </button>
+                <button class="bento-btn">
+                    <span style="font-size: 2rem;">⚙️</span>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Example 6: Wide Card (3×1) -->
+        <div class="bento-card bento-3x1">
+            <div class="bento-flex bento-gap">
+                <div class="bento-icon">🔔</div>
+                <div style="flex: 1;">
+                    <h3 class="bento-title" style="margin: 0 0 0.25rem 0;">Notifications</h3>
+                    <p style="margin: 0; color: #4b7660;">You have 3 pending approvals</p>
+                </div>
+                <button class="bento-badge bento-badge-warning" style="cursor: pointer;">View</button>
+            </div>
+        </div>
+
+        <!-- Example 7: Tall List Card (1×2) -->
+        <div class="bento-card bento-1x2">
+            <h3 class="bento-title">📋 Recent Activity</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="padding: 0.5rem; background: #f8faf9; border-radius: 8px;">
+                    <strong style="display: block; font-size: 0.85rem;">RR/2025/089</strong>
+                    <span class="bento-badge bento-badge-success" style="margin-top: 0.25rem;">+RM 500</span>
+                </div>
+                <div style="padding: 0.5rem; background: #f8faf9; border-radius: 8px;">
+                    <strong style="display: block; font-size: 0.85rem;">BP/2025/124</strong>
+                    <span class="bento-badge bento-badge-danger" style="margin-top: 0.25rem;">-RM 250</span>
+                </div>
+                <div style="padding: 0.5rem; background: #f8faf9; border-radius: 8px;">
+                    <strong style="display: block; font-size: 0.85rem;">RR/2025/088</strong>
+                    <span class="bento-badge bento-badge-success" style="margin-top: 0.25rem;">+RM 1,200</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example 8: Custom Content (1×1) -->
+        <div class="bento-card bento-1x1">
+            <div class="bento-flex-center bento-flex-col" style="height: 100%; text-align: center;">
+                <span style="font-size: 3rem;">🎯</span>
+                <div class="bento-value-sm" style="margin: 0.5rem 0;">95%</div>
+                <div class="bento-label">Goal Progress</div>
+            </div>
+        </div>
+
+        <!-- Example 9: Full Width Footer (4 columns / full) -->
+        <div class="bento-card bento-full" style="background: #f8faf9;">
+            <div class="bento-flex-between">
+                <div class="bento-flex bento-gap">
+                    <button class="bento-badge bento-badge-info" style="cursor: pointer;">⚙️ Settings</button>
+                    <button class="bento-badge bento-badge-info" style="cursor: pointer;">📅 FY: 2025</button>
+                    <button class="bento-badge bento-badge-info" style="cursor: pointer;">💾 Export</button>
+                </div>
+                <div class="bento-flex bento-gap-sm">
+                    <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+                    <span style="font-size: 0.875rem; color: #059669; font-weight: 600;">System Online</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="max-width: 1200px; margin: 3rem auto; padding: 2rem; background: #e6f7f0; border-radius: 13px; border: 2px solid #0f8a5f;">
+        <h2 style="color: #083f2f; margin-top: 0;">💡 How to Use</h2>
+        <pre style="background: white; padding: 1rem; border-radius: 8px; overflow-x: auto;"><code>&lt;!-- Just add sizing classes! --&gt;
+&lt;div class="bento-card bento-2x2"&gt;
+    &lt;!-- Your content here --&gt;
+&lt;/div&gt;
+
+&lt;!-- Available sizes: --&gt;
+bento-1x1, bento-2x1, bento-1x2, bento-2x2
+bento-3x1, bento-1x3, bento-3x2, bento-2x3
+bento-4x2, bento-full
+
+&lt;!-- Use utility classes for styling: --&gt;
+.bento-icon, .bento-badge, .bento-value
+.bento-title, .bento-label, .bento-btn
+.bento-flex, .bento-flex-between, .bento-gap</code></pre>
+        <p style="color: #083f2f; margin-bottom: 0;">See <code>bento-grid-usage.md</code> for complete documentation!</p>
+    </div>
+
+</body>
+</html>
