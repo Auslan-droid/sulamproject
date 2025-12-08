@@ -1,0 +1,81 @@
+<?php
+/**
+ * Deposit Account Listing View
+ * Variables expected: $deposits, $categoryColumns, $categoryLabels
+ */
+
+// Format amount for display
+function formatDepositAmount($value) {
+    if ($value > 0) {
+        return 'RM ' . number_format($value, 2);
+    }
+    return '-';
+}
+?>
+
+<div class="content-container">
+    <!-- Deposit Account Table -->
+    <?php if (empty($deposits)): ?>
+        <div class="notice" style="text-align: center; padding: 3rem;">
+            <i class="fas fa-hand-holding-usd" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem;"></i>
+            <p style="font-size: 1.1rem; color: var(--muted);">No deposit records found. <a href="<?php echo url('financial/deposit-account/add'); ?>">Add a new record</a>.</p>
+        </div>
+    <?php else: ?>
+        <div class="table-responsive table-responsive--wide">
+            <table class="table table-hover table--deposit-account">
+                <thead>
+                    <tr>
+                        <th>Tarikh</th>
+                        <th>No. Resit</th>
+                        <th class="sticky-col-left">Butiran</th>
+                        <?php foreach ($categoryLabels as $col => $label): ?>
+                            <th><?php echo htmlspecialchars($label); ?></th>
+                        <?php endforeach; ?>
+                        <th>Jumlah</th>
+                        <th class="table__cell--actions">Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($deposits as $row): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['tx_date']); ?></td>
+                        <td>
+                            <?php if (!empty($row['receipt_number'])): ?>
+                                <span class="badge badge-light border"><?php echo htmlspecialchars($row['receipt_number']); ?></span>
+                            <?php else: ?>
+                                <span class="text-muted">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="sticky-col-left"><?php echo htmlspecialchars($row['description']); ?></td>
+                        <?php 
+                        $rowTotal = 0;
+                        foreach ($categoryColumns as $col): 
+                            $val = (float)($row[$col] ?? 0);
+                            $rowTotal += $val;
+                        ?>
+                            <td class="table__cell--numeric"><?php echo formatDepositAmount($val); ?></td>
+                        <?php endforeach; ?>
+                        <td class="table__cell--numeric" style="font-weight: bold;"><?php echo formatDepositAmount($rowTotal); ?></td>
+                        <td class="table__cell--actions">
+                            <a href="<?php echo url('financial/receipt-print?id=' . $row['id']); ?>" class="btn btn-sm btn-outline-primary" title="Print Receipt" target="_blank">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <a href="<?php echo url('financial/deposit-account/edit?id=' . $row['id']); ?>" class="btn btn-sm btn-secondary" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="POST" action="<?php echo url('financial/deposit-account/delete'); ?>" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>
+
+<link rel="stylesheet" href="<?php echo url('features/financial/admin/assets/css/financial.css'); ?>">
