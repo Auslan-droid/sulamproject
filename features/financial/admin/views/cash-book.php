@@ -17,6 +17,13 @@
     <?php endif; ?>
 
     <?php
+    // Define month names for display
+    $months = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Mac', 4 => 'April',
+        5 => 'Mei', 6 => 'Jun', 7 => 'Julai', 8 => 'Ogos',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Disember'
+    ];
+    
     // Calculate display balances based on filtered view
     $displayCash = $openingCash;
     $displayBank = $openingBank;
@@ -50,7 +57,8 @@
 
     <!-- Filter Form -->
     <div class="card card--filter">
-        <form method="GET" class="form-inline align-items-center">
+        <form method="GET" class="form-inline align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
                 <div class="form-group mb-0 mr-4">
                     <label class="mr-2 text-muted text-uppercase small" style="font-size: 0.75rem;">Tahun</label>
                     <select name="year" class="form-control custom-select shadow-sm" style="min-width: 120px;" onchange="this.form.submit()">
@@ -69,11 +77,6 @@
                     <select name="month" class="form-control custom-select shadow-sm" style="min-width: 200px;" onchange="this.form.submit()">
                         <option value="all" <?php echo ($month === null) ? 'selected' : ''; ?>>Keseluruhan Tahun</option>
                         <?php
-                        $months = [
-                            1 => 'Januari', 2 => 'Februari', 3 => 'Mac', 4 => 'April',
-                            5 => 'Mei', 6 => 'Jun', 7 => 'Julai', 8 => 'Ogos',
-                            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Disember'
-                        ];
                         foreach ($months as $num => $name) {
                             $selected = ($month === $num) ? 'selected' : '';
                             echo "<option value='$num' $selected>$num - $name</option>";
@@ -81,10 +84,15 @@
                         ?>
                     </select>
                 </div>
-                
-                <button type="submit" class="btn btn-primary shadow-sm px-4">
-                    <i class="fas fa-filter mr-2"></i> Tapis
-                </button>
+            </div>
+
+            <div>
+                <a href="<?php echo url('financial/cash-book/print') . '?year=' . $fiscalYear . '&month=' . ($month ?? 'all'); ?>" 
+                   target="_blank" 
+                   class="btn btn-primary shadow-sm">
+                    <i class="fas fa-print mr-2"></i>Cetak Buku Tunai
+                </a>
+            </div>
         </form>
     </div>
 

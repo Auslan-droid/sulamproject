@@ -128,6 +128,13 @@ $router->get('/financial/cash-book', function() use ($ROOT) {
     require $ROOT . '/features/financial/admin/pages/cash-book.php';
 });
 
+$router->get('/financial/cash-book/print', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/cash-book-print.php';
+});
+
 $router->get('/financial/payment-account/add', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
