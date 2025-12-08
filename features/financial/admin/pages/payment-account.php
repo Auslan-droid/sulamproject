@@ -16,7 +16,7 @@ extract($data);
 
 // Define page header
 $pageHeader = [
-    'title' => 'Akaun Bayaran',
+    'title' => 'Akaun Bayaran (Payment Account)',
     'subtitle' => 'Manage payment records.',
     'breadcrumb' => [
         ['label' => 'Home', 'url' => url('/')],
