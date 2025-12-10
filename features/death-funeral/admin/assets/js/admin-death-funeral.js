@@ -1,4 +1,6 @@
-/* Admin Death & Funeral JavaScript */
+// Build base path dynamically (works regardless of project folder)
+const basePathMatch = window.location.pathname.match(/^(.*?)\/features\//);
+const basePath = basePathMatch ? basePathMatch[1] : '';
 
 /**
  * Verify a death notification
@@ -8,7 +10,7 @@ function verifyNotification(id) {
         return false;
     }
 
-    fetch('/sulamproject/features/death-funeral/admin/ajax/verify-notification.php', {
+    fetch(basePath + '/features/death-funeral/admin/ajax/verify-notification.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -38,7 +40,7 @@ function deleteNotification(id) {
         return false;
     }
 
-    fetch('/sulamproject/features/death-funeral/admin/ajax/delete-notification.php', {
+    fetch(basePath + '/features/death-funeral/admin/ajax/delete-notification.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
