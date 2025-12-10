@@ -66,11 +66,13 @@ $amountInWords = numberToWords($totalAmount);
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         body {
-            font-family: 'Arial', sans-serif;
-            font-size: 11pt;
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
             line-height: 1.3;
             color: #000;
             background: #fff;
@@ -80,7 +82,13 @@ $amountInWords = numberToWords($totalAmount);
         @media print {
             body {
                 margin: 0;
-                padding: 0;
+                padding: 20mm; /* Simulate page margin here */
+                -webkit-print-color-adjust: exact;
+            }
+            
+            @page {
+                size: A4;
+                margin: 0; /* Hides browser default headers/footers */
             }
             
             .no-print {
@@ -88,10 +96,11 @@ $amountInWords = numberToWords($totalAmount);
             }
             
             .voucher-container {
-                border: none !important;
+                border: 2px solid #000 !important;
                 box-shadow: none !important;
                 margin: 0 !important;
-                page-break-after: always;
+                width: 100% !important;
+                height: auto !important;
             }
         }
 
@@ -121,544 +130,407 @@ $amountInWords = numberToWords($totalAmount);
             .no-print button:hover {
                 background: #357abd;
             }
+            
+            .voucher-container {
+                width: 210mm;
+                min-height: 297mm;
+                margin: 0 auto;
+                background: #fff;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
         }
 
-        /* Voucher container */
+        /* Main Container */
         .voucher-container {
-            width: 210mm;
-            min-height: 297mm; /* A4 height */
-            margin: 0 auto;
-            padding: 12mm;
-            background: #fff;
             border: 2px solid #000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            position: relative;
         }
 
-        /* Header section */
-        .voucher-header {
+        /* Header */
+        .header {
             text-align: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
         }
 
-        .voucher-header h1 {
-            font-size: 14pt;
+        .header-title {
             font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 10px;
             text-transform: uppercase;
+        }
+
+        .org-name {
+            font-size: 11pt;
+            font-style: italic;
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            min-width: 80%;
+            padding-bottom: 2px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .org-name-label {
+            font-size: 8pt;
+            font-style: italic;
             margin-bottom: 5px;
         }
 
-        .voucher-header .address {
-            font-size: 9pt;
+        .org-address {
+            font-size: 10pt;
+            font-style: italic;
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            min-width: 80%;
+            padding-bottom: 2px;
+            margin-bottom: 5px;
         }
 
-        /* Title */
-        .voucher-title {
-            text-align: center;
-            margin: 12px 0;
-            padding: 6px;
-            background: #f5f5f5;
-            border: 1px solid #ccc;
+        .org-address-label {
+            font-size: 8pt;
+            font-style: italic;
         }
 
-        .voucher-title h2 {
-            font-size: 13pt;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        /* Info sections grid */
+        /* Info Grid */
         .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            display: flex;
+            gap: 20px;
             margin-bottom: 15px;
         }
 
-        .info-section {
-            border: 1px solid #ccc;
-            padding: 10px;
+        .col-left {
+            flex: 1.2;
         }
 
-        .info-section h3 {
-            font-size: 10pt;
-            font-weight: bold;
-            margin-bottom: 8px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ddd;
-            text-transform: uppercase;
-        }
-
-        .info-row {
-            display: flex;
-            margin-bottom: 6px;
-            font-size: 10pt;
-        }
-
-        .info-label {
-            width: 110px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .info-value {
+        .col-right {
             flex: 1;
-            border-bottom: 1px dotted #999;
-            padding-left: 5px;
-            min-height: 18px;
         }
 
-        /* Checkbox styles */
-        .checkbox-row {
+        .field-row {
             display: flex;
-            gap: 20px;
-            margin-top: 5px;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .field-label {
+            width: 140px;
+            font-size: 9pt;
+        }
+
+        .field-input {
+            flex: 1;
+            border: 1px solid #000;
+            height: 24px;
+            padding: 2px 5px;
+            font-size: 10pt;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #000;
+            padding: 2px;
+            font-size: 9pt;
+            flex: 1;
         }
 
         .checkbox-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 10pt;
+            margin: 1px 0;
         }
 
-        .checkbox {
-            width: 14px;
-            height: 14px;
+        .checkbox-box {
+            width: 12px;
+            height: 12px;
             border: 1px solid #000;
-            display: inline-flex;
+            margin-right: 5px;
+            margin-left: 2px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-size: 10px;
         }
 
-        .checkbox.checked::after {
-            content: '✓';
-        }
-
-        /* Transaction table */
-        .transaction-table {
+        /* Table */
+        .voucher-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
-        }
-
-        .transaction-table th,
-        .transaction-table td {
             border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
+            margin-bottom: 0;
         }
 
-        .transaction-table th {
-            background: #f0f0f0;
-            font-weight: bold;
-            font-size: 10pt;
-            text-align: center;
-        }
-
-        .transaction-table td.number {
-            text-align: center;
-            width: 50px;
-        }
-
-        .transaction-table td.amount {
-            text-align: right;
-            width: 120px;
-        }
-
-        .transaction-table tfoot td {
-            font-weight: bold;
-            background: #fafafa;
-        }
-
-        /* Amount in words section */
-        .amount-words-section {
-            margin: 15px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background: #fafafa;
-        }
-
-        .amount-words-section .label {
-            font-weight: bold;
-            font-size: 10pt;
-            margin-bottom: 5px;
-        }
-
-        .amount-words-section .value {
-            font-style: italic;
-            text-transform: uppercase;
-            font-size: 11pt;
-        }
-
-        /* Signature section */
-        .signature-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        .signature-box {
+        .voucher-table th, .voucher-table td {
             border: 1px solid #000;
-            padding: 10px;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .signature-box h4 {
-            font-size: 9pt;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .signature-box .sig-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-
-        .signature-box .sig-line {
-            border-top: 1px solid #000;
-            margin-top: 40px;
-            padding-top: 3px;
-            font-size: 8pt;
-        }
-
-        .signature-box .sig-field {
-            display: flex;
-            margin-bottom: 3px;
-            font-size: 8pt;
-        }
-
-        .signature-box .sig-field-label {
-            width: 50px;
-        }
-
-        .signature-box .sig-field-value {
-            flex: 1;
-            border-bottom: 1px dotted #999;
-        }
-
-        /* Recipient section */
-        .recipient-section {
-            margin-top: 15px;
-            border: 1px solid #000;
-            padding: 10px;
-        }
-
-        .recipient-section h4 {
-            font-size: 10pt;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .recipient-declaration {
-            font-size: 9pt;
-            font-style: italic;
-            margin-bottom: 10px;
             padding: 5px;
-            background: #fafafa;
         }
 
-        .recipient-fields {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .recipient-field {
+        .voucher-table th {
+            background-color: #ccc;
             text-align: center;
+            font-weight: bold;
+            font-size: 10pt;
         }
 
-        .recipient-field .line {
-            border-top: 1px solid #000;
-            margin-top: 30px;
-            padding-top: 3px;
+        .col-no { width: 40px; text-align: center; }
+        .col-desc { text-align: left; }
+        .col-amount { width: 120px; text-align: right; }
+
+        .total-row td {
+            font-weight: bold;
+        }
+
+        /* Amount Words */
+        .amount-words-row {
+            border: 1px solid #000;
+            border-top: none;
+            padding: 5px;
+            margin-bottom: 15px;
+            font-size: 10pt;
+        }
+
+        /* Authorization Grid */
+        .auth-grid {
+            border: 1px solid #000;
+            display: flex;
+        }
+
+        .auth-col-left {
+            width: 50%;
+            border-right: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-col-right {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-box {
+            padding: 5px;
+            min-height: 120px;
+            position: relative;
+        }
+
+        .auth-box-border-bottom {
+            border-bottom: 1px solid #000;
+        }
+
+        .auth-title {
+            font-weight: bold;
+            font-size: 9pt;
+            margin-bottom: 40px;
+        }
+
+        .auth-fields {
+            margin-top: auto;
             font-size: 9pt;
         }
 
-        /* Footer */
-        .voucher-footer {
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #ccc;
-            font-size: 8pt;
-            text-align: center;
-            color: #666;
+        .auth-line {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 2px;
         }
-
-        /* Lampiran label */
-        .lampiran-label {
-            position: absolute;
-            top: 8px;
-            right: 15px;
-            font-size: 8pt;
-            color: #666;
-        }
-
-        .voucher-wrapper {
-            position: relative;
+        
+        .auth-row {
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
-    <!-- Print buttons (hidden when printing) -->
     <div class="no-print">
-        <button onclick="window.print()"><i class="fas fa-print"></i> Cetak Baucar</button>
+        <button onclick="window.print()">Cetak</button>
         <button onclick="window.close()">Tutup</button>
     </div>
 
-    <div class="voucher-wrapper">
-        <div class="voucher-container">
-            <span class="lampiran-label">Lampiran 1</span>
+    <div class="voucher-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">BAUCAR BAYARAN</div>
             
-            <!-- Header -->
-            <div class="voucher-header">
-                <h1>Jawatankuasa Pengurusan Masjid Kamek</h1>
-                <p class="address">
-                    Jalan Masjid, Kampung Kamek, 12345 Bandar, Negeri, Malaysia | Tel: 012-345 6789
-                </p>
-            </div>
+            <div class="org-name">JAWATANKUASA PENGURUSAN MASJID DARUL ULUM</div>
+            
+            <div class="org-address">LORONG DESA ILMU 22, 94300 KOTA SAMARAHAN, SARAWAK</div>
+        </div>
 
-            <!-- Title -->
-            <div class="voucher-title">
-                <h2>Baucar Bayaran (Payment Voucher)</h2>
-            </div>
-
-            <!-- Payee and Voucher Details -->
-            <div class="info-grid">
-                <!-- Left: Payee Details -->
-                <div class="info-section">
-                    <h3>Butiran Penerima</h3>
-                    <div class="info-row">
-                        <span class="info-label">Bayar Kepada:</span>
-                        <span class="info-value"><?php echo e($payment['paid_to'] ?? '-'); ?></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">No. K/P:</span>
-                        <span class="info-value"><?php echo e($payment['payee_ic'] ?? '-'); ?></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Nama Bank:</span>
-                        <span class="info-value"><?php echo e($payment['payee_bank_name'] ?? '-'); ?></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">No. Akaun:</span>
-                        <span class="info-value"><?php echo e($payment['payee_bank_account'] ?? '-'); ?></span>
-                    </div>
+        <!-- Info Grid -->
+        <div class="info-grid">
+            <!-- Left Column -->
+            <div class="col-left">
+                <div class="field-row">
+                    <div class="field-label">BAYAR KEPADA</div>
+                    <div class="field-input"><?php echo e($payment['paid_to'] ?? ''); ?></div>
                 </div>
-
-                <!-- Right: Voucher Details -->
-                <div class="info-section">
-                    <h3>Butiran Baucar</h3>
-                    <div class="info-row">
-                        <span class="info-label">No. Baucar:</span>
-                        <span class="info-value"><?php echo e($payment['voucher_number'] ?? '-'); ?></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Tarikh:</span>
-                        <span class="info-value"><?php echo e($formattedDate); ?></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Kaedah:</span>
-                    </div>
-                    <div class="checkbox-row">
+                <div class="field-row">
+                    <div class="field-label">NO. KAD PENGENALAN</div>
+                    <div class="field-input"><?php echo e($payment['payee_ic'] ?? ''); ?></div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">NAMA BANK</div>
+                    <div class="field-input"><?php echo e($payment['payee_bank_name'] ?? ''); ?></div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">NO. AKAUN</div>
+                    <div class="field-input"><?php echo e($payment['payee_bank_account'] ?? ''); ?></div>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="col-right">
+                <div class="field-row">
+                    <div class="field-label" style="width: 100px;">NO. BAUCAR</div>
+                    <div class="field-input"><?php echo e($payment['voucher_number'] ?? ''); ?></div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label" style="width: 100px;">TARIKH</div>
+                    <div class="field-input"><?php echo $formattedDate; ?></div>
+                </div>
+                <div class="field-row" style="align-items: flex-start;">
+                    <div class="field-label" style="width: 100px; margin-top: 5px;">KAEDAH PEMBAYARAN</div>
+                    <div class="checkbox-group">
                         <div class="checkbox-item">
-                            <span class="checkbox <?php echo $isCash ? 'checked' : ''; ?>"></span>
-                            <span>Tunai</span>
+                            <div class="checkbox-box"><?php echo ($payment['payment_method'] === 'cash') ? '✓' : ''; ?></div>
+                            TUNAI
                         </div>
                         <div class="checkbox-item">
-                            <span class="checkbox <?php echo $isBank ? 'checked' : ''; ?>"></span>
-                            <span>Bank/E-Banking</span>
+                            <div class="checkbox-box"><?php echo ($payment['payment_method'] !== 'cash') ? '✓' : ''; ?></div>
+                            E-BANKING
                         </div>
                     </div>
-                    <?php if ($isBank && !empty($payment['payment_reference'])): ?>
-                    <div class="info-row" style="margin-top: 8px;">
-                        <span class="info-label">No. Rujukan:</span>
-                        <span class="info-value"><?php echo e($payment['payment_reference']); ?></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Table -->
+        <table class="voucher-table">
+            <thead>
+                <tr>
+                    <th class="col-no">NO</th>
+                    <th class="col-desc">BUTIRAN BAYARAN</th>
+                    <th class="col-amount">AMAUN (RM)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($categories)): ?>
+                    <?php $itemNo = 1; ?>
+                    <?php foreach ($categories as $cat): ?>
+                    <tr>
+                        <td class="col-no"><?php echo $itemNo++; ?></td>
+                        <td><?php echo e($payment['description'] ?? $cat['label']); ?></td>
+                        <td class="col-amount"><?php echo number_format($cat['amount'], 2); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td class="col-no">1</td>
+                        <td><?php echo e($payment['description'] ?? '-'); ?></td>
+                        <td class="col-amount"><?php echo number_format($totalAmount, 2); ?></td>
+                    </tr>
+                <?php endif; ?>
+                
+                <!-- Fillers to main consistency -->
+                <?php for($i=0; $i<3; $i++): ?>
+                <tr>
+                    <td class="col-no">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="col-amount">&nbsp;</td>
+                </tr>
+                <?php endfor; ?>
+                
+                <tr class="total-row">
+                    <td colspan="2" style="text-align: right; border-right: 1px solid #000;">JUMLAH (RM)</td>
+                    <td class="col-amount"><?php echo number_format($totalAmount, 2); ?></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Amount Words -->
+        <div class="amount-words-row">
+            <strong>AMAUN (DALAM PERKATAAN) RINGGIT MALAYSIA :</strong> <?php echo e($amountInWords); ?>
+        </div>
+
+        <!-- Signatures (Auth Grid) -->
+        <div class="auth-grid">
+            <!-- Left Column: Prepared + Recipient -->
+            <div class="auth-col-left">
+                <!-- Box 1: Prepared By -->
+                <div class="auth-box auth-box-border-bottom" style="flex: 1; display:flex; flex-direction:column;">
+                    <div class="auth-title">DISEDIAKAN OLEH</div>
+                    <div style="margin-top: auto;">
+                        <div style="border-bottom: 1px solid #000; margin-bottom: 4px;"></div>
+                        <div class="auth-fields">
+                             <div class="auth-row">NAMA:</div>
+                             <div class="auth-row">JAWATAN:</div>
+                             <div class="auth-row">TARIKH:</div>
+                        </div>
                     </div>
-                    <?php endif; ?>
+                </div>
+                <!-- Box 2: Recipient -->
+                <div class="auth-box" style="flex: 1; display:flex; flex-direction:column;">
+                     <div class="auth-row" style="font-style: italic; margin-bottom: 10px;">
+                        SAYA MENGESAHKAN PEMBAYARAN SEPERTI DI ATAS TELAH DITERIMA
+                    </div>
+                    <div style="margin-top: auto;">
+                        <div style="border-bottom: 1px solid #000; margin-bottom: 4px;"></div>
+                        <div class="auth-fields">
+                             <div class="auth-row">NAMA:</div>
+                             <div class="auth-row">NO. KAD PENGENALAN:</div>
+                             <div class="auth-row">TARIKH:</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Transaction Table -->
-            <table class="transaction-table">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">No.</th>
-                        <th>Butiran Bayaran (Payment Details)</th>
-                        <th style="width: 120px;">Amaun (RM)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($categories)): ?>
-                        <?php $itemNo = 1; ?>
-                        <?php foreach ($categories as $cat): ?>
-                        <tr>
-                            <td class="number"><?php echo $itemNo++; ?></td>
-                            <td><?php echo e($payment['description'] ?? $cat['label']); ?></td>
-                            <td class="amount"><?php echo number_format($cat['amount'], 2); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td class="number">1</td>
-                            <td><?php echo e($payment['description'] ?? '-'); ?></td>
-                            <td class="amount"><?php echo number_format($totalAmount, 2); ?></td>
-                        </tr>
-                    <?php endif; ?>
-                    <!-- Empty rows for writing additional items -->
-                    <tr>
-                        <td class="number">&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td class="amount">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td class="number">&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td class="amount">&nbsp;</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2" style="text-align: right;">JUMLAH (Total):</td>
-                        <td class="amount">RM <?php echo number_format($totalAmount, 2); ?></td>
-                    </tr>
-                </tfoot>
-            </table>
-
-            <!-- Amount in Words -->
-            <div class="amount-words-section">
-                <div class="label">Amaun Dalam Perkataan (Amount in Words):</div>
-                <div class="value"><?php echo e($amountInWords); ?></div>
-            </div>
-
-            <!-- Signatures Grid -->
-            <div class="signature-grid">
-                <!-- Prepared By -->
-                <div class="signature-box">
-                    <h4>Disediakan Oleh<br>(Prepared By)</h4>
-                    <div class="sig-content">
-                        <div class="sig-field">
-                            <span class="sig-field-label">Nama:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Jawatan:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Tarikh:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-line">Tandatangan</div>
-                    </div>
-                </div>
-
+            <!-- Right Column: Approvers -->
+            <div class="auth-col-right">
                 <!-- Approver 1 -->
-                <div class="signature-box">
-                    <h4>Disemak & Diluluskan<br>(Checked & Approved)</h4>
-                    <div class="sig-content">
-                        <div class="sig-field">
-                            <span class="sig-field-label">Nama:</span>
-                            <span class="sig-field-value"></span>
+                <div class="auth-box auth-box-border-bottom" style="flex: 1; display:flex; flex-direction:column;">
+                    <div class="auth-title">DISEMAK DAN DILULUSKAN OLEH</div>
+                    <div style="margin-top: auto;">
+                        <div style="border-bottom: 1px solid #000; margin-bottom: 4px;"></div>
+                        <div class="auth-fields">
+                            <div class="auth-row">NAMA:</div>
+                            <div class="auth-row">JAWATAN:</div>
+                            <div class="auth-row">TARIKH:</div>
                         </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Jawatan:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Tarikh:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-line">Tandatangan</div>
                     </div>
                 </div>
-
                 <!-- Approver 2 -->
-                <div class="signature-box">
-                    <h4>Disemak & Diluluskan<br>(Checked & Approved)</h4>
-                    <div class="sig-content">
-                        <div class="sig-field">
-                            <span class="sig-field-label">Nama:</span>
-                            <span class="sig-field-value"></span>
+                <div class="auth-box auth-box-border-bottom" style="flex: 1; display:flex; flex-direction:column;">
+                    <div class="auth-title">DISEMAK DAN DILULUSKAN OLEH</div>
+                    <div style="margin-top: auto;">
+                        <div style="border-bottom: 1px solid #000; margin-bottom: 4px;"></div>
+                        <div class="auth-fields">
+                            <div class="auth-row">NAMA:</div>
+                            <div class="auth-row">JAWATAN:</div>
+                            <div class="auth-row">TARIKH:</div>
                         </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Jawatan:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Tarikh:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-line">Tandatangan</div>
                     </div>
                 </div>
-
                 <!-- Approver 3 -->
-                <div class="signature-box">
-                    <h4>Disemak & Diluluskan<br>(Checked & Approved)</h4>
-                    <div class="sig-content">
-                        <div class="sig-field">
-                            <span class="sig-field-label">Nama:</span>
-                            <span class="sig-field-value"></span>
+                <div class="auth-box" style="flex: 1; display:flex; flex-direction:column;">
+                    <div class="auth-title">DISEMAK DAN DILULUSKAN OLEH</div>
+                    <div style="margin-top: auto;">
+                        <div style="border-bottom: 1px solid #000; margin-bottom: 4px;"></div>
+                        <div class="auth-fields">
+                            <div class="auth-row">NAMA:</div>
+                            <div class="auth-row">JAWATAN:</div>
+                            <div class="auth-row">TARIKH:</div>
                         </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Jawatan:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-field">
-                            <span class="sig-field-label">Tarikh:</span>
-                            <span class="sig-field-value"></span>
-                        </div>
-                        <div class="sig-line">Tandatangan</div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Recipient Confirmation -->
-            <div class="recipient-section">
-                <h4>Penerima (Recipient)</h4>
-                <div class="recipient-declaration">
-                    "Saya mengesahkan bahawa pembayaran seperti di atas telah diterima."<br>
-                    <em>("I confirm that the above payment has been received.")</em>
-                </div>
-                <div class="recipient-fields">
-                    <div class="recipient-field">
-                        <div class="line">Nama / Name</div>
-                    </div>
-                    <div class="recipient-field">
-                        <div class="line">No. K/P / IC No.</div>
-                    </div>
-                    <div class="recipient-field">
-                        <div class="line">Tarikh / Date</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="voucher-footer">
-                <p>Dokumen ini adalah baucar bayaran rasmi. Sila simpan untuk rujukan.</p>
-                <p>This document is an official payment voucher. Please keep for your records.</p>
             </div>
         </div>
     </div>
-
-    <!-- Auto-print script -->
+    
     <script>
-        // Auto-print when page loads (with slight delay for rendering)
         window.onload = function() {
-            setTimeout(function() {
-                window.print();
-            }, 500);
+            // setTimeout(() => window.print(), 500); 
         };
     </script>
 </body>
