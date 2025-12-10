@@ -274,6 +274,15 @@ $amountInWords = numberToWords($totalAmount);
             /* Margins handled by parent flex container */
         }
 
+        .value-box {
+            border: 1px solid #000;
+            padding: 5px 10px;
+            min-width: 150px;
+            display: inline-block;
+            font-weight: bold;
+            background: #fff;
+        }
+
         /* Footer */
         .footer {
             margin-top: 50px;
@@ -312,9 +321,9 @@ $amountInWords = numberToWords($totalAmount);
         <!-- Info Grid -->
         <div class="info-grid">
             <div class="row">
-                <div class="col-left">
-                    <span class="label">No. Resit:</span>
-                    <span class="value-line"><?php echo e($deposit['receipt_number'] ?? '-'); ?></span>
+                <div class="col-left" style="align-items: center;">
+                    <span class="label" style="width: auto; margin-right: 15px;">NO. RESIT</span>
+                    <div class="value-box"><?php echo e($deposit['receipt_number'] ?? '-'); ?></div>
                 </div>
                 <div class="col-right">
                     <span class="label" style="width: 60px;">Tarikh:</span>
@@ -349,7 +358,10 @@ $amountInWords = numberToWords($totalAmount);
                     <span class="summary-value"><?php echo number_format($totalAmount, 2); ?></span>
                 </div>
                 <div class="summary-row">
-                    <span class="summary-label">TUNAI / BANK</span>
+                    <span class="summary-label">
+                        <span style="<?php echo ($deposit['payment_method'] === 'cash') ? '' : 'text-decoration: line-through;'; ?>">TUNAI</span> / 
+                        <span style="<?php echo ($deposit['payment_method'] !== 'cash') ? '' : 'text-decoration: line-through;'; ?>">BANK</span>
+                    </span>
                     <span class="summary-value"><?php echo e($paymentMethodDisplay); ?></span>
                 </div>
             </div>
@@ -369,8 +381,7 @@ $amountInWords = numberToWords($totalAmount);
 
         <!-- Footer -->
         <div class="footer">
-            <p>Resit ini adalah bukti rasmi penerimaan wang. Sila simpan untuk rujukan.</p>
-            <p>This receipt is an official proof of payment. Please keep for your records.</p>
+            
         </div>
     </div>
 
