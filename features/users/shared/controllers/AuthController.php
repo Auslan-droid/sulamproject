@@ -130,6 +130,10 @@ class AuthController {
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
         
+        $maritalStatus = $_POST['marital_status'] ?? null;
+        $address = trim($_POST['address'] ?? '');
+        $income = $_POST['income'] ?? null;
+        
         // Validation
         $errors = [];
 
@@ -150,6 +154,11 @@ class AuthController {
         if (!empty($phone) && strlen($phone) > 20) {
             $errors[] = 'Phone number must be at most 20 characters.';
         }
+
+        // Basic validation for income if provided
+        if (!empty($income) && !is_numeric($income)) {
+            $errors[] = 'Income must be a valid number.';
+        }
         
         $passwordValidation = validatePassword($password);
         if (!$passwordValidation['valid']) {
@@ -165,7 +174,7 @@ class AuthController {
             redirect('/register');
         }
         
-        $result = $this->authService->register($name, $username, $email, $password, 'resident', $phone);
+        $result = $this->authService->register($name, $username, $email, $password, 'resident', $phone, $maritalStatus, $address, $income);
         
         if ($result['success']) {
             $this->auditLog->logCreate('user', $result['user_id']);

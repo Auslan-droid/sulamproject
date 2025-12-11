@@ -41,7 +41,7 @@ class AuthService {
         return ['success' => false, 'message' => 'Invalid credentials'];
     }
     
-    public function register($name, $username, $email, $password, $role = 'user', $phone = null) {
+    public function register($name, $username, $email, $password, $role = 'user', $phone = null, $marital_status = null, $address = null, $income = null) {
         // Check if username or email already exists
         $existing = $this->db->fetchOne(
             "SELECT id FROM users WHERE username = ? OR email = ?",
@@ -56,8 +56,8 @@ class AuthService {
         
         try {
             $this->db->execute(
-                "INSERT INTO users (name, username, email, password, roles, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
-                [$name, $username, $email, $hashedPassword, $role, $phone]
+                "INSERT INTO users (name, username, email, password, roles, phone_number, marital_status, address, income) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [$name, $username, $email, $hashedPassword, $role, $phone, $marital_status, $address, $income]
             );
             
             return [
