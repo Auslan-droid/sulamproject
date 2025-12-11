@@ -57,6 +57,7 @@ $content = ob_get_clean();
 
 // 2. Wrap with dashboard layout
 $additionalStyles = [
+    url('features/shared/assets/css/split-content-layout.css'),
     url('features/financial/admin/assets/css/financial-settings.css')
 ];
 
