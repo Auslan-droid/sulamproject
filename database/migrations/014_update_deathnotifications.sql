@@ -1,4 +1,4 @@
---based on migration-plan.md
+-- based on migration-plan.md
 
 CREATE TABLE IF NOT EXISTS `death_notifications` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,

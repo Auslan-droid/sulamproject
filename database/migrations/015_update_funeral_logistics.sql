@@ -1,4 +1,4 @@
---based on migration-plan.md
+-- based on migration-plan.md
 
 CREATE TABLE IF NOT EXISTS `funeral_logistics` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
