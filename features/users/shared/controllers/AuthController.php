@@ -130,6 +130,10 @@ class AuthController {
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
         
+        $maritalStatus = $_POST['marital_status'] ?? null;
+        $address = trim($_POST['address'] ?? '');
+        $incomeRange = $_POST['income_range'] ?? null;
+        
         // Validation
         $errors = [];
 
@@ -150,6 +154,12 @@ class AuthController {
         if (!empty($phone) && strlen($phone) > 20) {
             $errors[] = 'Phone number must be at most 20 characters.';
         }
+
+        // Basic validation for income if provided
+        $validIncomeRanges = ['below_5250', 'between_5250_11820', 'above_11820'];
+        if (!empty($incomeRange) && !in_array($incomeRange, $validIncomeRanges)) {
+             $errors[] = 'Invalid income range selected.';
+        }
         
         $passwordValidation = validatePassword($password);
         if (!$passwordValidation['valid']) {
@@ -165,7 +175,7 @@ class AuthController {
             redirect('/register');
         }
         
-        $result = $this->authService->register($name, $username, $email, $password, 'resident', $phone);
+        $result = $this->authService->register($name, $username, $email, $password, 'resident', $phone, $maritalStatus, $address, $incomeRange);
         
         if ($result['success']) {
             $this->auditLog->logCreate('user', $result['user_id']);

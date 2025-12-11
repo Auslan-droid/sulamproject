@@ -72,23 +72,52 @@
                     <input type="text" name="name" required maxlength="120" <?php echo ($initialView === 'register') ? 'autofocus' : ''; ?>>
                 </label>
 
-                <label>
-                    Username
-                    <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
-                           title="3-20 characters, letters, numbers, and underscore only">
-                </label>
-                
                 <div class="form-row">
+                    <label>
+                        Username
+                        <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
+                               title="3-20 characters, letters, numbers, and underscore only">
+                    </label>
+
                     <label>
                         Email
                         <input type="email" name="email" required>
                     </label>
-
+                </div>
+                
+                <div class="form-row">
                     <label>
                         Phone Number
                         <input type="tel" name="phone_number" maxlength="20">
                     </label>
+
+                    <label>
+                        Marital Status
+                        <select name="marital_status">
+                            <option value="">Select Status</option>
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                            <option value="divorced">Divorced</option>
+                            <option value="widowed">Widowed</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </label>
                 </div>
+
+                <label>
+                    Address
+                    <textarea name="address" rows="2" placeholder="House No, Street, Area..."></textarea>
+                </label>
+
+                <label>
+                    Monthly Income Range
+                    <select name="income_range">
+                        <option value="">Select Income Range</option>
+                        <option value="below_5250">Below RM5,250</option>
+                        <option value="between_5250_11820">RM5,250 - RM11,820</option>
+                        <option value="above_11820">Above RM11,820</option>
+                    </select>
+                </label>
                 
                 <div class="form-row">
                     <label>

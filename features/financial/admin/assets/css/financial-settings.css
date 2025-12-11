@@ -1,17 +1,6 @@
 /* Financial Settings Page */
 
-/* Layout Grid */
-.financial-settings-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-}
-
-@media (min-width: 992px) {
-    .financial-settings-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
+/* Layout Grid definition moved to shared/assets/css/split-content-layout.css */
 
 /* Card Improvements */
 .card-header {

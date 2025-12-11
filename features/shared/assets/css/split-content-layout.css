@@ -1,0 +1,14 @@
+/* Shared Split Content Layout */
+/* Usage: Container for a 2-column layout typically used for Forms (Left) + Aux Info (Right) */
+
+.split-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 992px) {
+    .split-layout-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

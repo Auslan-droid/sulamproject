@@ -81,10 +81,8 @@ http://sulamproject.test/login
 2. Click "Import" tab
 3. Import the SQL files in this order:
    - First: `database/schema.sql` (creates database and tables)
-   - Then: `database/dump.sql` (optional - sample data)
+   - Then: `database/dump.sql` (sample data)
    - Finally: All files in `database/migrations/` folder in numerical order
-
-**Alternative**: The database can auto-provision basic tables when you first visit the registration page, but manual import is recommended for the complete schema.
 
 **Database name**: `masjidkamek`
 

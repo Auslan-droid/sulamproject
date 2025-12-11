@@ -41,6 +41,11 @@ $pageHeader = [
     ]
 ];
 
+$additionalStyles = [
+    url('features/shared/assets/css/split-content-layout.css'),
+    url('features/users/user/assets/css/edit-profile.css')
+];
+
 ob_start();
 include __DIR__ . '/../views/edit-profile.php';
 $content = ob_get_clean();
