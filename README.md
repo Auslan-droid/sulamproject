@@ -1,58 +1,76 @@
-# sulamproject
-A secure, role-based system for Desa Ilmu that replaces Excel/myMasjid to manage residents, zakat aid, donations, death/funeral records, and events. Offers search, approvals, receipts, audit logs, reports, and backups—so no needy resident is overlooked.
+# SulamProject
 
-## Registration Flow
+SulamProject is a comprehensive **Community Management System** designed for **Masjid Desa Ilmu**. It replaces legacy Excel sheets and manual processes with a secure, role-based web application to efficiently manage community data and mosque operations.
 
-The application persists user accounts into a MySQL database named `masjidkamek`, table `users`.
+## 🚀 Overview
 
-### Auto-provisioning
-On first load (or first registration submit), the helper `db.php` will:
-1. Connect to MySQL (`localhost`, user `root`, blank password — adjust if different).
-2. Create the database `masjidkamek` if it does not exist (or import `database/schema.sql`).
-3. Select the database and create a `users` table if missing.
+The system is built to ensure no needy resident is overlooked and provides transparency in mosque management. It covers key functional areas including resident registry, financial aid (Zakat), donations, funeral management, and event scheduling.
 
-### `users` table structure
-```sql
-CREATE TABLE `users` (
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	username VARCHAR(50) NOT NULL UNIQUE,
-	email VARCHAR(120) NOT NULL UNIQUE,
-	password_hash VARCHAR(255) NOT NULL,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+### Key Features
+
+*   **👥 Resident Management**: Digital registry of community members and household details.
+*   **💰 Financial & Zakat**: Complete workflow for Zakat applications, assessments, and disbursements.
+*   **🎁 Donations**: Tracking donors, issuing receipts, and managing funds.
+*   **⚰️ Death & Funeral (Khairat Kematian)**: Managing death notifications and funeral assistance.
+*   **📅 Events**: Scheduling and announcing mosque events.
+*   **🛡️ Security**: Role-based access control, audit logs, and secure data handling.
+
+## 🛠️ Technical Stack
+
+The project utilizes a simplified, robust stack tailored for easy deployment and maintenance:
+
+*   **Backend**: Vanilla PHP (No heavy frameworks)
+*   **Database**: MySQL / MariaDB
+*   **Frontend**: HTML5, CSS3, Vanilla JavaScript
+*   **Server Environment**: Apache (Developed using Laragon on Windows)
+
+## 📂 Project Architecture
+
+This project follows a **Feature-Based Architecture**. Code is organized by business domain/features rather than technical layers (MVC folders).
+
+```text
+sulamproject/
+├── features/                  # CORE LOGIC (Residents, Financial, etc.)
+│   ├── [feature-name]/
+│   │   ├── shared/            # Shared logic (Models, Libraries)
+│   │   ├── admin/             # Admin controllers & views
+│   │   └── user/              # User controllers & views
+├── database/                  # Migrations & Seeds
+├── public/                    # (Root) Entry points & Assets
+├── context-docs/              # Detailed internal documentation
+└── db.php                     # Database connection & auto-provisioning
 ```
 
-### Security Notes
-- Passwords are hashed with `password_hash()` (bcrypt/Argon depending on PHP build).
-- All inserts use prepared statements to mitigate SQL injection.
-- Basic validation enforces username length (3–50), email format/length, password min length (8).
+## ⚙️ Installation & Setup
 
-### Local Setup (Laragon)
-1. Start Apache & MySQL in the Laragon control panel.
-2. Place the project in `c:\laragon\www\sulamcode\sulamproject`.
-3. Visit `http://localhost/sulamcode/sulamproject/register.php` to create an account.
-4. Check via phpMyAdmin (`http://localhost/phpmyadmin`) → database `masjidkamek` → table `users`.
+1.  **Prerequisites**:
+    *   Install **Laragon** (recommended for Windows) or any LAMP/WAMP stack.
+    *   Ensure PHP 7.4+ and MySQL 5.7+ are running.
 
-### Adjusting Credentials
-Edit `db.php` if your MySQL root password differs or you want a dedicated user:
-```php
-$DB_HOST = 'localhost';
-$DB_USER = 'app_user';
-$DB_PASS = 'strong_password_here';
-```
-Create the user in MySQL:
-```sql
-CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'strong_password_here';
-GRANT ALL PRIVILEGES ON masjidkamek.* TO 'app_user'@'localhost';
-FLUSH PRIVILEGES;
-```
+2.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/your-repo/sulamproject.git
+    cd sulamproject
+    ```
 
-### Next Steps
-- Add login verification using `password_verify()`.
-- Implement session handling and logout.
-- Introduce role column and permission checks.
-- Add CSRF tokens to forms.
-- Rate-limit registration to prevent abuse.
+3.  **Database Setup (Manual)**:
+    Since automated provisioning is disabled for live production safety:
+    1.  **Create Database**: Create a database named `masjidkamek` (or your preferred name) in your MySQL server (e.g., via phpMyAdmin).
+    2.  **Import Schema**: Import the file `database/manual_install.sql` into that database. This file contains the base schema and all necessary migrations.
 
----
-For questions or improvements, open an issue or propose a PR.
+4.  **Configuration**:
+    *   Edit the connection file: `features/shared/lib/database/mysqli-db.php`.
+    *   Update the `$DB_HOST`, `$DB_USER`, `$DB_PASS`, and `$DB_NAME` variables to match your environment.
+    *   *Alternatively, you can set these as environment variables.*
+
+5.  **Access**:
+    *   Point your web server (Apache/Nginx) to the project root.
+    *   Visit: `http://localhost/sulamproject` (or your domain).
+
+## 📚 Documentation
+
+For more detailed technical documentation, architectural decisions, and feature specs, please refer to the `context-docs/` directory:
+
+*   [Architecture Overview](context-docs/Architecture.md)
+*   [Feature Based Structure](context-docs/Feature-Based-Structure.md)
+*   [Requirements](context-docs/Requirements_Summary.md)
