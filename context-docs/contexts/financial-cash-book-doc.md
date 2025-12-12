@@ -100,6 +100,45 @@ Important notes about SQL and security:
     - Columns show `-` if not applicable.
     - Balance columns use the pre-computed `$tx['tunai_balance']` and `$tx['bank_balance']` computed in the controller.
     - Actions column prints a `Print Receipt` (IN) or `Print Voucher` (OUT) button that opens `financial/receipt-print?id={id}` or `financial/voucher-print?id={id}` in a new tab.
+
+**Printing / Print Templates**
+
+- **Routes**: The print endpoints are registered in `features/shared/lib/routes.php` as `/financial/receipt-print` and `/financial/voucher-print` which load the respective page templates.
+- **Files**:
+  - Receipt template: [features/financial/admin/pages/receipt-print.php](features/financial/admin/pages/receipt-print.php)
+  - Voucher template: [features/financial/admin/pages/voucher-print.php](features/financial/admin/pages/voucher-print.php)
+  - Cash book action links: see [features/financial/admin/views/cash-book.php](features/financial/admin/views/cash-book.php#L190-L212) where the `Print Receipt` / `Print Voucher` anchors are generated.
+
+- **What these print pages do**:
+  - Fetch the transaction ID from `$_GET['id']` (cast to `(int)`), load the corresponding repository (`DepositAccountRepository` or `PaymentAccountRepository`) and `findById($id)`. If the record is missing or ID invalid, they `die()` with a short message.
+  - Compute `totalAmount` from category columns (they iterate `::CATEGORY_COLUMNS`), determine display category labels, format date, and convert the amount to words using `numberToWords()`.
+  - Render a standalone HTML document intended for printing (no surrounding app layout). They include inline CSS and print-specific `@media print` rules and `@page` adjustments to try to suppress browser headers/footers and control margins.
+  - Both pages include small controls in a `.no-print` block for a manual `window.print()` button and `window.close()`; `receipt-print.php` additionally auto-triggers printing via `window.print()` on `window.onload` (with a short `setTimeout`), while `voucher-print.php` has the auto-print commented out by default.
+
+- **Key CSS / print behavior notes**:
+  - `@page { margin: 0; }` is used in `receipt-print.php` and `voucher-print.php` to remove default browser margins; however browser support for `@page` and suppression of headers/footers varies by browser and printer driver.
+  - Both templates use `@media print` to hide `.no-print` controls and to expand the container to full page. They also use `-webkit-print-color-adjust: exact` in `voucher-print.php` to preserve background colors in some browsers.
+  - For consistent A4 layout, the templates set container widths to `210mm` and padding in `mm`. If you need millimetre-perfect prints, test with the target printer and adjust `padding` and `@page size`.
+
+- **How to change printed header / organization details**:
+  - Edit the static text in the templates: the organization name, address and title are hard-coded in the HTML of the print templates. Files to edit: [features/financial/admin/pages/receipt-print.php](features/financial/admin/pages/receipt-print.php) and [features/financial/admin/pages/voucher-print.php](features/financial/admin/pages/voucher-print.php).
+  - If you prefer a centralized config, create a helper (e.g., `features/shared/lib/config/org.php`) and replace the hard-coded strings with `echo e(orgConfig('name'))`.
+
+- **How the print link is created in the Cash Book**:
+  - In `views/cash-book.php` the action anchor uses `url('financial/receipt-print?id={$tx['id']}')` or `url('financial/voucher-print?id={$tx['id']}')` and `target="_blank"` so printing opens in a new tab/window. To change this behavior (for example to use a modal preview), update the anchor and add JS to fetch the template via AJAX or create an inline print preview.
+
+- **Security & robustness**:
+  - The print endpoints cast `$_GET['id']` to `(int)` which mitigates SQL injection risk; the repositories use prepared statements for DB access. Keep the `(int)` cast if you refactor these pages.
+  - Because the print templates call `die()` on missing records, consider returning a friendly error view if you need better UX for missing records.
+
+- **Customizing printed fields (amount in words, categories, payment reference)**:
+  - Amount to words: `numberToWords()` is used. Its implementation lives in `features/shared/lib/utilities/functions.php`. If you want a different language or formatting, update that function.
+  - Categories and amounts are derived from `::CATEGORY_COLUMNS` and `::CATEGORY_LABELS` in the respective repository classes. Adding/removing categories requires DB migrations and updates to these arrays.
+
+- **Advanced print tips**:
+  - To remove browser headers/footers reliably in Chrome, instruct users to disable them in the print dialog or use a PDF generator (wkhtmltopdf, Puppeteer) for server-side rendering.
+  - If you need multiple receipts/vouchers printed in one go, build an admin tool that accepts multiple IDs, loads each template sequentially into a single combined HTML with `page-break-after: always;` between receipts, and then prints the combined document.
+  - For two-sided printing, ensure margins and page breaks are symmetric and test with the actual paper / printer settings.
   - Table footer (`<tfoot>`) shows the current balances (cash, bank, total).
 
 Practical editing notes for view changes

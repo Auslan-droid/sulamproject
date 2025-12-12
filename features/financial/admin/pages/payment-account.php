@@ -14,6 +14,24 @@ $controller = new FinancialController($mysqli);
 $data = $controller->paymentAccount();
 extract($data);
 
+// Build print URL with current filters
+$printUrl = url('financial/payment-account/print');
+$queryParams = [];
+if (!empty($_GET)) {
+    foreach ($_GET as $key => $value) {
+        if (is_array($value)) {
+            foreach ($value as $v) {
+                $queryParams[] = urlencode($key) . '[]=' . urlencode($v);
+            }
+        } else {
+            $queryParams[] = urlencode($key) . '=' . urlencode($value);
+        }
+    }
+}
+if (!empty($queryParams)) {
+    $printUrl .= '?' . implode('&', $queryParams);
+}
+
 // Define page header
 $pageHeader = [
     'title' => 'Akaun Bayaran (Payment Account)',
@@ -25,6 +43,7 @@ $pageHeader = [
     ],
     'actions' => [
         ['label' => 'Back', 'icon' => 'fa-arrow-left', 'url' => url('financial'), 'class' => 'btn-secondary'],
+        ['label' => 'Print', 'icon' => 'fa-print', 'url' => $printUrl, 'class' => 'btn', 'target' => '_blank'],
         ['label' => 'Add Payment', 'icon' => 'fa-plus', 'url' => url('financial/payment-account/add'), 'class' => 'btn-primary'],
     ]
 ];

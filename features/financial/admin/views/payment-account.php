@@ -32,6 +32,240 @@ function formatAmount($value) {
         </div>
     </div>
 
+    <!-- Filter Card (Styleguide Pattern) -->
+    <div class="card card--filter mb-4" id="paymentFilter">
+        <!-- Filter Header -->
+        <div class="filter-header">
+            <div class="filter-icon">
+                <i class="fas fa-sliders-h"></i>
+            </div>
+            <h4 class="filter-title">Payment Filters</h4>
+            <button type="button" class="filter-collapse-toggle" aria-label="Toggle filters" onclick="togglePaymentFilter()">
+                <i class="fas fa-chevron-down" id="paymentFilterIcon"></i>
+            </button>
+        </div>
+
+        <!-- Active Filters Display (Pills) -->
+        <?php 
+        $hasFilters = !empty($_GET['date_from']) || !empty($_GET['date_to']) || !empty($_GET['payment_method']) || !empty($_GET['search']) || !empty($_GET['categories']);
+        if ($hasFilters): 
+        ?>
+        <div style="padding: 1rem 1.5rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+            <div class="filter-pills">
+                <?php if (!empty($_GET['date_from']) || !empty($_GET['date_to'])): ?>
+                <span class="filter-pill filter-pill--selected">
+                    <span>Date: <?php echo htmlspecialchars($_GET['date_from'] ?? 'Start'); ?> to <?php echo htmlspecialchars($_GET['date_to'] ?? 'End'); ?></span>
+                    <button type="button" class="filter-pill-remove" onclick="removePaymentFilter('date')" aria-label="Remove date filter">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+                <?php endif; ?>
+                
+                <?php if (!empty($_GET['payment_method'])): ?>
+                <span class="filter-pill filter-pill--selected">
+                    <span>Method: <?php echo htmlspecialchars(ucfirst($_GET['payment_method'])); ?></span>
+                    <button type="button" class="filter-pill-remove" onclick="removePaymentFilter('payment_method')" aria-label="Remove payment method filter">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+                <?php endif; ?>
+                
+                <?php if (!empty($_GET['categories'])): ?>
+                    <?php foreach ($_GET['categories'] as $cat): ?>
+                        <?php if (isset($categoryLabels[$cat])): ?>
+                        <span class="filter-pill filter-pill--selected">
+                            <span><?php echo htmlspecialchars($categoryLabels[$cat]); ?></span>
+                            <button type="button" class="filter-pill-remove" onclick="removePaymentCategoryFilter('<?php echo htmlspecialchars($cat, ENT_QUOTES); ?>')" aria-label="Remove category filter">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </span>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                
+                <?php if (!empty($_GET['search'])): ?>
+                <span class="filter-pill filter-pill--selected">
+                    <span>Search: "<?php echo htmlspecialchars($_GET['search']); ?>"</span>
+                    <button type="button" class="filter-pill-remove" onclick="removePaymentFilter('search')" aria-label="Remove search filter">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Filter Content (Collapsible) -->
+        <div id="paymentFilterContent" style="display: none;">
+            <form method="GET" id="paymentFilterForm">
+                <!-- Date Range Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-section-header" onclick="togglePaymentSection(this)">
+                        <span class="filter-section-title">Date Range</span>
+                        <i class="fas fa-chevron-down filter-section-icon" style="transform: rotate(-90deg);"></i>
+                    </div>
+                    <div class="filter-section-content" style="display: none;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">From Date</label>
+                                <input type="date" name="date_from" class="form-control" value="<?php echo htmlspecialchars($_GET['date_from'] ?? ''); ?>" style="width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">To Date</label>
+                                <input type="date" name="date_to" class="form-control" value="<?php echo htmlspecialchars($_GET['date_to'] ?? ''); ?>" style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-section-header" onclick="togglePaymentSection(this)">
+                        <span class="filter-section-title">Payment Method</span>
+                        <i class="fas fa-chevron-down filter-section-icon" style="transform: rotate(-90deg);"></i>
+                    </div>
+                    <div class="filter-section-content" style="display: none;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <select name="payment_method" class="form-control" style="width: 100%;">
+                                <option value="">All Methods</option>
+                                <option value="cash" <?php echo (isset($_GET['payment_method']) && $_GET['payment_method'] === 'cash') ? 'selected' : ''; ?>>Cash</option>
+                                <option value="bank" <?php echo (isset($_GET['payment_method']) && $_GET['payment_method'] === 'bank') ? 'selected' : ''; ?>>Bank</option>
+                                <option value="cheque" <?php echo (isset($_GET['payment_method']) && $_GET['payment_method'] === 'cheque') ? 'selected' : ''; ?>>Cheque</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-section-header" onclick="togglePaymentSection(this)">
+                        <span class="filter-section-title">Expense Category</span>
+                        <i class="fas fa-chevron-down filter-section-icon" style="transform: rotate(-90deg);"></i>
+                    </div>
+                    <div class="filter-section-content" style="display: none;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                            <?php foreach ($categoryLabels as $col => $label): ?>
+                            <div>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" name="categories[]" value="<?php echo htmlspecialchars($col); ?>" 
+                                        <?php echo (isset($_GET['categories']) && in_array($col, $_GET['categories'])) ? 'checked' : ''; ?>
+                                        style="width: 16px; height: 16px; accent-color: var(--accent);">
+                                    <span style="font-size: 0.875rem; color: var(--text-primary);"><?php echo htmlspecialchars($label); ?></span>
+                                </label>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; font-size: 0.813rem; color: var(--muted);">
+                            <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
+                            Shows records with non-zero values in selected categories
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-section-header" onclick="togglePaymentSection(this)">
+                        <span class="filter-section-title">Search</span>
+                        <i class="fas fa-chevron-down filter-section-icon" style="transform: rotate(-90deg);"></i>
+                    </div>
+                    <div class="filter-section-content" style="display: none;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Voucher No. / Description / Paid To</label>
+                            <input 
+                                type="text" 
+                                name="search" 
+                                class="form-control" 
+                                placeholder="Search by voucher number, description or paid to..." 
+                                value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>"
+                                style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Actions -->
+                <div style="padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; gap: 0.75rem;">
+                    <button type="submit" class="btn" style="flex: 1;">
+                        <i class="fas fa-filter" style="margin-right: 0.5rem;"></i>Apply Filters
+                    </button>
+                    <button type="button" class="btn outline" onclick="resetPaymentFilters()" style="flex: 1;">
+                        <i class="fas fa-redo" style="margin-right: 0.5rem;"></i>Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    // Toggle filter card collapse
+    function togglePaymentFilter() {
+        const content = document.getElementById('paymentFilterContent');
+        const icon = document.getElementById('paymentFilterIcon');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        } else {
+            content.style.display = 'none';
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        }
+    }
+
+    // Toggle individual filter sections
+    function togglePaymentSection(header) {
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.filter-section-icon');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.style.transform = 'rotate(0deg)';
+            header.classList.remove('collapsed');
+        } else {
+            content.style.display = 'none';
+            icon.style.transform = 'rotate(-90deg)';
+            header.classList.add('collapsed');
+        }
+    }
+
+    // Remove individual filter
+    function removePaymentFilter(filterType) {
+        const params = new URLSearchParams(window.location.search);
+        
+        if (filterType === 'date') {
+            params.delete('date_from');
+            params.delete('date_to');
+        } else if (filterType === 'payment_method') {
+            params.delete('payment_method');
+        } else if (filterType === 'search') {
+            params.delete('search');
+        }
+        
+        window.location.href = '<?php echo url('financial/payment-account'); ?>' + (params.toString() ? '?' + params.toString() : '');
+    }
+
+    // Remove individual category filter
+    function removePaymentCategoryFilter(category) {
+        const params = new URLSearchParams(window.location.search);
+        const categories = params.getAll('categories[]');
+        
+        // Remove this category
+        params.delete('categories[]');
+        categories.forEach(cat => {
+            if (cat !== category) {
+                params.append('categories[]', cat);
+            }
+        });
+        
+        window.location.href = '<?php echo url('financial/payment-account'); ?>' + (params.toString() ? '?' + params.toString() : '');
+    }
+
+    // Reset all filters
+    function resetPaymentFilters() {
+        window.location.href = '<?php echo url('financial/payment-account'); ?>';
+    }
+    </script>
+
     <?php if (empty($payments)): ?>
         <div class="notice" style="text-align: center; padding: 3rem;">
             <i class="fas fa-coins" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem;"></i>

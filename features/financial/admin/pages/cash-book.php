@@ -25,7 +25,9 @@ if (isset($_GET['month'])) {
     $month = (int)date('m');
 }
 
-$data = $controller->cashBook($year, $month);
+$search = isset($_GET['search']) ? trim($_GET['search']) : null;
+
+$data = $controller->cashBook($year, $month, $search);
 
 extract($data);
 
@@ -40,6 +42,7 @@ $pageHeader = [
     ],
     'actions' => [
         ['label' => 'Back', 'icon' => 'fa-arrow-left', 'url' => url('financial'), 'class' => 'btn-secondary'],
+        ['label' => 'Print Cash Book', 'icon' => 'fa-print', 'url' => url('financial/cash-book/print') . '?year=' . $year . '&month=' . ($month ?? 'all') . (!empty($search) ? '&search=' . urlencode($search) : ''), 'class' => 'btn', 'target' => '_blank'],
     ]
 ];
 

@@ -68,6 +68,89 @@ class PaymentAccountRepository
     }
 
     /**
+     * Find payments with filters
+     * 
+     * @param array $filters Associative array with optional keys: date_from, date_to, payment_method, search, categories
+     * @return array
+     */
+    public function findWithFilters(array $filters = []): array
+    {
+        $conditions = [];
+        $params = [];
+        $types = '';
+
+        // Date range filter
+        if (!empty($filters['date_from'])) {
+            $conditions[] = "tx_date >= ?";
+            $params[] = $filters['date_from'];
+            $types .= 's';
+        }
+        if (!empty($filters['date_to'])) {
+            $conditions[] = "tx_date <= ?";
+            $params[] = $filters['date_to'];
+            $types .= 's';
+        }
+
+        // Payment method filter
+        if (!empty($filters['payment_method'])) {
+            $conditions[] = "payment_method = ?";
+            $params[] = $filters['payment_method'];
+            $types .= 's';
+        }
+
+        // Search filter (voucher_number, description, paid_to)
+        if (!empty($filters['search'])) {
+            $conditions[] = "(voucher_number LIKE ? OR description LIKE ? OR paid_to LIKE ?)";
+            $searchTerm = '%' . $filters['search'] . '%';
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $types .= 'sss';
+        }
+
+        // Category filter (show records with non-zero values in selected categories)
+        if (!empty($filters['categories']) && is_array($filters['categories'])) {
+            $categoryConditions = [];
+            foreach ($filters['categories'] as $category) {
+                if (in_array($category, self::CATEGORY_COLUMNS)) {
+                    $categoryConditions[] = "`$category` > 0";
+                }
+            }
+            if (!empty($categoryConditions)) {
+                $conditions[] = "(" . implode(' OR ', $categoryConditions) . ")";
+            }
+        }
+
+        // Build SQL query
+        $sql = "SELECT * FROM financial_payment_accounts";
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(' AND ', $conditions);
+        }
+        $sql .= " ORDER BY tx_date DESC, id DESC";
+
+        // Execute query
+        if (!empty($params)) {
+            $stmt = $this->mysqli->prepare($sql);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $rows = [];
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+            $stmt->close();
+            return $rows;
+        } else {
+            $result = $this->mysqli->query($sql);
+            $rows = [];
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
+    }
+
+    /**
      * Find a single payment record by ID
      *
      * @param int $id

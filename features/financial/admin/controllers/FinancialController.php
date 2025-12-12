@@ -44,12 +44,8 @@ class FinancialController {
      * Display the Cash Book (Buku Tunai)
      * @param int|null $fiscalYear Optional fiscal year filter (defaults to current year)
      */
-    public function cashBook(?int $fiscalYear = null, ?int $month = null): array {
+    public function cashBook(?int $fiscalYear = null, ?int $month = null, ?string $search = null): array {
         $fiscalYear = $fiscalYear ?? (int)date('Y');
-        // Default to current month if not specified, or allow '0' or null for "All" ? 
-        // Let's assume if month is null, we show all (or user can select 'All'). 
-        // But for better UX per user request "one month will have one cash book", maybe default to current month if not provided is safer, 
-        // but let's stick to optional so 'All' is possible.
         
         // Get opening balances for the year from financial_settings
         $settings = $this->settingsRepo->getByFiscalYear($fiscalYear);
@@ -102,7 +98,16 @@ class FinancialController {
             $tx['tunai_balance'] = $tunaiBalance;
             $tx['bank_balance'] = $bankBalance;
 
-            if ($isInSelectedRange) {
+            // Apply Search Filtering
+            $matchesSearch = true;
+            if ($search) {
+                $searchLower = strtolower($search);
+                $descMatch = strpos(strtolower($tx['description']), $searchLower) !== false;
+                $refMatch = strpos(strtolower($tx['ref_no'] ?? ''), $searchLower) !== false;
+                $matchesSearch = $descMatch || $refMatch;
+            }
+
+            if ($isInSelectedRange && $matchesSearch) {
                 $filteredTransactions[] = $tx;
             }
         }
@@ -149,6 +154,7 @@ class FinancialController {
             'openingBank' => $openingBank,
             'fiscalYear' => $fiscalYear,
             'month' => $month,
+            'search' => $search,
             'hasSettings' => $settings !== null,
         ];
     }
@@ -208,7 +214,28 @@ class FinancialController {
      * List all payment records
      */
     public function paymentAccount(): array {
-        $payments = $this->paymentRepo->findAll();
+        // Get filters from query parameters
+        $filters = [];
+        if (!empty($_GET['date_from'])) {
+            $filters['date_from'] = $_GET['date_from'];
+        }
+        if (!empty($_GET['date_to'])) {
+            $filters['date_to'] = $_GET['date_to'];
+        }
+        if (!empty($_GET['payment_method'])) {
+            $filters['payment_method'] = $_GET['payment_method'];
+        }
+        if (!empty($_GET['search'])) {
+            $filters['search'] = $_GET['search'];
+        }
+        if (!empty($_GET['categories']) && is_array($_GET['categories'])) {
+            $filters['categories'] = $_GET['categories'];
+        }
+
+        // Fetch payments with filters
+        $payments = empty($filters) 
+            ? $this->paymentRepo->findAll() 
+            : $this->paymentRepo->findWithFilters($filters);
         
         $totalCash = 0;
         $totalBank = 0;
@@ -372,7 +399,28 @@ class FinancialController {
      * List all deposit records
      */
     public function depositAccount(): array {
-        $deposits = $this->depositRepo->findAll();
+        // Get filters from query parameters
+        $filters = [];
+        if (!empty($_GET['date_from'])) {
+            $filters['date_from'] = $_GET['date_from'];
+        }
+        if (!empty($_GET['date_to'])) {
+            $filters['date_to'] = $_GET['date_to'];
+        }
+        if (!empty($_GET['payment_method'])) {
+            $filters['payment_method'] = $_GET['payment_method'];
+        }
+        if (!empty($_GET['search'])) {
+            $filters['search'] = $_GET['search'];
+        }
+        if (!empty($_GET['categories']) && is_array($_GET['categories'])) {
+            $filters['categories'] = $_GET['categories'];
+        }
+
+        // Fetch deposits with filters
+        $deposits = empty($filters) 
+            ? $this->depositRepo->findAll() 
+            : $this->depositRepo->findWithFilters($filters);
         
         $totalCash = 0;
         $totalBank = 0;

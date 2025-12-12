@@ -341,8 +341,18 @@ $amountInWords = numberToWords($totalAmount);
 <body>
     <div class="no-print">
         <button onclick="window.print()">Cetak</button>
-        <button onclick="window.close()">Tutup</button>
+        <button onclick="closeWindow()">Tutup</button>
     </div>
+
+    <script>
+        function closeWindow() {
+            window.close();
+            // If window.close() doesn't work (e.g., opened via link), go back
+            setTimeout(function() {
+                window.history.back();
+            }, 100);
+        }
+    </script>
 
     <div class="voucher-container">
         <!-- Header -->

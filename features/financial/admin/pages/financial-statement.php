@@ -30,108 +30,144 @@ $pageHeader = [
     ]
 ];
 
+// Add page-specific CSS (including stat cards via financial.css)
+$additionalStyles = [
+    url('features/financial/admin/assets/css/financial.css'),
+];
+
 // 1. Capture the inner content
 ob_start();
 ?>
-<style>
-    .financial-statement-title {
-        background: linear-gradient(135deg, var(--text-primary), var(--accent));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-    }
-    .filter-body {
-        padding: 2rem;
-    }
-</style>
 
-<div class="card card--filter">
-    <div class="filter-header">
-        <div class="filter-icon">
-            <i class="fas fa-file-invoice-dollar"></i>
+<div class="content-container">
+    <!-- Filter Card (Styleguide Pattern) -->
+    <div class="card card--filter mb-4" id="statementFilter">
+        <!-- Filter Header -->
+        <div class="filter-header">
+            <div class="filter-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <h4 class="filter-title">Financial Statement Generator</h4>
+            <button type="button" class="filter-collapse-toggle" aria-label="Toggle filters" onclick="toggleStatementFilter()">
+                <i class="fas fa-chevron-down" id="statementFilterIcon"></i>
+            </button>
         </div>
-        <h3 class="filter-title financial-statement-title">Generate Financial Statement</h3>
-    </div>
-    <div class="filter-body">
-        <form action="<?php echo url('financial/statement-print'); ?>" method="GET" target="_blank" id="statementForm">
-            <!-- Hidden inputs for actual submission -->
-            <input type="hidden" name="start_date" id="real_start_date" value="<?php echo $startDate; ?>">
-            <input type="hidden" name="end_date" id="real_end_date" value="<?php echo $endDate; ?>">
 
-            <!-- Report Type Selection -->
-            <div class="col-md-12 mb-3">
-                <label for="report_type" class="form-label">Report Period</label>
-                <select class="form-select form-control" id="report_type" name="report_type">
-                    <option value="monthly" selected>Monthly</option>
-                    <option value="annual">Annual (Whole Year)</option>
-                    <option value="custom">Custom Range</option>
-                </select>
-            </div>
+        <!-- Filter Content (Collapsible) -->
+        <div id="statementFilterContent" style="display: block;">
+            <form action="<?php echo url('financial/statement-print'); ?>" method="GET" target="_blank" id="statementForm">
+                <!-- Hidden inputs for actual submission -->
+                <input type="hidden" name="start_date" id="real_start_date" value="<?php echo $startDate; ?>">
+                <input type="hidden" name="end_date" id="real_end_date" value="<?php echo $endDate; ?>">
 
-            <div class="row g-4">
-                <!-- Monthly/Annual Controls -->
-                <div id="period_controls" class="col-12">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="select_year" class="form-label">Year</label>
-                            <select class="form-select form-control" id="select_year">
-                                <?php 
-                                $currentYear = date('Y');
-                                for ($y = $currentYear - 2; $y <= $currentYear + 1; $y++) {
-                                    $selected = ($y == $currentYear) ? 'selected' : '';
-                                    echo "<option value='$y' $selected>$y</option>";
-                                }
-                                ?>
+                <!-- Report Period Section -->
+                <div class="filter-section">
+                    <div class="filter-section-header" onclick="toggleStatementSection(this)">
+                        <span class="filter-section-title">Report Period</span>
+                        <i class="fas fa-chevron-down filter-section-icon"></i>
+                    </div>
+                    <div class="filter-section-content">
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Period Type</label>
+                            <select class="form-control" id="report_type" name="report_type" style="width: 100%;">
+                                <option value="monthly" selected>Monthly</option>
+                                <option value="annual">Annual (Whole Year)</option>
+                                <option value="custom">Custom Range</option>
                             </select>
                         </div>
-                        <div class="col-md-6" id="month_container">
-                            <label for="select_month" class="form-label">Month</label>
-                            <select class="form-select form-control" id="select_month">
-                                <?php 
-                                $months = [
-                                    1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-                                    5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-                                    9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
-                                ];
-                                $currentMonth = (int)date('m');
-                                foreach ($months as $num => $name) {
-                                    $selected = ($num == $currentMonth) ? 'selected' : '';
-                                    echo "<option value='$num' $selected>$num - $name</option>";
-                                }
-                                ?>
-                            </select>
+
+                        <!-- Monthly/Annual Controls -->
+                        <div id="period_controls">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Year</label>
+                                    <select class="form-control" id="select_year" style="width: 100%;">
+                                        <?php 
+                                        $currentYear = date('Y');
+                                        for ($y = $currentYear - 2; $y <= $currentYear + 1; $y++) {
+                                            $selected = ($y == $currentYear) ? 'selected' : '';
+                                            echo "<option value='$y' $selected>$y</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="month_container" style="margin-bottom: 0;">
+                                    <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Month</label>
+                                    <select class="form-control" id="select_month" style="width: 100%;">
+                                        <?php 
+                                        $months = [
+                                            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                                            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                                            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+                                        ];
+                                        $currentMonth = (int)date('m');
+                                        foreach ($months as $num => $name) {
+                                            $selected = ($num == $currentMonth) ? 'selected' : '';
+                                            echo "<option value='$num' $selected>$num - $name</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Range Controls -->
+                        <div id="custom_controls" style="display: none;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Start Date</label>
+                                    <input type="date" class="form-control" id="input_start" value="<?php echo $startDate; ?>" style="width: 100%;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">End Date</label>
+                                    <input type="date" class="form-control" id="input_end" value="<?php echo $endDate; ?>" style="width: 100%;">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Custom Range Controls -->
-                <div id="custom_controls" class="col-12" style="display: none;">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="input_start" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="input_start" value="<?php echo $startDate; ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="input_end" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="input_end" value="<?php echo $endDate; ?>">
-                        </div>
-                    </div>
+                <!-- Action Buttons -->
+                <div style="padding: 1.5rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+                        <i class="fas fa-print" style="margin-right: 0.5rem;"></i> Generate Statement
+                    </button>
                 </div>
-
-                </div>
-
-            <!-- Button Section - Centered relative to card with increased gap -->
-            <div class="d-flex justify-content-center mt-5">
-                <button type="submit" class="btn btn-primary px-5 py-2">
-                    <i class="fas fa-print me-2"></i> Generate Statement
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
 <script>
+// Filter toggle function
+function toggleStatementFilter() {
+    const content = document.getElementById('statementFilterContent');
+    const icon = document.getElementById('statementFilterIcon');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+    } else {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(-90deg)';
+    }
+}
+
+// Section toggle function
+function toggleStatementSection(header) {
+    const content = header.nextElementSibling;
+    const icon = header.querySelector('.filter-section-icon');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+    } else {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(-90deg)';
+    }
+}
+
+// Date calculation logic
 document.addEventListener('DOMContentLoaded', function() {
     const reportTypeSelect = document.getElementById('report_type');
     const periodControls = document.getElementById('period_controls');

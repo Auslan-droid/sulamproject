@@ -298,8 +298,18 @@ $amountInWords = numberToWords($totalAmount);
     <!-- Print buttons (hidden when printing) -->
     <div class="no-print">
         <button onclick="window.print()"><i class="fas fa-print"></i> Cetak Resit</button>
-        <button onclick="window.close()">Tutup</button>
+        <button onclick="closeWindow()">Tutup</button>
     </div>
+
+    <script>
+        function closeWindow() {
+            window.close();
+            // If window.close() doesn't work (e.g., opened via link), go back
+            setTimeout(function() {
+                window.history.back();
+            }, 100);
+        }
+    </script>
 
     <div class="receipt-container">
         <!-- Title Box -->

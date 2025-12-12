@@ -55,46 +55,170 @@
         </div>
     </div>
 
-    <!-- Filter Form -->
-    <div class="card card--filter">
-        <form method="GET" class="form-inline align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center">
-                <div class="form-group mb-0 mr-4">
-                    <label class="mr-2 text-muted text-uppercase small" style="font-size: 0.75rem;">Tahun</label>
-                    <select name="year" class="form-control custom-select shadow-sm" style="min-width: 120px;" onchange="this.form.submit()">
-                        <?php 
-                        $currentYear = date('Y');
-                        for ($y = $currentYear - 2; $y <= $currentYear + 1; $y++) {
-                            $selected = ($y == $fiscalYear) ? 'selected' : '';
-                            echo "<option value='$y' $selected>$y</option>";
-                        }
-                        ?>
-                    </select>
+    <!-- Filter Card (Styleguide Pattern) -->
+    <div class="card card--filter mb-4" id="cashBookFilter">
+        <!-- Filter Header -->
+        <div class="filter-header">
+            <div class="filter-icon">
+                <i class="fas fa-sliders-h"></i>
+            </div>
+            <h4 class="filter-title">Cash Book Filters</h4>
+            <button type="button" class="filter-collapse-toggle" aria-label="Toggle filters" onclick="toggleFilterCard()">
+                <i class="fas fa-chevron-down" id="filterToggleIcon"></i>
+            </button>
+        </div>
+
+        <!-- Active Filters Display (Pills) -->
+        <?php if ($month !== null || !empty($search)): ?>
+        <div style="padding: 1rem 1.5rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+            <div class="filter-pills">
+                <?php if ($month !== null): ?>
+                <span class="filter-pill filter-pill--selected">
+                    <span><?php echo $months[$month]; ?> <?php echo $fiscalYear; ?></span>
+                    <button type="button" class="filter-pill-remove" onclick="removeFilter('month')" aria-label="Remove month filter">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+                <?php endif; ?>
+                
+                <?php if (!empty($search)): ?>
+                <span class="filter-pill filter-pill--selected">
+                    <span>Search: "<?php echo htmlspecialchars($search); ?>"</span>
+                    <button type="button" class="filter-pill-remove" onclick="removeFilter('search')" aria-label="Remove search filter">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Filter Content (Collapsible) -->
+        <div id="filterContent" style="display: none;">
+            <form method="GET" id="cashBookFilterForm">
+                <!-- Period Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-section-header" onclick="toggleFilterSection(this)">
+                        <span class="filter-section-title">Period</span>
+                        <i class="fas fa-chevron-down filter-section-icon"></i>
+                    </div>
+                    <div class="filter-section-content">
+                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; align-items: end;">
+                            <!-- Year Selection -->
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Year</label>
+                                <select name="year" class="form-control" style="width: 100%;">
+                                    <?php 
+                                    $currentYear = date('Y');
+                                    for ($y = $currentYear - 2; $y <= $currentYear + 1; $y++) {
+                                        $selected = ($y == $fiscalYear) ? 'selected' : '';
+                                        echo "<option value='$y' $selected>$y</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <!-- Month Selection -->
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Month</label>
+                                <select name="month" class="form-control" style="width: 100%;">
+                                    <option value="all" <?php echo ($month === null) ? 'selected' : ''; ?>>Entire Year</option>
+                                    <?php
+                                    foreach ($months as $num => $name) {
+                                        $selected = ($month === $num) ? 'selected' : '';
+                                        echo "<option value='$num' $selected>$num - $name</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group mb-0 mr-4">
-                    <label class="mr-2 text-muted text-uppercase small" style="font-size: 0.75rem;">Bulan</label>
-                    <select name="month" class="form-control custom-select shadow-sm" style="min-width: 200px;" onchange="this.form.submit()">
-                        <option value="all" <?php echo ($month === null) ? 'selected' : ''; ?>>Keseluruhan Tahun</option>
-                        <?php
-                        foreach ($months as $num => $name) {
-                            $selected = ($month === $num) ? 'selected' : '';
-                            echo "<option value='$num' $selected>$num - $name</option>";
-                        }
-                        ?>
-                    </select>
+                <!-- Search Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-section-header" onclick="toggleFilterSection(this)">
+                        <span class="filter-section-title">Search</span>
+                        <i class="fas fa-chevron-down filter-section-icon"></i>
+                    </div>
+                    <div class="filter-section-content">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-primary);">Reference No. / Description</label>
+                            <input 
+                                type="text" 
+                                name="search" 
+                                class="form-control" 
+                                placeholder="Search by reference number or transaction description..." 
+                                value="<?php echo htmlspecialchars($search ?? ''); ?>"
+                                style="width: 100%;">
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div>
-                <a href="<?php echo url('financial/cash-book/print') . '?year=' . $fiscalYear . '&month=' . ($month ?? 'all'); ?>" 
-                   target="_blank" 
-                   class="btn btn-primary shadow-sm">
-                    <i class="fas fa-print mr-2"></i>Cetak Buku Tunai
-                </a>
-            </div>
-        </form>
+                <!-- Filter Actions -->
+                <div style="padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; gap: 0.75rem;">
+                    <button type="submit" class="btn" style="flex: 1;">
+                        <i class="fas fa-filter" style="margin-right: 0.5rem;"></i>Apply Filters
+                    </button>
+                    <button type="button" class="btn outline" onclick="resetFilters()" style="flex: 1;">
+                        <i class="fas fa-redo" style="margin-right: 0.5rem;"></i>Reset
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <script>
+    // Toggle filter card collapse
+    function toggleFilterCard() {
+        const content = document.getElementById('filterContent');
+        const icon = document.getElementById('filterToggleIcon');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        } else {
+            content.style.display = 'none';
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        }
+    }
+
+    // Toggle individual filter sections
+    function toggleFilterSection(header) {
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.filter-section-icon');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.style.transform = 'rotate(0deg)';
+            header.classList.remove('collapsed');
+        } else {
+            content.style.display = 'none';
+            icon.style.transform = 'rotate(-90deg)';
+            header.classList.add('collapsed');
+        }
+    }
+
+    // Remove individual filter
+    function removeFilter(filterType) {
+        const form = document.getElementById('cashBookFilterForm');
+        const year = form.querySelector('select[name="year"]').value;
+        
+        if (filterType === 'month') {
+            window.location.href = '<?php echo url('financial/cash-book'); ?>?year=' + year + '&month=all<?php echo !empty($search) ? "&search=" . urlencode($search) : ""; ?>';
+        } else if (filterType === 'search') {
+            window.location.href = '<?php echo url('financial/cash-book'); ?>?year=' + year + '&month=<?php echo $month ?? 'all'; ?>';
+        }
+    }
+
+    // Reset all filters
+    function resetFilters() {
+        const currentYear = new Date().getFullYear();
+        window.location.href = '<?php echo url('financial/cash-book'); ?>?year=' + currentYear + '&month=all';
+    }
+    </script>
 
     <!-- Cash Book Table -->
     <div class="table-responsive">

@@ -67,6 +67,7 @@ $periodString = "{$displayStartDate} HINGGA {$displayEndDate}";
         .statement-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         .statement-table td { padding: 4px; vertical-align: top; }
         .statement-table tr { break-inside: avoid; page-break-inside: avoid; } /* Prevent rows from splitting */
+        .statement-table thead { display: table-header-group; } /* Repeat header on new pages */
         
         /* Flexible layout relying on the single table structure for alignment */
         .col-label { width: 1%; white-space: nowrap; padding-right: 15px; vertical-align: top; }
@@ -113,20 +114,30 @@ $periodString = "{$displayStartDate} HINGGA {$displayEndDate}";
 <body>
     <div class="no-print">
         <button onclick="window.print()">Cetak</button>
-        <button onclick="window.close()">Tutup</button>
+        <button onclick="closeWindow()">Tutup</button>
     </div>
+
+    <script>
+        function closeWindow() {
+            window.close();
+            // If window.close() doesn't work (e.g., opened via link), go back
+            setTimeout(function() {
+                window.history.back();
+            }, 100);
+        }
+    </script>
 
     <div class="page-container">
 
         <div class="header">
             <h1>PENYATA TERIMAAN DAN BAYARAN</h1>
             
-            <div class="header-line">
-                (JAWATANKUASA PENGURUSAN MASJID DARUL ULUM)
+            <div style="margin-bottom: 5px;">
+                JAWATANKUASA PENGURUSAN MASJID DARUL ULUM
             </div>
             
-            <div class="header-line">
-                (TAMAN DESA ILMU, 94300 KOTA SAMARAHAN, SARAWAK)
+            <div style="margin-bottom: 5px;">
+                TAMAN DESA ILMU, 94300 KOTA SAMARAHAN, SARAWAK
             </div>
 
             <div style="margin-top: 20px;">
@@ -272,7 +283,7 @@ $periodString = "{$displayStartDate} HINGGA {$displayEndDate}";
                     </td>
                 </tr>
 
-                <!-- Closing Balance -->
+                <!-- Closing Balance (Moved back to first table) -->
                 <tr>
                     <td colspan="3" style="padding-top: 15px;">
                         <div class="bold">BAKI PADA <?php echo $displayEndDate; ?></div>
@@ -283,6 +294,9 @@ $periodString = "{$displayStartDate} HINGGA {$displayEndDate}";
                         </span>
                     </td>
                 </tr>
+            </tbody>
+            <!-- Diwakili Oleh Section + Signatures - Atomic Block -->
+            <tbody style="break-inside: avoid; page-break-inside: avoid;">
                 <tr>
                     <td colspan="4">
                         <div class="bold" style="text-decoration: underline; margin-top: 5px;">DIWAKILI OLEH</div>
@@ -319,30 +333,32 @@ $periodString = "{$displayStartDate} HINGGA {$displayEndDate}";
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="signatures">
+                            <div class="sig-box">
+                                <div class="sig-title">Disediakan oleh :</div>
+                                <div>Nama:</div>
+                                <div>Jawatan:</div>
+                                <div>Tarikh :</div>
+                            </div>
+                            <div class="sig-box">
+                                <div class="sig-title">Disahkan oleh :</div>
+                                <div>Nama:</div>
+                                <div>Jawatan:</div>
+                                <div>Tarikh :</div>
+                            </div>
+                            <div class="sig-box">
+                                <div class="sig-title">Disemak oleh :</div>
+                                <div>Nama:</div>
+                                <div>Jawatan:</div>
+                                <div>Tarikh :</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
-
-        <!-- Signatures -->
-        <div class="signatures">
-            <div class="sig-box">
-                <div class="sig-title">Disediakan oleh :</div>
-                <div>Nama:</div>
-                <div>Jawatan:</div>
-                <div>Tarikh :</div>
-            </div>
-            <div class="sig-box">
-                <div class="sig-title">Disahkan oleh :</div>
-                <div>Nama:</div>
-                <div>Jawatan:</div>
-                <div>Tarikh :</div>
-            </div>
-            <div class="sig-box">
-                <div class="sig-title">Disemak oleh :</div>
-                <div>Nama:</div>
-                <div>Jawatan:</div>
-                <div>Tarikh :</div>
-            </div>
-        </div>
 
 
     </div>

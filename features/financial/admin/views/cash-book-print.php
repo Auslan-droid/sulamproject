@@ -48,7 +48,6 @@ $titleDate = $month ? "$monthName $fiscalYear" : "$fiscalYear";
             font-size: 9pt;
         }
         .org-info {
-            border-bottom: 1px solid black;
             padding-bottom: 2px;
             margin-bottom: 5px;
             display: inline-block;
@@ -81,7 +80,7 @@ $titleDate = $month ? "$monthName $fiscalYear" : "$fiscalYear";
         .col-desc { }
         .col-money { width: 85px; text-align: right; }
         
-        .header-yellow { background-color: #ffffcc !important; } /* Approximating the yellow in screenshot */
+        .header-yellow { background-color: #ffffcc !important; }
         .header-orange { background-color: #ffcc99 !important; }
         .header-cyan { background-color: #ccffff !important; }
         .header-purple { background-color: #eebbff !important; }
@@ -109,18 +108,28 @@ $titleDate = $month ? "$monthName $fiscalYear" : "$fiscalYear";
 
     <div class="no-print" style="margin-bottom: 20px; padding: 10px; background: #eee; border-bottom: 1px solid #ddd;">
         <button onclick="window.print()" style="padding: 5px 15px; font-weight: bold;">Print / Save as PDF</button>
-        <button onclick="window.close()" style="padding: 5px 15px;">Close</button>
+        <button onclick="closeWindow()" style="padding: 5px 15px;">Close</button>
     </div>
+
+    <script>
+        function closeWindow() {
+            window.close();
+            // If window.close() doesn't work (e.g., opened via link), go back
+            setTimeout(function() {
+                window.history.back();
+            }, 100);
+        }
+    </script>
 
     <div class="header">
         <h1>BUKU TUNAI</h1>
         
         <div class="org-info">
-            (JAWATANKUASA PENGURUSAN MASJID DARUL ULUM)
+            JAWATANKUASA PENGURUSAN MASJID DARUL ULUM
         </div>
         <br>
-        <div class="org-info" style="border-bottom: 1px solid black;">
-            (Taman Desa Ilmu, 94300 Kota Samarahan, Sarawak)
+        <div class="org-info">
+            Taman Desa Ilmu, 94300 Kota Samarahan, Sarawak
         </div>
     </div>
 

@@ -202,16 +202,17 @@
   justify-content: space-between;
   padding: 1rem 1.5rem;
   cursor: pointer;
+  background: #f7f7f7;
   transition: background 0.2s ease;
   user-select: none;
 }
 
 .filter-section-header:hover {
-  background: #f8fafc;
+  background: #eeeeee;
 }
 
 .filter-section-title {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.95rem;
   color: var(--text-primary);
 }

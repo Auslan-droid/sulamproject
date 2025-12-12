@@ -135,6 +135,20 @@ $router->get('/financial/cash-book/print', function() use ($ROOT) {
     require $ROOT . '/features/financial/admin/pages/cash-book-print.php';
 });
 
+$router->get('/financial/deposit-account/print', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/deposit-account-print.php';
+});
+
+$router->get('/financial/payment-account/print', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/financial/admin/pages/payment-account-print.php';
+});
+
 $router->get('/financial/payment-account/add', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
