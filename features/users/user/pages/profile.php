@@ -31,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 extract($data); // Makes $user, $success, $error available to view
 
+// Check if user is admin
+$isAdmin = isAdmin();
+
 $pageHeader = [
     'title' => 'Edit Profile',
     'subtitle' => 'Update your personal information.',
@@ -38,6 +41,14 @@ $pageHeader = [
         ['label' => 'Home', 'url' => url('/')],
         ['label' => 'Dashboard', 'url' => url('dashboard')],
         ['label' => 'Profile', 'url' => null],
+    ],
+    'actions' => [
+        [
+            'label' => 'Back',
+            'url' => url('dashboard'),
+            'icon' => 'fa-arrow-left',
+            'class' => 'btn-secondary'
+        ]
     ]
 ];
 

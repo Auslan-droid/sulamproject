@@ -1,44 +1,181 @@
-<div class="card page-card">
-    <section class="dashboard-cards">
-        <a class="card dashboard-card card--elevated" href="<?php echo url('profile'); ?>">
-            <i class="fa-solid fa-user-edit icon" aria-hidden="true"></i>
-            <h3>Edit Profile</h3>
-            <p>Update your personal info.</p>
-        </a>
-    </section>
-</div>
+<div class="page-header-margin">
+    <!-- Hero Section with Prayer Times -->
+    <div class="bento-grid" style="margin-bottom: 2rem;">
+        <!-- Welcome Hero Card -->
+        <div class="bento-card bento-2x2 card-hero-user">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2 class="hero-title">Assalamualaikum, <?php echo e($username); ?>!</h2>
+                    <p class="hero-subtitle">Welcome to your community dashboard</p>
+                </div>
+                
+                <!-- Date Pills -->
+                <div class="hero-date-pills">
+                    <div class="date-pill">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        <span><?php echo date('l, d M Y'); ?></span>
+                    </div>
+                    <?php if (!empty($hijriDate)): ?>
+                        <div class="date-pill">
+                            <i class="fa-solid fa-moon"></i>
+                            <span><?php echo $hijriDate; ?> H</span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                
+                <!-- Prayer Times in Hero -->
+                <div class="hero-prayer-times">
+                    <div class="hero-prayer-header">
+                        <i class="fa-solid fa-mosque"></i>
+                        <span>Waktu Solat · Kota Samarahan</span>
+                    </div>
+                    <div class="hero-prayer-grid">
+                        <?php if (!empty($prayerTimes)): ?>
+                            <?php foreach ($prayerTimes as $name => $time): ?>
+                                <div class="hero-prayer-item">
+                                    <span class="hero-prayer-name"><?php echo $name; ?></span>
+                                    <span class="hero-prayer-time"><?php echo $time; ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="hero-prayer-error">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>Unable to load prayer times</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-bg-accent"></div>
+        </div>
 
-<!-- Donations Preview -->
-<div class="card" style="max-width: 980px; margin: 2rem auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h3 style="margin: 0;">Featured Donation</h3>
-        <a href="<?php echo url('donations'); ?>" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem;">Show more details →</a>
-    </div>
-    <div style="display: flex; gap: 1.5rem; align-items: center;">
-        <div style="width: 120px; height: 120px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <i class="fa-solid fa-qrcode" style="font-size: 3rem; color: #d1d5db;"></i>
+        <!-- Quick Action: Edit Profile -->
+        <div class="bento-card bento-1x1 card-action">
+            <a href="<?php echo url('profile'); ?>" class="card-action-link">
+                <div class="bento-icon-sm icon-bg-blue">
+                    <i class="fa-solid fa-user-edit text-blue"></i>
+                </div>
+                <h3>Edit Profile</h3>
+                <p>Update your personal info</p>
+            </a>
         </div>
-        <div style="flex: 1;">
-            <h4 style="margin: 0 0 0.5rem 0;">Mosque Building Fund</h4>
-            <p style="margin: 0; color: var(--muted); line-height: 1.6;">Support our community mosque construction project. Scan the QR code to donate.</p>
-        </div>
-    </div>
-</div>
 
-<!-- Events Preview -->
-<div class="card" style="max-width: 980px; margin: 2rem auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h3 style="margin: 0;">Upcoming Event</h3>
-        <a href="<?php echo url('events'); ?>" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem;">Show more details →</a>
-    </div>
-    <div style="display: flex; gap: 1.5rem; align-items: center;">
-        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #eef6ec 0%, #d1e7dd 100%); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
-            <span style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary); line-height: 1;">24</span>
-            <span style="font-size: 0.65rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-top: 0.2rem;">NOV</span>
+        <!-- Quick Action: View Donations -->
+        <div class="bento-card bento-1x1 card-action">
+            <a href="<?php echo url('donations'); ?>" class="card-action-link">
+                <div class="bento-icon-sm icon-bg-green">
+                    <i class="fa-solid fa-hand-holding-dollar text-green"></i>
+                </div>
+                <h3>Donations</h3>
+                <p>View & contribute</p>
+            </a>
         </div>
-        <div style="flex: 1;">
-            <h4 style="margin: 0 0 0.5rem 0;">Community Gathering</h4>
-            <p style="margin: 0; color: var(--muted); line-height: 1.6;">Friday, 8:00 PM • Main Hall</p>
+
+        <!-- Quick Action: Events -->
+        <div class="bento-card bento-1x1 card-action">
+            <a href="<?php echo url('events'); ?>" class="card-action-link">
+                <div class="bento-icon-sm icon-bg-purple">
+                    <i class="fa-solid fa-calendar-check text-purple"></i>
+                </div>
+                <h3>Events</h3>
+                <p>Upcoming activities</p>
+            </a>
+        </div>
+
+        <!-- Quick Action: Contact -->
+        <div class="bento-card bento-1x1 card-action">
+            <a href="#" class="card-action-link">
+                <div class="bento-icon-sm icon-bg-orange">
+                    <i class="fa-solid fa-envelope text-orange"></i>
+                </div>
+                <h3>Contact</h3>
+                <p>Get in touch</p>
+            </a>
+        </div>
+    </div>
+        
+    <!-- Featured Content Section -->
+    <div style="margin-bottom: 0.5rem;">
+        <h3 class="bento-title">Featured Content</h3>
+    </div>
+    
+    <div class="bento-grid">
+        <!-- Featured Donation -->
+        <div class="bento-card bento-2x1 card-preview">
+            <div class="preview-header">
+                <h3>Donation Campaign</h3>
+                <a href="<?php echo url('donations'); ?>" class="preview-link">
+                    View All <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            <?php if (!empty($featuredDonation)): ?>
+                <div class="preview-content">
+                    <div class="preview-icon">
+                        <?php if (!empty($featuredDonation['image_path'])): ?>
+                            <img src="<?php echo e($featuredDonation['image_path']); ?>" alt="Donation" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                        <?php else: ?>
+                            <i class="fa-solid fa-hand-holding-heart"></i>
+                        <?php endif; ?>
+                    </div>
+                    <div class="preview-text">
+                        <h4><?php echo e($featuredDonation['title']); ?></h4>
+                        <p><?php echo e(strlen($featuredDonation['description']) > 120 ? substr($featuredDonation['description'], 0, 120) . '...' : $featuredDonation['description']); ?></p>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="preview-content preview-empty">
+                    <div class="preview-icon">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="preview-text">
+                        <h4>No Active Campaigns</h4>
+                        <p>Check back soon for new donation opportunities.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Featured Event -->
+        <div class="bento-card bento-2x1 card-preview">
+            <div class="preview-header">
+                <h3>Upcoming Event</h3>
+                <a href="<?php echo url('events'); ?>" class="preview-link">
+                    View All <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            <?php if (!empty($featuredEvent)): ?>
+                <?php 
+                    $eventDate = new DateTime($featuredEvent['event_date']);
+                    $dayName = $eventDate->format('l');
+                    $dayNum = $eventDate->format('d');
+                    $monthShort = strtoupper($eventDate->format('M'));
+                    $timeStr = !empty($featuredEvent['event_time']) ? date('g:i A', strtotime($featuredEvent['event_time'])) : '';
+                    $locationStr = !empty($featuredEvent['location']) ? $featuredEvent['location'] : '';
+                    $details = $dayName;
+                    if ($timeStr) $details .= ', ' . $timeStr;
+                    if ($locationStr) $details .= ' • ' . $locationStr;
+                ?>
+                <div class="preview-content">
+                    <div class="preview-date-box">
+                        <span class="preview-date-day"><?php echo $dayNum; ?></span>
+                        <span class="preview-date-month"><?php echo $monthShort; ?></span>
+                    </div>
+                    <div class="preview-text">
+                        <h4><?php echo e($featuredEvent['title']); ?></h4>
+                        <p><?php echo e($details); ?></p>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="preview-content preview-empty">
+                    <div class="preview-date-box" style="background: #f3f4f6;">
+                        <i class="fa-solid fa-calendar-xmark" style="font-size: 1.5rem; color: #9ca3af;"></i>
+                    </div>
+                    <div class="preview-text">
+                        <h4>No Upcoming Events</h4>
+                        <p>Check back soon for scheduled activities.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

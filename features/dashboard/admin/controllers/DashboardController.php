@@ -168,6 +168,71 @@ class DashboardController extends BaseController {
             ]
         ];
 
+        // Fetch Prayer Times from Aladhan API (same as admin)
+        $prayerTimes = [];
+        $hijriDate = '';
+        try {
+            $apiUrl = "https://api.aladhan.com/v1/timingsByCity?city=Kota%20Samarahan&country=Malaysia&method=3";
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 5
+                ]
+            ]);
+            $response = @file_get_contents($apiUrl, false, $context);
+            
+            if ($response !== false) {
+                $data = json_decode($response, true);
+                if (isset($data['code']) && $data['code'] == 200 && isset($data['data']['timings'])) {
+                    $timings = $data['data']['timings'];
+                    $prayerTimes = [
+                        'Subuh' => $timings['Fajr'] ?? '-',
+                        'Syuruk' => $timings['Sunrise'] ?? '-',
+                        'Zohor' => $timings['Dhuhr'] ?? '-',
+                        'Asar' => $timings['Asr'] ?? '-',
+                        'Maghrib' => $timings['Maghrib'] ?? '-',
+                        'Isyak' => $timings['Isha'] ?? '-'
+                    ];
+                    
+                    // Extract Hijri date
+                    if (isset($data['data']['date']['hijri'])) {
+                        $hijri = $data['data']['date']['hijri'];
+                        $hijriMonthsMalay = [
+                            1 => 'Muharram', 2 => 'Safar', 3 => 'Rabiulawal',
+                            4 => 'Rabiulakhir', 5 => 'Jamadilawal', 6 => 'Jamadilakhir',
+                            7 => 'Rejab', 8 => 'Syaaban', 9 => 'Ramadan',
+                            10 => 'Syawal', 11 => 'Zulkaedah', 12 => 'Zulhijjah'
+                        ];
+                        $monthNumber = (int)($hijri['month']['number'] ?? 0);
+                        $monthMalay = $hijriMonthsMalay[$monthNumber] ?? '';
+                        $hijriDate = $hijri['day'] . ' ' . $monthMalay . ' ' . $hijri['year'];
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // Silently fail
+        }
+
+        // Fetch Featured Donation & Event
+        global $mysqli;
+        if (!$mysqli) {
+            require_once __DIR__ . '/../../../shared/lib/database/mysqli-db.php';
+        }
+
+        // Get one active donation
+        $featuredDonation = null;
+        $donationQuery = $mysqli->query("SELECT title, description, image_path FROM donations WHERE is_active = 1 ORDER BY created_at DESC LIMIT 1");
+        if ($donationQuery && $donationQuery->num_rows > 0) {
+            $featuredDonation = $donationQuery->fetch_assoc();
+        }
+
+        // Get one upcoming event
+        $featuredEvent = null;
+        $today = date('Y-m-d');
+        $eventQuery = $mysqli->query("SELECT title, description, event_date, event_time, location FROM events WHERE is_active = 1 AND event_date >= '$today' ORDER BY event_date ASC, event_time ASC LIMIT 1");
+        if ($eventQuery && $eventQuery->num_rows > 0) {
+            $featuredEvent = $eventQuery->fetch_assoc();
+        }
+
         ob_start();
         include __DIR__ . '/../../user/views/user-overview.php';
         $content = ob_get_clean();
@@ -177,7 +242,10 @@ class DashboardController extends BaseController {
         $content = ob_get_clean();
         
         $pageTitle = 'Dashboard';
-        $additionalStyles = [url('features/dashboard/user/assets/user-dashboard.css')];
+        $additionalStyles = [
+            url('features/shared/assets/css/bento-grid.css'),
+            url('features/dashboard/user/assets/user-dashboard.css')
+        ];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
 }
