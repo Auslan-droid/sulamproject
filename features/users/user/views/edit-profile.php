@@ -42,6 +42,7 @@ ob_start();
                     <input type="text" id="phone_number" name="phone_number" value="<?php echo htmlspecialchars($user['phone_number'] ?? ''); ?>">
                 </div>
 
+                <?php if (!$isAdmin): ?>
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label for="address">Address</label>
                     <textarea id="address" name="address" rows="3"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
@@ -91,6 +92,7 @@ ob_start();
                         </option>
                     </select>
                 </div>
+                <?php endif; ?>
 
                 <div class="actions" style="grid-column: 1 / -1; justify-content: flex-start; margin-top: 1.5rem;">
                     <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -102,8 +104,9 @@ ob_start();
 <?php
 $splitLayoutLeft = ob_get_clean();
 
-// Capture Right Column: Dependents & Next of Kin
-ob_start();
+// Capture Right Column: Dependents & Next of Kin (only for non-admin users)
+if (!$isAdmin) {
+    ob_start();
 ?>
     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
         
@@ -197,10 +200,15 @@ ob_start();
             </div>
         </div>
 <?php
-$splitLayoutRight = ob_get_clean();
-
-// Use the shared layout
-include dirname(__DIR__, 4) . '/features/shared/components/layouts/split-content-layout.php';
+    $splitLayoutRight = ob_get_clean();
+    // Use the shared split layout for regular users
+    include dirname(__DIR__, 4) . '/features/shared/components/layouts/split-content-layout.php';
+} else {
+    // For admin users, show centered single column layout
+    echo '<div style="max-width: 800px; margin: 0 auto;">';
+    echo $splitLayoutLeft;
+    echo '</div>';
+}
 ?>
 
 

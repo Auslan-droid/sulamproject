@@ -1,9 +1,743 @@
-/* Dashboard User Styles */
+/* =========================================
+   User Dashboard - Bento Grid Styles
+   ========================================= */
 
-/* Dashboard-specific card coloring */
-.page-card {
-  background: #eef6ec; /* soft green tint for dashboard */
+/* Layout wrapper */
+.page-header-margin {
+  padding-bottom: 2rem;
 }
-.dashboard-card {
-  /* Inherits from base.css, add user-specific overrides here */
+
+/* =========================================
+   Hero Card - User Version
+   ========================================= */
+.card-hero-user {
+  background: linear-gradient(135deg, #0f8a5f 0%, #064030 100%);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 240px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.card-hero-user .hero-title {
+  color: #ffffff;
+}
+
+.card-hero-user .hero-subtitle {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.95rem;
+  margin: 0;
+  max-width: 80%;
+}
+
+/* Hero Date Pills */
+.hero-date-pills {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.date-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.date-pill i {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Hero Prayer Times */
+.hero-prayer-times {
+  margin-top: 1.25rem;
+}
+
+.hero-prayer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.75rem;
+}
+
+.hero-prayer-header i {
+  font-size: 0.85rem;
+}
+
+.hero-prayer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.hero-prayer-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.hero-prayer-name {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0.1rem;
+  font-weight: 500;
+}
+
+.hero-prayer-time {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.hero-prayer-error {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.85rem;
+}
+
+.hero-bg-accent {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* =========================================
+   Quick Action Cards
+   ========================================= */
+.card-action {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-action:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-action-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-action h3 {
+  font-size: 1.1rem;
+  margin: 0.75rem 0 0.4rem 0;
+  color: var(--text-primary);
+}
+
+.card-action p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Icon backgrounds */
+.bento-icon-sm {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.icon-bg-blue {
+  background: #dbeafe;
+}
+
+.icon-bg-green {
+  background: #d1fae5;
+}
+
+.icon-bg-purple {
+  background: #e9d5ff;
+}
+
+.icon-bg-orange {
+  background: #fed7aa;
+}
+
+.text-blue {
+  color: #1e40af;
+}
+
+.text-green {
+  color: #065f46;
+}
+
+.text-purple {
+  color: #6b21a8;
+}
+
+.text-orange {
+  color: #c2410c;
+}
+
+/* =========================================
+   Preview Cards
+   ========================================= */
+.card-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.preview-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: gap 0.2s ease;
+}
+
+.preview-link:hover {
+  gap: 0.6rem;
+}
+
+.preview-content {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.preview-icon {
+  width: 80px;
+  height: 80px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 2.5rem;
+  color: #d1d5db;
+}
+
+.preview-date-box {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #eef6ec 0%, #d1e7dd 100%);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.preview-date-day {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.preview-date-month {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+.preview-text {
+  flex: 1;
+}
+
+.preview-text h4 {
+  margin: 0 0 0.4rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.preview-text p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Empty state styling */
+.preview-empty {
+  opacity: 0.7;
+}
+
+.preview-empty .preview-text h4 {
+  color: var(--muted);
+}
+
+.preview-empty .preview-text p {
+  font-size: 0.85rem;
+}
+
+/* =========================================
+   Section Titles
+   ========================================= */
+.bento-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* =========================================
+   Responsive Design - ENHANCED
+   ========================================= */
+
+/* =====================================
+   TABLET (768px - 1023px)
+   ===================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .bento-2x2,
+  .bento-2x1 {
+    grid-column: span 2;
+  }
+  
+  .bento-1x1 {
+    grid-column: span 1;
+  }
+
+  /* Hero adjustments */
+  .card-hero-user {
+    min-height: 220px;
+  }
+  
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .hero-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Quick action cards */
+  .quick-action-card {
+    padding: 1.25rem;
+  }
+  
+  /* Preview cards */
+  .preview-content {
+    gap: 1rem;
+  }
+}
+
+/* =====================================
+   MOBILE (< 768px)
+   ===================================== */
+@media (max-width: 767px) {
+  /* Page layout */
+  .page-header-margin {
+    padding-bottom: 1rem;
+  }
+  
+  /* Bento grid - single column */
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .bento-1x1,
+  .bento-2x1,
+  .bento-2x2 {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  /* ===== HERO CARD ===== */
+  .card-hero-user {
+    min-height: auto;
+    padding: 1.25rem;
+  }
+  
+  .hero-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.85rem;
+    max-width: 100%;
+  }
+  
+  /* Hero Date Pills */
+  .hero-date-pills {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .date-pill {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .date-pill i {
+    font-size: 0.8rem;
+  }
+  
+  /* Hero Prayer Times */
+  .hero-prayer-times {
+    margin-top: 1rem;
+  }
+  
+  .hero-prayer-header {
+    font-size: 0.7rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .hero-prayer-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .hero-prayer-item {
+    padding: 0.45rem;
+  }
+  
+  .hero-prayer-name {
+    font-size: 0.6rem;
+  }
+  
+  .hero-prayer-time {
+    font-size: 0.8rem;
+  }
+  
+  /* ===== QUICK ACTION CARDS ===== */
+  .quick-action-card {
+    padding: 1rem;
+  }
+  
+  .action-icon-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .action-icon {
+    font-size: 1.1rem;
+  }
+  
+  .action-title {
+    font-size: 0.95rem;
+  }
+  
+  .action-subtitle {
+    font-size: 0.75rem;
+  }
+  
+  /* ===== PREVIEW CARDS ===== */
+  .card-preview {
+    padding: 1rem;
+  }
+  
+  .preview-content {
+    gap: 0.875rem;
+  }
+  
+  .preview-icon,
+  .preview-date-box {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .preview-icon i {
+    font-size: 1.25rem;
+  }
+  
+  .preview-date-day {
+    font-size: 1.1rem;
+  }
+  
+  .preview-date-month {
+    font-size: 0.6rem;
+  }
+  
+  .preview-title {
+    font-size: 0.95rem;
+  }
+  
+  .preview-meta {
+    font-size: 0.75rem;
+  }
+  
+  .preview-arrow {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* ===== SECTION TITLES ===== */
+  .bento-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* ===== STAT CARDS ===== */
+  .card-stat {
+    padding: 1rem;
+  }
+  
+  .stat-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .stat-icon {
+    font-size: 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.35rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* =====================================
+   LARGE MOBILE (480px - 767px)
+   ===================================== */
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Allow 3-column prayer times on larger mobile */
+  .hero-prayer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Date pills in a row */
+  .hero-date-pills {
+    flex-direction: row;
+  }
+  
+  .date-pill {
+    flex: 1;
+  }
+}
+
+/* =====================================
+   SMALL MOBILE (< 480px)
+   ===================================== */
+@media (max-width: 479px) {
+  /* Hero - more compact */
+  .card-hero-user {
+    padding: 1rem;
+  }
+  
+  .hero-title {
+    font-size: 1.2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  /* Prayer times - 2 columns on very small screens */
+  .hero-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Date pills - stack vertically */
+  .hero-date-pills {
+    flex-direction: column;
+  }
+  
+  .date-pill {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Cards more compact */
+  .quick-action-card,
+  .card-preview {
+    padding: 0.875rem;
+  }
+  
+  .action-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .action-icon {
+    font-size: 1rem;
+  }
+  
+  .action-title {
+    font-size: 0.9rem;
+  }
+  
+  .action-subtitle {
+    font-size: 0.7rem;
+  }
+  
+  /* Preview cards - smaller icons */
+  .preview-icon,
+  .preview-date-box {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .preview-icon i {
+    font-size: 1.1rem;
+  }
+  
+  .preview-date-day {
+    font-size: 1rem;
+  }
+  
+  .preview-title {
+    font-size: 0.9rem;
+  }
+  
+  .preview-meta {
+    font-size: 0.7rem;
+  }
+}
+
+/* =====================================
+   TOUCH ENHANCEMENTS
+   ===================================== */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device - larger touch targets */
+  .quick-action-card,
+  .card-preview {
+    min-height: 80px;
+  }
+  
+  /* Remove hover effects on touch */
+  .quick-action-card:hover,
+  .card-preview:hover {
+    transform: none;
+  }
+  
+  /* Add active state instead */
+  .quick-action-card:active,
+  .card-preview:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  .hero-prayer-item:hover {
+    transform: none;
+  }
+  
+  .hero-prayer-item:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Legacy breakpoints - maintained for compatibility */
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-2x2 {
+    grid-column: span 2;
+  }
+
+  .hero-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-1x1,
+  .bento-2x1,
+  .bento-2x2 {
+    grid-column: span 1;
+  }
+
+  .hero-title {
+    font-size: 1.4rem;
+  }
+
+  .hero-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .preview-content {
+    gap: 1rem;
+  }
+
+  .preview-icon,
+  .preview-date-box {
+    width: 60px;
+    height: 60px;
+  }
 }

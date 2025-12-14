@@ -2,6 +2,7 @@
 // Moved from /user_edit.php
 $ROOT = dirname(__DIR__, 4);
 require_once $ROOT . '/features/shared/lib/auth/session.php';
+require_once $ROOT . '/features/shared/lib/utilities/functions.php';
 require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
 initSecureSession();
 requireAdmin();
@@ -58,6 +59,25 @@ $user = $result ? $result->fetch_assoc() : null;
 $stmt->close();
 if (!$user) { http_response_code(404); echo 'User not found'; exit; }
 
+// Define page header with back button
+$pageHeader = [
+    'title' => 'Edit User: ' . htmlspecialchars($user['name']),
+    'subtitle' => 'Update user information.',
+    'breadcrumb' => [
+        ['label' => 'Home', 'url' => url('/')],
+        ['label' => 'Users', 'url' => url('users/admin')],
+        ['label' => 'Edit', 'url' => null],
+    ],
+    'actions' => [
+        [
+            'label' => 'Back',
+            'url' => url('users/admin'),
+            'icon' => 'fa-arrow-left',
+            'class' => 'btn-secondary'
+        ]
+    ]
+];
+
 // 1. Capture the inner content
 ob_start();
 ?>
@@ -110,7 +130,6 @@ ob_start();
 
     <div class="actions">
       <button class="btn" type="submit">Save</button>
-      <a class="btn outline" href="<?php echo url('admin'); ?>">Back</a>
     </div>
   </form>
 </div>

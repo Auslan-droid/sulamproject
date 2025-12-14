@@ -26,12 +26,16 @@ $data = $controller->index();
 extract($data);
 
 $pageHeader = [
-    'title' => 'Families',
+    'title' => 'Families Registry',
     'breadcrumb' => [
         ['label' => 'Home', 'url' => url('/')],
         ['label' => 'Residents', 'url' => url('features/residents/admin/pages/resident-management.php')],
         ['label' => 'Families', 'url' => null],
     ]
+];
+
+$additionalStyles = [
+    url('features/shared/assets/css/cards.css')
 ];
 
 ob_start();
