@@ -29,9 +29,9 @@ $formData = $isEdit ? $record : ($old ?? []);
                 <div class="form-group">
                     <label for="receipt_number">No. Resit (Receipt Number)</label>
                     <input type="text" id="receipt_number" name="receipt_number" class="form-control" 
-                           placeholder="e.g. RR/2025/001"
-                           value="<?php echo htmlspecialchars($formData['receipt_number'] ?? ''); ?>">
-                    <small class="form-text text-muted">Optional. Leave blank to auto-generate later.</small>
+                           value="<?php echo htmlspecialchars($nextReceiptNumber ?? $formData['receipt_number'] ?? ''); ?>"
+                           readonly>
+                    <small class="form-text text-muted">Auto-generated receipt number</small>
                 </div>
 
                 <!-- Date -->
@@ -42,49 +42,7 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <!-- Row 2: Payment Method and Reference Number -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <!-- Payment Method -->
-                <div class="form-group">
-                    <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
-                    <select id="payment_method" name="payment_method" class="form-control" required>
-                        <option value="">-- Select Method --</option>
-                        <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
-                        <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Cek (Cheque)</option>
-                        <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank Transfer</option>
-                    </select>
-                </div>
-
-                <!-- Payment Reference -->
-                <div class="form-group">
-                    <label for="payment_reference">No. Rujukan (Reference Number)</label>
-                    <input type="text" id="payment_reference" name="payment_reference" class="form-control" 
-                           placeholder="e.g. TRX123456 or Cheque No."
-                           value="<?php echo htmlspecialchars($formData['payment_reference'] ?? ''); ?>">
-                    <small class="form-text text-muted">Required for Bank Transfer or Cheque payments.</small>
-                </div>
-            </div>
-
-            <!-- Row 3: Received From and Description -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <!-- Received From -->
-                <div class="form-group">
-                    <label for="received_from">Diterima Dari (Received From) <span style="color: red;">*</span></label>
-                    <input type="text" id="received_from" name="received_from" class="form-control" required 
-                           placeholder="e.g. Ahmad bin Ali"
-                           value="<?php echo htmlspecialchars($formData['received_from'] ?? ''); ?>">
-                </div>
-
-                <!-- Description -->
-                <div class="form-group">
-                    <label for="description">Butiran (Description) <span style="color: red;">*</span></label>
-                    <input type="text" id="description" name="description" class="form-control" required 
-                           placeholder="e.g. Kutipan Jumaat"
-                           value="<?php echo htmlspecialchars($formData['description'] ?? ''); ?>">
-                </div>
-            </div>
-
-            <!-- Category Amounts -->
+            <!-- Category Amounts (MOVED HERE - BEFORE Payment Method) -->
             <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Category Amounts (RM)</h4>
             <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Select a category and enter the amount.</p>
 
@@ -112,9 +70,51 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem; display: none;">
+            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
                 <i class="fas fa-plus"></i> Add Another Category
             </button>
+
+            <!-- Row 2: Payment Method and Reference Number (MOVED HERE - AFTER Category) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <!-- Payment Method -->
+                <div class="form-group">
+                    <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
+                    <select id="payment_method" name="payment_method" class="form-control" required>
+                        <option value="">-- Select Method --</option>
+                        <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
+                        <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Cek (Cheque)</option>
+                        <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank Transfer</option>
+                    </select>
+                </div>
+
+                <!-- Payment Reference -->
+                <div class="form-group" id="reference-field">
+                    <label for="payment_reference">No. Rujukan (Reference Number)</label>
+                    <input type="text" id="payment_reference" name="payment_reference" class="form-control" 
+                           placeholder="e.g. TRX123456 or Cheque No."
+                           value="<?php echo htmlspecialchars($formData['payment_reference'] ?? ''); ?>">
+                    <small class="form-text text-muted">Required for Bank Transfer or Cheque payments.</small>
+                </div>
+            </div>
+
+            <!-- Row 3: Received From and Description -->
+            <div id="details-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <!-- Received From -->
+                <div class="form-group">
+                    <label for="received_from">Diterima Dari (Received From) <span style="color: red;">*</span></label>
+                    <input type="text" id="received_from" name="received_from" class="form-control" required 
+                           placeholder="e.g. Ahmad bin Ali"
+                           value="<?php echo htmlspecialchars($formData['received_from'] ?? ''); ?>">
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description">Butiran (Description) <span style="color: red;">*</span></label>
+                    <input type="text" id="description" name="description" class="form-control" required 
+                           placeholder="e.g. Kutipan Jumaat"
+                           value="<?php echo htmlspecialchars($formData['description'] ?? ''); ?>">
+                </div>
+            </div>
 
             <!-- Hidden inputs for actual category data (will be populated on submit) -->
             <div id="hidden-category-inputs"></div>
@@ -131,9 +131,145 @@ $formData = $isEdit ? $record : ($old ?? []);
         <script>
             // Category management
             document.addEventListener('DOMContentLoaded', function() {
+                // Payment-method driven field visibility
+                const paymentMethodSelect = document.getElementById('payment_method');
+                const referenceField = document.getElementById('reference-field');
+                const detailsFields = document.getElementById('details-fields');
+                const receivedFromInput = document.getElementById('received_from');
+                const descriptionInput = document.getElementById('description');
+
+                function togglePaymentDependentFields() {
+                    if (!paymentMethodSelect) return;
+                    const method = paymentMethodSelect.value;
+
+                    // Until a method is selected, hide reference + received_from + description
+                    const hasMethod = method !== '';
+
+                    if (detailsFields) {
+                        detailsFields.style.display = hasMethod ? 'grid' : 'none';
+                    }
+                    if (receivedFromInput) {
+                        receivedFromInput.required = hasMethod;
+                    }
+                    if (descriptionInput) {
+                        descriptionInput.required = hasMethod;
+                    }
+
+                    // Reference: show only after method selection, and only for bank/cheque
+                    if (referenceField) {
+                        referenceField.style.display = (!hasMethod || method === 'cash') ? 'none' : '';
+                    }
+                }
+
+                // Auto-fill fields when Kontra is selected
+                function checkForKontraAndAutoFill() {
+                    const categorySelects = document.querySelectorAll('.category-select');
+                    const addCategoryBtn = document.getElementById('add-category');
+                    const categoryEntriesContainer = document.getElementById('category-entries');
+                    let hasKontra = false;
+                    let kontraEntry = null;
+                    
+                    categorySelects.forEach(select => {
+                        if (select.value === 'kontra') {
+                            hasKontra = true;
+                            kontraEntry = select.closest('.category-entry');
+                        }
+                    });
+
+                    if (hasKontra) {
+                        const paymentMethod = paymentMethodSelect.value;
+                        
+                        // Remove all other category entries - Kontra must be alone!
+                        const allEntries = categoryEntriesContainer.querySelectorAll('.category-entry');
+                        allEntries.forEach(entry => {
+                            if (entry !== kontraEntry) {
+                                entry.remove();
+                            }
+                        });
+                        
+                        // Auto-fill "Received From"
+                        if (receivedFromInput && !receivedFromInput.dataset.userEdited) {
+                            receivedFromInput.value = 'Internal Transfer';
+                            receivedFromInput.readOnly = true;
+                            receivedFromInput.style.backgroundColor = '#f5f5f5';
+                        }
+                        
+                        // Auto-fill "Description" based on payment method
+                        if (descriptionInput && !descriptionInput.dataset.userEdited) {
+                            if (paymentMethod === 'cash') {
+                                descriptionInput.value = 'Transfer from Bank to Cash';
+                            } else if (paymentMethod === 'bank') {
+                                descriptionInput.value = 'Transfer from Cash to Bank';
+                            } else {
+                                descriptionInput.value = 'Internal Transfer';
+                            }
+                            descriptionInput.readOnly = true;
+                            descriptionInput.style.backgroundColor = '#f5f5f5';
+                        }
+
+                        // Disable "Add Another Category" button - Kontra must be alone
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'none';
+                        }
+                    } else {
+                        // Reset if Kontra is removed
+                        if (receivedFromInput) {
+                            receivedFromInput.readOnly = false;
+                            receivedFromInput.style.backgroundColor = '';
+                            if (!receivedFromInput.dataset.userEdited) {
+                                receivedFromInput.value = '';
+                            }
+                        }
+                        if (descriptionInput) {
+                            descriptionInput.readOnly = false;
+                            descriptionInput.style.backgroundColor = '';
+                            if (!descriptionInput.dataset.userEdited) {
+                                descriptionInput.value = '';
+                            }
+                        }
+
+                        // Re-enable "Add Another Category" button
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'inline-block';
+                        }
+                    }
+                }
+
+                // Track user edits to prevent overwriting
+                if (receivedFromInput) {
+                    receivedFromInput.addEventListener('input', function() {
+                        if (this.value !== 'Internal Transfer') {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
+                if (descriptionInput) {
+                    descriptionInput.addEventListener('input', function() {
+                        const autoValues = ['Transfer from Bank to Cash', 'Transfer from Cash to Bank', 'Internal Transfer'];
+                        if (!autoValues.includes(this.value)) {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
+
+                if (paymentMethodSelect) {
+                    paymentMethodSelect.addEventListener('change', function() {
+                        togglePaymentDependentFields();
+                        checkForKontraAndAutoFill();
+                    });
+                    togglePaymentDependentFields();
+                }
+
                 const categoryEntriesContainer = document.getElementById('category-entries');
                 const addCategoryBtn = document.getElementById('add-category');
                 const form = document.querySelector('form');
+
+                // Listen for category changes to trigger auto-fill
+                categoryEntriesContainer.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('category-select')) {
+                        checkForKontraAndAutoFill();
+                    }
+                });
 
                 // Load existing data if editing
                 <?php if ($isEdit && !empty($record)): ?>

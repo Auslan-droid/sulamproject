@@ -23,6 +23,7 @@ class DepositAccountRepository
         'faedah_simpanan_tetap',
         'sewa_rumah_kedai_tadika_menara',
         'lain_lain_terimaan',
+        'kontra',
     ];
 
     /**
@@ -39,6 +40,7 @@ class DepositAccountRepository
         'faedah_simpanan_tetap' => 'Faedah Simpanan Tetap',
         'sewa_rumah_kedai_tadika_menara' => 'Sewa (Rumah/Kedai/Tadika/Menara)',
         'lain_lain_terimaan' => 'Lain-lain Terimaan',
+        'kontra' => 'Kontra',
     ];
 
     public function __construct(mysqli $mysqli)
@@ -163,6 +165,40 @@ class DepositAccountRepository
 
         return $row ?: null;
     }
+    
+    /**
+     * Generate next receipt number in format RR/YEAR/COUNT
+     *
+     * @return string
+     */
+    public function generateReceiptNumber(): string
+    {
+        $year = date('Y');
+        $prefix = "RR/{$year}/";
+
+        // Find the highest count for this year
+        $sql = "SELECT receipt_number FROM financial_deposit_accounts
+                WHERE receipt_number LIKE ?
+                ORDER BY receipt_number DESC
+                LIMIT 1";
+
+        $stmt = $this->mysqli->prepare($sql);
+        $pattern = "RR/{$year}/%";
+        $stmt->bind_param('s', $pattern);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        if ($row && !empty($row['receipt_number']) && preg_match('/RR\/\d{4}\/(\d+)/', $row['receipt_number'], $matches)) {
+            $nextCount = intval($matches[1]) + 1;
+        } else {
+            $nextCount = 1;
+        }
+
+        // Format with leading zeros (4 digits)
+        return $prefix . str_pad($nextCount, 4, '0', STR_PAD_LEFT);
+    }
 
     /**
      * Create a new deposit record
@@ -172,6 +208,11 @@ class DepositAccountRepository
      */
     public function create(array $data): int
     {
+        // Auto-generate receipt number if not provided or empty
+        if (empty($data['receipt_number'])) {
+            $data['receipt_number'] = $this->generateReceiptNumber();
+        }
+
         $columns = [
             'tx_date', 
             'description', 
@@ -305,5 +346,57 @@ class DepositAccountRepository
             $total += (float) ($row[$col] ?? 0);
         }
         return $total;
+    }
+
+    /**
+     * Update contra_pair_id and is_contra_transaction flag for a deposit
+     *
+     * @param int $id Deposit ID
+     * @param int $contraPairId Payment ID that this deposit is paired with
+     * @return bool
+     */
+    public function updateContraPair(int $id, int $contraPairId): bool
+    {
+        $stmt = $this->mysqli->prepare(
+            "UPDATE financial_deposit_accounts 
+             SET contra_pair_id = ?, is_contra_transaction = 1 
+             WHERE id = ?"
+        );
+        $stmt->bind_param('ii', $contraPairId, $id);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Check if a deposit has a kontra amount
+     *
+     * @param array $data Deposit data
+     * @return bool
+     */
+    public function hasKontraAmount(array $data): bool
+    {
+        return isset($data['kontra']) && $this->sanitizeAmount($data['kontra']) > 0;
+    }
+
+    /**
+     * Get the contra pair payment ID for a deposit
+     *
+     * @param int $id Deposit ID
+     * @return int|null Payment ID or null if no pair
+     */
+    public function getContraPairId(int $id): ?int
+    {
+        $stmt = $this->mysqli->prepare(
+            "SELECT contra_pair_id FROM financial_deposit_accounts WHERE id = ?"
+        );
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row && $row['contra_pair_id'] ? (int)$row['contra_pair_id'] : null;
     }
 }

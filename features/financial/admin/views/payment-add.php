@@ -42,78 +42,7 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <!-- Row 2: Paid To (Full Width) -->
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="paid_to">Dibayar Kepada (Paid To) <span style="color: red;">*</span></label>
-                <input type="text" id="paid_to" name="paid_to" class="form-control" required 
-                       placeholder="e.g. Tenaga Nasional Berhad"
-                       value="<?php echo htmlspecialchars($formData['paid_to'] ?? ''); ?>">
-            </div>
-
-            <!-- Row 3: Description (Full Width) -->
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="description">Butiran (Description) <span style="color: red;">*</span></label>
-                <input type="text" id="description" name="description" class="form-control" required 
-                       placeholder="e.g. Bayaran Bil Elektrik"
-                       value="<?php echo htmlspecialchars($formData['description'] ?? ''); ?>">
-            </div>
-
-            <!-- Row 4: Payment Method and Reference Number -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <!-- Payment Method -->
-                <div class="form-group">
-                    <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
-                    <select id="payment_method" name="payment_method" class="form-control" required>
-                        <option value="">-- Select Method --</option>
-                        <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
-                        <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Bank (Cek)</option>
-                        <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank (E-Banking)</option>
-                    </select>
-                </div>
-
-                <!-- Payment Reference -->
-                <div class="form-group" id="reference-field">
-                    <label for="payment_reference">No. Rujukan (Reference Number)</label>
-                    <input type="text" id="payment_reference" name="payment_reference" class="form-control" 
-                           placeholder="e.g. Reference No."
-                           value="<?php echo htmlspecialchars($formData['payment_reference'] ?? ''); ?>">
-                    <small class="form-text text-muted">Required for Bank/Cheque.</small>
-                </div>
-            </div>
-
-            <!-- Bank Details Section (Hidden by default, shown for bank/cheque) -->
-            <div id="bank-details-section" style="display: none;">
-                <h4 style="margin-bottom: 1rem; color: #666; font-size: 1rem;">Bank Details</h4>
-                
-                <!-- Row: IC Number and Bank Name -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <!-- Payee IC Number -->
-                    <div class="form-group">
-                        <label for="payee_ic">No. Kad Pengenalan (IC Number)</label>
-                        <input type="text" id="payee_ic" name="payee_ic" class="form-control" 
-                               placeholder="e.g. 123456-12-1234"
-                               value="<?php echo htmlspecialchars($formData['payee_ic'] ?? ''); ?>">
-                    </div>
-
-                    <!-- Payee Bank Name -->
-                    <div class="form-group">
-                        <label for="payee_bank_name">Nama Bank (Bank Name)</label>
-                        <input type="text" id="payee_bank_name" name="payee_bank_name" class="form-control" 
-                               placeholder="e.g. Maybank, CIMB"
-                               value="<?php echo htmlspecialchars($formData['payee_bank_name'] ?? ''); ?>">
-                    </div>
-                </div>
-
-                <!-- Row: Bank Account Number (Full Width) -->
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label for="payee_bank_account">No. Akaun (Account Number)</label>
-                    <input type="text" id="payee_bank_account" name="payee_bank_account" class="form-control" 
-                           placeholder="e.g. 1234567890"
-                           value="<?php echo htmlspecialchars($formData['payee_bank_account'] ?? ''); ?>">
-                </div>
-            </div>
-
-            <!-- Category Amounts -->
+            <!-- Category Amounts (MOVED HERE - BEFORE Payment Method) -->
             <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Category Amounts (RM)</h4>
             <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Select a category and enter the amount.</p>
 
@@ -141,9 +70,78 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem; display: none;">
+            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
                 <i class="fas fa-plus"></i> Add Another Category
             </button>
+
+            <!-- Payment Method (MOVED HERE - AFTER Category) -->
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
+                <select id="payment_method" name="payment_method" class="form-control" required>
+                    <option value="">-- Select Method --</option>
+                    <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
+                    <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Bank (Cek)</option>
+                    <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank (E-Banking)</option>
+                </select>
+            </div>
+
+            <div id="payee-fields" style="display: none;">
+                <!-- Row 2: Paid To (Full Width) -->
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="paid_to">Dibayar Kepada (Paid To) <span style="color: red;">*</span></label>
+                    <input type="text" id="paid_to" name="paid_to" class="form-control" required 
+                           placeholder="e.g. Tenaga Nasional Berhad"
+                           value="<?php echo htmlspecialchars($formData['paid_to'] ?? ''); ?>">
+                </div>
+
+                <!-- IC Number (Shown when a payment method is selected, including cash) -->
+                <div class="form-group" id="ic-field" style="margin-bottom: 1rem; display: none;">
+                    <label for="payee_ic">No. Kad Pengenalan (IC Number)</label>
+                    <input type="text" id="payee_ic" name="payee_ic" class="form-control" 
+                           placeholder="e.g. 123456-12-1234"
+                           value="<?php echo htmlspecialchars($formData['payee_ic'] ?? ''); ?>">
+                </div>
+            </div>
+
+            <!-- Description (Shown after payment method selected) -->
+            <div class="form-group" id="description-field" style="margin-bottom: 1rem; display: none;">
+                <label for="description">Butiran (Description) <span style="color: red;">*</span></label>
+                <input type="text" id="description" name="description" class="form-control" required 
+                       placeholder="e.g. Bayaran Bil Elektrik"
+                       value="<?php echo htmlspecialchars($formData['description'] ?? ''); ?>">
+            </div>
+
+            <!-- Bank Details Section (Hidden by default, shown for bank/cheque) -->
+            <div id="bank-details-section" style="display: none;">
+                <h4 style="margin-bottom: 1rem; color: #666; font-size: 1rem;">Bank Details</h4>
+
+                <!-- Payment Reference (Bank/Cheque only) -->
+                <div class="form-group" id="reference-field" style="margin-bottom: 1rem;">
+                    <label for="payment_reference">No. Rujukan (Reference Number)</label>
+                    <input type="text" id="payment_reference" name="payment_reference" class="form-control" 
+                           placeholder="e.g. Reference No."
+                           value="<?php echo htmlspecialchars($formData['payment_reference'] ?? ''); ?>">
+                    <small class="form-text text-muted">Required for Bank/Cheque.</small>
+                </div>
+                
+                <!-- Row: Bank Name -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label for="payee_bank_name">Nama Bank (Bank Name)</label>
+                        <input type="text" id="payee_bank_name" name="payee_bank_name" class="form-control" 
+                               placeholder="e.g. Maybank, CIMB"
+                               value="<?php echo htmlspecialchars($formData['payee_bank_name'] ?? ''); ?>">
+                    </div>
+                </div>
+
+                <!-- Row: Bank Account Number (Full Width) -->
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="payee_bank_account">No. Akaun (Account Number)</label>
+                    <input type="text" id="payee_bank_account" name="payee_bank_account" class="form-control" 
+                           placeholder="e.g. 1234567890"
+                           value="<?php echo htmlspecialchars($formData['payee_bank_account'] ?? ''); ?>">
+                </div>
+            </div>
 
             <!-- Hidden inputs for actual category data (will be populated on submit) -->
             <div id="hidden-category-inputs"></div>
@@ -163,20 +161,44 @@ $formData = $isEdit ? $record : ($old ?? []);
                 const paymentMethodSelect = document.getElementById('payment_method');
                 const bankDetailsSection = document.getElementById('bank-details-section');
                 const referenceField = document.getElementById('reference-field');
+                const payeeFields = document.getElementById('payee-fields');
+                const paidToInput = document.getElementById('paid_to');
+                const descriptionInput = document.getElementById('description');
+                const icField = document.getElementById('ic-field');
+                const descriptionField = document.getElementById('description-field');
 
                 function toggleBankDetails() {
                     const selectedMethod = paymentMethodSelect.value;
+
+                    const hasMethod = selectedMethod !== '';
+                    if (payeeFields) {
+                        payeeFields.style.display = hasMethod ? 'block' : 'none';
+                    }
+                    if (icField) {
+                        icField.style.display = hasMethod ? 'block' : 'none';
+                    }
+                    if (descriptionField) {
+                        descriptionField.style.display = hasMethod ? 'block' : 'none';
+                    }
+                    if (paidToInput) {
+                        paidToInput.required = hasMethod;
+                        paidToInput.disabled = !hasMethod;
+                    }
+                    if (descriptionInput) {
+                        descriptionInput.required = hasMethod;
+                        descriptionInput.disabled = !hasMethod;
+                    }
                     
                     if (selectedMethod === 'bank' || selectedMethod === 'cheque') {
                         bankDetailsSection.style.display = 'block';
-                        referenceField.style.display = 'block';
+                        if (referenceField) referenceField.style.display = 'block';
                     } else if (selectedMethod === 'cash') {
                         bankDetailsSection.style.display = 'none';
-                        referenceField.style.display = 'none';
+                        if (referenceField) referenceField.style.display = 'none';
                     } else {
                         // No method selected yet
                         bankDetailsSection.style.display = 'none';
-                        referenceField.style.display = 'none';
+                        if (referenceField) referenceField.style.display = 'none';
                     }
                 }
 
@@ -184,7 +206,120 @@ $formData = $isEdit ? $record : ($old ?? []);
                 toggleBankDetails();
 
                 // Run when payment method changes
-                paymentMethodSelect.addEventListener('change', toggleBankDetails);
+                paymentMethodSelect.addEventListener('change', function() {
+                    toggleBankDetails();
+                    checkForKontraAndAutoFill();
+                });
+
+                // Auto-fill fields when Kontra is selected
+                function checkForKontraAndAutoFill() {
+                    const categorySelects = document.querySelectorAll('.category-select');
+                    const addCategoryBtn = document.getElementById('add-category');
+                    const categoryEntriesContainer = document.getElementById('category-entries');
+                    let hasKontra = false;
+                    let kontraEntry = null;
+                    
+                    categorySelects.forEach(select => {
+                        if (select.value === 'kontra') {
+                            hasKontra = true;
+                            kontraEntry = select.closest('.category-entry');
+                        }
+                    });
+
+                    if (hasKontra) {
+                        const paymentMethod = paymentMethodSelect.value;
+                        
+                        // Remove all other category entries - Kontra must be alone!
+                        const allEntries = categoryEntriesContainer.querySelectorAll('.category-entry');
+                        allEntries.forEach(entry => {
+                            if (entry !== kontraEntry) {
+                                entry.remove();
+                            }
+                        });
+                        
+                        // Auto-fill "Paid To"
+                        if (paidToInput && !paidToInput.dataset.userEdited) {
+                            paidToInput.value = 'Internal Transfer';
+                            paidToInput.readOnly = true;
+                            paidToInput.style.backgroundColor = '#f5f5f5';
+                        }
+                        
+                        // Auto-fill "Description" based on payment method
+                        if (descriptionInput && !descriptionInput.dataset.userEdited) {
+                            if (paymentMethod === 'cash') {
+                                // Payment from cash = money leaving cash, going to bank
+                                descriptionInput.value = 'Transfer from Cash to Bank';
+                            } else if (paymentMethod === 'bank' || paymentMethod === 'cheque') {
+                                // Payment from bank = money leaving bank, going to cash
+                                descriptionInput.value = 'Transfer from Bank to Cash';
+                            } else {
+                                descriptionInput.value = 'Internal Transfer';
+                            }
+                            descriptionInput.readOnly = true;
+                            descriptionInput.style.backgroundColor = '#f5f5f5';
+                        }
+
+                        // Hide IC field and bank details for Kontra transactions
+                        if (icField) {
+                            icField.style.display = 'none';
+                        }
+                        if (bankDetailsSection) {
+                            bankDetailsSection.style.display = 'none';
+                        }
+
+                        // Hide "Add Another Category" button - Kontra must be alone
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'none';
+                        }
+                    } else {
+                        // Reset if Kontra is removed
+                        if (paidToInput) {
+                            paidToInput.readOnly = false;
+                            paidToInput.style.backgroundColor = '';
+                            if (!paidToInput.dataset.userEdited) {
+                                paidToInput.value = '';
+                            }
+                        }
+                        if (descriptionInput) {
+                            descriptionInput.readOnly = false;
+                            descriptionInput.style.backgroundColor = '';
+                            if (!descriptionInput.dataset.userEdited) {
+                                descriptionInput.value = '';
+                            }
+                        }
+
+                        // Re-show IC field and bank details based on payment method
+                        const paymentMethod = paymentMethodSelect.value;
+                        if (icField && paymentMethod) {
+                            icField.style.display = 'block';
+                        }
+                        if (bankDetailsSection && (paymentMethod === 'bank' || paymentMethod === 'cheque')) {
+                            bankDetailsSection.style.display = 'block';
+                        }
+
+                        // Re-show "Add Another Category" button
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'inline-block';
+                        }
+                    }
+                }
+
+                // Track user edits to prevent overwriting
+                if (paidToInput) {
+                    paidToInput.addEventListener('input', function() {
+                        if (this.value !== 'Internal Transfer') {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
+                if (descriptionInput) {
+                    descriptionInput.addEventListener('input', function() {
+                        const autoValues = ['Transfer from Bank to Cash', 'Transfer from Cash to Bank', 'Internal Transfer'];
+                        if (!autoValues.includes(this.value)) {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
             });
 
             // Category management
@@ -214,6 +349,87 @@ $formData = $isEdit ? $record : ($old ?? []);
                     if (e.target.closest('.remove-category')) {
                         e.target.closest('.category-entry').remove();
                         updateRemoveButtons();
+                    }
+                });
+
+                // Listen for category changes to trigger auto-fill
+                categoryEntriesContainer.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('category-select')) {
+                        // Get reference to the checkForKontraAndAutoFill function from the first DOMContentLoaded block
+                        const paymentMethodSelect = document.getElementById('payment_method');
+                        const paidToInput = document.getElementById('paid_to');
+                        const descriptionInput = document.getElementById('description');
+                        
+                        // Check for kontra and auto-fill
+                        const categorySelects = document.querySelectorAll('.category-select');
+                        let hasKontra = false;
+                        
+                        categorySelects.forEach(select => {
+                            if (select.value === 'kontra') {
+                                hasKontra = true;
+                            }
+                        });
+
+                        if (hasKontra) {
+                            const paymentMethod = paymentMethodSelect.value;
+                            const icField = document.getElementById('ic-field');
+                            const bankDetailsSection = document.getElementById('bank-details-section');
+                            
+                            if (paidToInput && !paidToInput.dataset.userEdited) {
+                                paidToInput.value = 'Internal Transfer';
+                                paidToInput.readOnly = true;
+                                paidToInput.style.backgroundColor = '#f5f5f5';
+                            }
+                            
+                            if (descriptionInput && !descriptionInput.dataset.userEdited) {
+                                if (paymentMethod === 'cash') {
+                                    // Payment from cash = money leaving cash, going to bank
+                                    descriptionInput.value = 'Transfer from Cash to Bank';
+                                } else if (paymentMethod === 'bank' || paymentMethod === 'cheque') {
+                                    // Payment from bank = money leaving bank, going to cash
+                                    descriptionInput.value = 'Transfer from Bank to Cash';
+                                } else {
+                                    descriptionInput.value = 'Internal Transfer';
+                                }
+                                descriptionInput.readOnly = true;
+                                descriptionInput.style.backgroundColor = '#f5f5f5';
+                            }
+
+                            // Hide IC field and bank details for Kontra transactions
+                            if (icField) {
+                                icField.style.display = 'none';
+                            }
+                            if (bankDetailsSection) {
+                                bankDetailsSection.style.display = 'none';
+                            }
+                        } else {
+                            const icField = document.getElementById('ic-field');
+                            const bankDetailsSection = document.getElementById('bank-details-section');
+                            const paymentMethod = paymentMethodSelect.value;
+
+                            if (paidToInput) {
+                                paidToInput.readOnly = false;
+                                paidToInput.style.backgroundColor = '';
+                                if (!paidToInput.dataset.userEdited) {
+                                    paidToInput.value = '';
+                                }
+                            }
+                            if (descriptionInput) {
+                                descriptionInput.readOnly = false;
+                                descriptionInput.style.backgroundColor = '';
+                                if (!descriptionInput.dataset.userEdited) {
+                                    descriptionInput.value = '';
+                                }
+                            }
+
+                            // Re-show IC field and bank details based on payment method
+                            if (icField && paymentMethod) {
+                                icField.style.display = 'block';
+                            }
+                            if (bankDetailsSection && (paymentMethod === 'bank' || paymentMethod === 'cheque')) {
+                                bankDetailsSection.style.display = 'block';
+                            }
+                        }
                     }
                 });
 
