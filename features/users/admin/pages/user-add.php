@@ -256,7 +256,7 @@ ob_start();
             </div>
         </div>
 
-        <div class="actions" style="position: sticky; bottom: 0; background: white; padding: 1rem 0; border-top: 2px solid #e5e7eb; margin-top: 2rem;">
+        <div class="actions" style="background: white; padding: 1rem 0; border-top: 2px solid #e5e7eb; margin-top: 2rem;">
             <button class="btn btn-primary" type="submit" style="font-size: 1rem; padding: 0.75rem 1.5rem;">
                 <i class="fa-solid fa-user-plus"></i>
                 Create User
