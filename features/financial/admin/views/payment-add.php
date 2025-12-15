@@ -26,12 +26,24 @@ $formData = $isEdit ? $record : ($old ?? []);
             <!-- Row 1: Voucher Number and Date -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <!-- Voucher Number -->
-                <div class="form-group">
-                    <label for="voucher_number">No. Baucar (Voucher Number)</label>
-                    <input type="text" id="voucher_number" name="voucher_number" class="form-control" 
-                           value="<?php echo htmlspecialchars($nextVoucherNumber ?? $formData['voucher_number'] ?? ''); ?>"
-                           readonly>
-                    <small class="form-text text-muted">Auto-generated voucher number</small>
+                <div>
+                    <div class="form-group">
+                        <label for="voucher_number">No. Baucar (Voucher Number)</label>
+                        <input type="text" id="voucher_number" name="voucher_number" class="form-control" 
+                               value="<?php echo htmlspecialchars($nextVoucherNumber ?? $formData['voucher_number'] ?? ''); ?>"
+                               readonly>
+                        <small class="form-text text-muted">Auto-generated voucher number</small>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
+                        <select id="payment_method" name="payment_method" class="form-control" required>
+                            <option value="">-- Select Method --</option>
+                            <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
+                            <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Bank (Cek)</option>
+                            <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank (E-Banking)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Date -->
@@ -42,60 +54,47 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <!-- Row 2: Paid To (Full Width) -->
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="paid_to">Dibayar Kepada (Paid To) <span style="color: red;">*</span></label>
-                <input type="text" id="paid_to" name="paid_to" class="form-control" required 
-                       placeholder="e.g. Tenaga Nasional Berhad"
-                       value="<?php echo htmlspecialchars($formData['paid_to'] ?? ''); ?>">
+            <div id="payee-fields" style="display: none;">
+                <!-- Row 2: Paid To (Full Width) -->
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="paid_to">Dibayar Kepada (Paid To) <span style="color: red;">*</span></label>
+                    <input type="text" id="paid_to" name="paid_to" class="form-control" required 
+                           placeholder="e.g. Tenaga Nasional Berhad"
+                           value="<?php echo htmlspecialchars($formData['paid_to'] ?? ''); ?>">
+                </div>
+
+                <!-- IC Number (Shown when a payment method is selected, including cash) -->
+                <div class="form-group" id="ic-field" style="margin-bottom: 1rem; display: none;">
+                    <label for="payee_ic">No. Kad Pengenalan (IC Number)</label>
+                    <input type="text" id="payee_ic" name="payee_ic" class="form-control" 
+                           placeholder="e.g. 123456-12-1234"
+                           value="<?php echo htmlspecialchars($formData['payee_ic'] ?? ''); ?>">
+                </div>
             </div>
 
-            <!-- Row 3: Description (Full Width) -->
-            <div class="form-group" style="margin-bottom: 1rem;">
+            <!-- Description (Shown after payment method selected) -->
+            <div class="form-group" id="description-field" style="margin-bottom: 1rem; display: none;">
                 <label for="description">Butiran (Description) <span style="color: red;">*</span></label>
                 <input type="text" id="description" name="description" class="form-control" required 
                        placeholder="e.g. Bayaran Bil Elektrik"
                        value="<?php echo htmlspecialchars($formData['description'] ?? ''); ?>">
             </div>
 
-            <!-- Row 4: Payment Method and Reference Number -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <!-- Payment Method -->
-                <div class="form-group">
-                    <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
-                    <select id="payment_method" name="payment_method" class="form-control" required>
-                        <option value="">-- Select Method --</option>
-                        <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
-                        <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Bank (Cek)</option>
-                        <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank (E-Banking)</option>
-                    </select>
-                </div>
+            <!-- Bank Details Section (Hidden by default, shown for bank/cheque) -->
+            <div id="bank-details-section" style="display: none;">
+                <h4 style="margin-bottom: 1rem; color: #666; font-size: 1rem;">Bank Details</h4>
 
-                <!-- Payment Reference -->
-                <div class="form-group" id="reference-field">
+                <!-- Payment Reference (Bank/Cheque only) -->
+                <div class="form-group" id="reference-field" style="margin-bottom: 1rem;">
                     <label for="payment_reference">No. Rujukan (Reference Number)</label>
                     <input type="text" id="payment_reference" name="payment_reference" class="form-control" 
                            placeholder="e.g. Reference No."
                            value="<?php echo htmlspecialchars($formData['payment_reference'] ?? ''); ?>">
                     <small class="form-text text-muted">Required for Bank/Cheque.</small>
                 </div>
-            </div>
-
-            <!-- Bank Details Section (Hidden by default, shown for bank/cheque) -->
-            <div id="bank-details-section" style="display: none;">
-                <h4 style="margin-bottom: 1rem; color: #666; font-size: 1rem;">Bank Details</h4>
                 
-                <!-- Row: IC Number and Bank Name -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <!-- Payee IC Number -->
-                    <div class="form-group">
-                        <label for="payee_ic">No. Kad Pengenalan (IC Number)</label>
-                        <input type="text" id="payee_ic" name="payee_ic" class="form-control" 
-                               placeholder="e.g. 123456-12-1234"
-                               value="<?php echo htmlspecialchars($formData['payee_ic'] ?? ''); ?>">
-                    </div>
-
-                    <!-- Payee Bank Name -->
+                <!-- Row: Bank Name -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem;">
                     <div class="form-group">
                         <label for="payee_bank_name">Nama Bank (Bank Name)</label>
                         <input type="text" id="payee_bank_name" name="payee_bank_name" class="form-control" 
@@ -141,7 +140,7 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem; display: none;">
+            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
                 <i class="fas fa-plus"></i> Add Another Category
             </button>
 
@@ -163,20 +162,44 @@ $formData = $isEdit ? $record : ($old ?? []);
                 const paymentMethodSelect = document.getElementById('payment_method');
                 const bankDetailsSection = document.getElementById('bank-details-section');
                 const referenceField = document.getElementById('reference-field');
+                const payeeFields = document.getElementById('payee-fields');
+                const paidToInput = document.getElementById('paid_to');
+                const descriptionInput = document.getElementById('description');
+                const icField = document.getElementById('ic-field');
+                const descriptionField = document.getElementById('description-field');
 
                 function toggleBankDetails() {
                     const selectedMethod = paymentMethodSelect.value;
+
+                    const hasMethod = selectedMethod !== '';
+                    if (payeeFields) {
+                        payeeFields.style.display = hasMethod ? 'block' : 'none';
+                    }
+                    if (icField) {
+                        icField.style.display = hasMethod ? 'block' : 'none';
+                    }
+                    if (descriptionField) {
+                        descriptionField.style.display = hasMethod ? 'block' : 'none';
+                    }
+                    if (paidToInput) {
+                        paidToInput.required = hasMethod;
+                        paidToInput.disabled = !hasMethod;
+                    }
+                    if (descriptionInput) {
+                        descriptionInput.required = hasMethod;
+                        descriptionInput.disabled = !hasMethod;
+                    }
                     
                     if (selectedMethod === 'bank' || selectedMethod === 'cheque') {
                         bankDetailsSection.style.display = 'block';
-                        referenceField.style.display = 'block';
+                        if (referenceField) referenceField.style.display = 'block';
                     } else if (selectedMethod === 'cash') {
                         bankDetailsSection.style.display = 'none';
-                        referenceField.style.display = 'none';
+                        if (referenceField) referenceField.style.display = 'none';
                     } else {
                         // No method selected yet
                         bankDetailsSection.style.display = 'none';
-                        referenceField.style.display = 'none';
+                        if (referenceField) referenceField.style.display = 'none';
                     }
                 }
 

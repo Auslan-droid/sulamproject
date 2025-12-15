@@ -112,7 +112,7 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem; display: none;">
+            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
                 <i class="fas fa-plus"></i> Add Another Category
             </button>
 
