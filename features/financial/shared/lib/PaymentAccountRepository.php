@@ -8,6 +8,7 @@
 class PaymentAccountRepository
 {
     private mysqli $mysqli;
+    private $auditLogger;
 
     /**
      * Category columns in the payments table
@@ -47,19 +48,20 @@ class PaymentAccountRepository
         'kontra' => 'Kontra',
     ];
 
-    public function __construct(mysqli $mysqli)
+    public function __construct(mysqli $mysqli, $auditLogger = null)
     {
         $this->mysqli = $mysqli;
+        $this->auditLogger = $auditLogger;
     }
 
     /**
-     * Get all payment records, ordered by tx_date descending
+     * Get all payment records (excluding soft-deleted), ordered by tx_date descending
      *
      * @return array
      */
     public function findAll(): array
     {
-        $sql = "SELECT * FROM financial_payment_accounts ORDER BY tx_date DESC, id DESC";
+        $sql = "SELECT * FROM financial_payment_accounts WHERE deleted_at IS NULL ORDER BY tx_date DESC, id DESC";
         $result = $this->mysqli->query($sql);
 
         $rows = [];
@@ -208,9 +210,10 @@ class PaymentAccountRepository
      * Create a new payment record
      *
      * @param array $data Associative array with tx_date, description, and category amounts
+     * @param int|null $userId User creating the record
      * @return int The inserted ID
      */
-    public function create(array $data): int
+    public function create(array $data, $userId = null): int
     {
         // Auto-generate voucher number if not provided or empty
         if (empty($data['voucher_number'])) {
@@ -226,10 +229,11 @@ class PaymentAccountRepository
             'payee_bank_name', 
             'payee_bank_account', 
             'payment_method', 
-            'payment_reference'
+            'payment_reference',
+            'created_by'
         ];
-        $placeholders = ['?', '?', '?', '?', '?', '?', '?', '?', '?'];
-        $types = 'sssssssss';
+        $placeholders = ['?', '?', '?', '?', '?', '?', '?', '?', '?', '?'];
+        $types = 'sssssssssi';
         $values = [
             $data['tx_date'],
             $data['description'],
@@ -240,6 +244,7 @@ class PaymentAccountRepository
             $data['payee_bank_account'] ?? null,
             $data['payment_method'] ?? 'cash',
             $data['payment_reference'] ?? null,
+            $userId,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {
@@ -261,6 +266,12 @@ class PaymentAccountRepository
         $insertedId = $stmt->insert_id;
         $stmt->close();
 
+        // Log audit trail
+        if ($this->auditLogger && $insertedId) {
+            $recordData = array_merge($data, ['id' => $insertedId, 'created_by' => $userId]);
+            $this->auditLogger->logCreate('financial_payment_accounts', $insertedId, $userId, $recordData);
+        }
+
         return $insertedId;
     }
 
@@ -269,10 +280,17 @@ class PaymentAccountRepository
      *
      * @param int $id
      * @param array $data
+     * @param int|null $userId User updating the record
      * @return bool
      */
-    public function update(int $id, array $data): bool
+    public function update(int $id, array $data, $userId = null): bool
     {
+        // Get old values for audit log
+        $oldValues = null;
+        if ($this->auditLogger) {
+            $oldValues = $this->findById($id);
+        }
+
         $setClauses = [
             'tx_date = ?', 
             'description = ?',
@@ -282,9 +300,10 @@ class PaymentAccountRepository
             'payee_bank_name = ?',
             'payee_bank_account = ?',
             'payment_method = ?',
-            'payment_reference = ?'
+            'payment_reference = ?',
+            'updated_by = ?'
         ];
-        $types = 'sssssssss';
+        $types = 'sssssssssi';
         $values = [
             $data['tx_date'],
             $data['description'],
@@ -295,6 +314,7 @@ class PaymentAccountRepository
             $data['payee_bank_account'] ?? null,
             $data['payment_method'] ?? 'cash',
             $data['payment_reference'] ?? null,
+            $userId,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {
@@ -316,11 +336,48 @@ class PaymentAccountRepository
         $success = $stmt->execute();
         $stmt->close();
 
+        // Log audit trail
+        if ($this->auditLogger && $success && $oldValues) {
+            $newValues = array_merge($data, ['updated_by' => $userId]);
+            $this->auditLogger->logUpdate('financial_payment_accounts', $id, $userId, $oldValues, $newValues);
+        }
+
         return $success;
     }
 
     /**
-     * Delete a payment record by ID
+     * Soft delete a payment record by ID
+     *
+     * @param int $id
+     * @param int|null $userId User deleting the record
+     * @return bool
+     */
+    public function softDelete(int $id, $userId = null): bool
+    {
+        // Get old values for audit log
+        $oldValues = null;
+        if ($this->auditLogger) {
+            $oldValues = $this->findById($id);
+        }
+
+        $stmt = $this->mysqli->prepare(
+            "UPDATE financial_payment_accounts SET deleted_at = NOW(), deleted_by = ? WHERE id = ?"
+        );
+        $stmt->bind_param('ii', $userId, $id);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        // Log audit trail
+        if ($this->auditLogger && $success && $oldValues) {
+            $this->auditLogger->logDelete('financial_payment_accounts', $id, $userId, $oldValues);
+        }
+
+        return $success;
+    }
+
+    /**
+     * Hard delete a payment record by ID (permanent deletion)
+     * Use with caution - this is irreversible
      *
      * @param int $id
      * @return bool
@@ -333,6 +390,58 @@ class PaymentAccountRepository
         $stmt->close();
 
         return $success;
+    }
+
+    /**
+     * Restore a soft-deleted payment record
+     *
+     * @param int $id
+     * @param int|null $userId User restoring the record
+     * @return bool
+     */
+    public function restore(int $id, $userId = null): bool
+    {
+        $stmt = $this->mysqli->prepare(
+            "UPDATE financial_payment_accounts SET deleted_at = NULL, deleted_by = NULL WHERE id = ?"
+        );
+        $stmt->bind_param('i', $id);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        // Log audit trail
+        if ($this->auditLogger && $success) {
+            $this->auditLogger->logRestore('financial_payment_accounts', $id, $userId);
+        }
+
+        return $success;
+    }
+
+    /**
+     * Get audit trail for a payment record
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getAuditTrail(int $id): array
+    {
+        if (!$this->auditLogger) {
+            return [];
+        }
+        return $this->auditLogger->getAuditTrail('financial_payment_accounts', $id);
+    }
+
+    /**
+     * Get creator info for tooltip display
+     *
+     * @param int $id
+     * @return array|null
+     */
+    public function getCreatorInfo(int $id): ?array
+    {
+        if (!$this->auditLogger) {
+            return null;
+        }
+        return $this->auditLogger->getLastAction('financial_payment_accounts', $id, 'create');
     }
 
     /**

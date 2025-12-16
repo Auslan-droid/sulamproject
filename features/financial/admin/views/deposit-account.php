@@ -4,6 +4,9 @@
  * Variables expected: $deposits, $categoryColumns, $categoryLabels
  */
 
+// Include audit helpers
+require_once dirname(__DIR__, 4) . '/features/shared/lib/utilities/audit-helpers.php';
+
 // Format amount for display
 function formatDepositAmount($value) {
     if ($value > 0) {
@@ -305,7 +308,10 @@ function formatDepositAmount($value) {
                             <?php endif; ?>
                         </td>
                         <td class="sticky-col-left">
-                            <div style="font-weight: 600;"><?php echo htmlspecialchars($row['description'] ?? ''); ?></div>
+                            <div style="font-weight: 600;">
+                                <?php echo htmlspecialchars($row['description'] ?? ''); ?>
+                                <?php echo renderAuditIcon($row['audit_info'] ?? null); ?>
+                            </div>
                             <div style="color: #6b7280; font-size: 0.85em;"><?php echo htmlspecialchars($row['received_from'] ?? ''); ?></div>
                         </td>
                         <td>
@@ -358,6 +364,9 @@ function formatDepositAmount($value) {
     <?php endif; ?>
 </div>
 
+<?php echo renderSharedAuditModal(); ?>
+
+<link rel="stylesheet" href="<?php echo url('features/shared/assets/css/audit-modal.css'); ?>">
 <link rel="stylesheet" href="<?php echo url('features/financial/admin/assets/css/financial.css'); ?>">
 
 <script>
