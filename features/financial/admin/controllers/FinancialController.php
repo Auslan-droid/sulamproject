@@ -8,17 +8,20 @@ $ROOT = dirname(__DIR__, 4);
 require_once $ROOT . '/features/financial/shared/lib/PaymentAccountRepository.php';
 require_once $ROOT . '/features/financial/shared/lib/DepositAccountRepository.php';
 require_once $ROOT . '/features/financial/shared/lib/FinancialSettingsRepository.php';
+require_once $ROOT . '/features/shared/lib/AuditLogger.php';
 
 class FinancialController {
     private mysqli $mysqli;
     private PaymentAccountRepository $paymentRepo;
     private DepositAccountRepository $depositRepo;
     private FinancialSettingsRepository $settingsRepo;
+    private $auditLogger;
 
     public function __construct(mysqli $mysqli) {
         $this->mysqli = $mysqli;
-        $this->paymentRepo = new PaymentAccountRepository($mysqli);
-        $this->depositRepo = new DepositAccountRepository($mysqli);
+        $this->auditLogger = new AuditLogger($mysqli);
+        $this->paymentRepo = new PaymentAccountRepository($mysqli, $this->auditLogger);
+        $this->depositRepo = new DepositAccountRepository($mysqli, $this->auditLogger);
         $this->settingsRepo = new FinancialSettingsRepository($mysqli);
     }
 
@@ -237,6 +240,12 @@ class FinancialController {
             ? $this->paymentRepo->findAll() 
             : $this->paymentRepo->findWithFilters($filters);
         
+        // Fetch audit info for each payment
+        foreach ($payments as &$payment) {
+            $payment['audit_info'] = $this->paymentRepo->getCreatorInfo($payment['id']);
+        }
+        unset($payment);
+        
         $totalCash = 0;
         $totalBank = 0;
         foreach ($payments as $row) {
@@ -290,8 +299,11 @@ class FinancialController {
             ];
         }
 
+        // Get current user ID
+        $userId = $_SESSION['user_id'] ?? null;
+        
         // Create the payment
-        $paymentId = $this->paymentRepo->create($postData);
+        $paymentId = $this->paymentRepo->create($postData, $userId);
 
         // Check if this is a kontra transaction
         if ($this->paymentRepo->hasKontraAmount($postData)) {
@@ -306,13 +318,19 @@ class FinancialController {
             $depositMethod = ($paymentMethod === 'cash') ? 'bank' : 'cash';
             
             // Prepare deposit data
+            // Map payment methods to Malay terms
+            $methodMalay = [
+                'cash' => 'Tunai',
+                'bank' => 'Bank',
+                'cheque' => 'Cek'
+            ];
+            
             $depositData = [
                 'tx_date' => $postData['tx_date'],
                 'description' => sprintf(
-                    '(Contra) Transfer from %s to %s - Ref: Payment #%s',
-                    ucfirst($paymentMethod),
-                    ucfirst($depositMethod),
-                    $paymentId
+                    'Kontra: %s ke %s',
+                    $methodMalay[$paymentMethod] ?? ucfirst($paymentMethod),
+                    $methodMalay[$depositMethod] ?? ucfirst($depositMethod)
                 ),
                 'received_from' => 'Internal Transfer',
                 'payment_method' => $depositMethod,
@@ -328,7 +346,7 @@ class FinancialController {
             }
             
             // Create the deposit
-            $depositId = $this->depositRepo->create($depositData);
+            $depositId = $this->depositRepo->create($depositData, $userId);
             
             // Update both records with contra pair IDs
             $this->paymentRepo->updateContraPair($paymentId, $depositId);
@@ -378,7 +396,10 @@ class FinancialController {
             ];
         }
 
-        $this->paymentRepo->update($id, $postData);
+        // Get current user ID
+        $userId = $_SESSION['user_id'] ?? null;
+        
+        $this->paymentRepo->update($id, $postData, $userId);
         return ['success' => true];
     }
 
@@ -391,15 +412,18 @@ class FinancialController {
             return ['success' => false, 'error' => 'Record not found.'];
         }
 
+        // Get current user ID
+        $userId = $_SESSION['user_id'] ?? null;
+        
         // Check if this payment has a contra pair
         $contraPairId = $this->paymentRepo->getContraPairId($id);
         
-        // Delete the payment
-        $this->paymentRepo->delete($id);
+        // Soft delete the payment
+        $this->paymentRepo->softDelete($id, $userId);
         
-        // If it has a contra pair, delete the paired deposit as well
+        // If it has a contra pair, soft delete the paired deposit as well
         if ($contraPairId) {
-            $this->depositRepo->delete($contraPairId);
+            $this->depositRepo->softDelete($contraPairId, $userId);
         }
 
         return ['success' => true];
@@ -489,6 +513,12 @@ class FinancialController {
             ? $this->depositRepo->findAll() 
             : $this->depositRepo->findWithFilters($filters);
         
+        // Fetch audit info for each deposit
+        foreach ($deposits as &$deposit) {
+            $deposit['audit_info'] = $this->depositRepo->getCreatorInfo($deposit['id']);
+        }
+        unset($deposit);
+        
         $totalCash = 0;
         $totalBank = 0;
         foreach ($deposits as $row) {
@@ -542,8 +572,11 @@ class FinancialController {
             ];
         }
 
+        // Get current user ID
+        $userId = $_SESSION['user_id'] ?? null;
+        
         // Create the deposit
-        $depositId = $this->depositRepo->create($postData);
+        $depositId = $this->depositRepo->create($postData, $userId);
 
         // Check if this is a kontra transaction
         if ($this->depositRepo->hasKontraAmount($postData)) {
@@ -558,13 +591,19 @@ class FinancialController {
             $paymentMethod = ($depositMethod === 'bank') ? 'cash' : 'bank';
             
             // Prepare payment data
+            // Map payment methods to Malay terms
+            $methodMalay = [
+                'cash' => 'Tunai',
+                'bank' => 'Bank',
+                'cheque' => 'Cek'
+            ];
+            
             $paymentData = [
                 'tx_date' => $postData['tx_date'],
                 'description' => sprintf(
-                    '(Contra) Transfer from %s to %s - Ref: Deposit #%s',
-                    ucfirst($paymentMethod),
-                    ucfirst($depositMethod),
-                    $depositId
+                    'Kontra: %s ke %s',
+                    $methodMalay[$paymentMethod] ?? ucfirst($paymentMethod),
+                    $methodMalay[$depositMethod] ?? ucfirst($depositMethod)
                 ),
                 'paid_to' => 'Internal Transfer',
                 'payment_method' => $paymentMethod,
@@ -580,7 +619,7 @@ class FinancialController {
             }
             
             // Create the payment
-            $paymentId = $this->paymentRepo->create($paymentData);
+            $paymentId = $this->paymentRepo->create($paymentData, $userId);
             
             // Update both records with contra pair IDs
             $this->depositRepo->updateContraPair($depositId, $paymentId);
@@ -630,7 +669,10 @@ class FinancialController {
             ];
         }
 
-        $this->depositRepo->update($id, $postData);
+        // Get current user ID
+        $userId = $_SESSION['user_id'] ?? null;
+        
+        $this->depositRepo->update($id, $postData, $userId);
         return ['success' => true];
     }
 
@@ -643,15 +685,18 @@ class FinancialController {
             return ['success' => false, 'error' => 'Record not found.'];
         }
 
+        // Get current user ID
+        $userId = $_SESSION['user_id'] ?? null;
+        
         // Check if this deposit has a contra pair
         $contraPairId = $this->depositRepo->getContraPairId($id);
         
-        // Delete the deposit
-        $this->depositRepo->delete($id);
+        // Soft delete the deposit
+        $this->depositRepo->softDelete($id, $userId);
         
-        // If it has a contra pair, delete the paired payment as well
+        // If it has a contra pair, soft delete the paired payment as well
         if ($contraPairId) {
-            $this->paymentRepo->delete($contraPairId);
+            $this->paymentRepo->softDelete($contraPairId, $userId);
         }
 
         return ['success' => true];

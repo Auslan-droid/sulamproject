@@ -1,0 +1,195 @@
+/* ============================================
+   AUDIT TRAIL MODAL STYLES
+   ============================================ */
+
+/* Info Icon - Blue Circle Style */
+.audit-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    /* Prevent squishing */
+    margin-left: 8px;
+    background: #4F46E5;
+    /* Indigo-600 */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    line-height: 1;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.audit-info-icon:hover {
+    background: #4338CA;
+    /* Indigo-700 */
+    transform: scale(1.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.audit-info-icon i {
+    pointer-events: none;
+    /* Ensure click hits button */
+}
+
+/* Modal Overlay */
+.audit-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6) !important;
+    z-index: 999999 !important;
+    animation: fadeIn 0.2s ease;
+    backdrop-filter: blur(2px);
+}
+
+.audit-modal-overlay.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Container */
+.audit-modal {
+    background: white !important;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    max-width: 400px;
+    width: 90%;
+    animation: slideUp 0.3s ease;
+    position: relative;
+    z-index: 1000000 !important;
+}
+
+/* Modal Header */
+.audit-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 12px 12px 0 0;
+}
+
+.audit-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.audit-modal-close {
+    background: transparent;
+    border: none;
+    color: #6B7280;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.audit-modal-close:hover {
+    background: #F3F4F6;
+    color: #111827;
+}
+
+/* Modal Body */
+.audit-modal-body {
+    padding: 24px;
+    background: white;
+    border-radius: 0 0 12px 12px;
+}
+
+.audit-info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.audit-info-row:last-child {
+    margin-bottom: 0;
+}
+
+.audit-info-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.audit-info-value {
+    font-size: 15px;
+    color: #111827;
+    font-weight: 500;
+}
+
+.audit-info-username {
+    color: #4F46E5;
+    font-weight: 600;
+}
+
+.audit-info-time {
+    color: #059669;
+    font-size: 14px;
+}
+
+.audit-divider {
+    height: 1px;
+    background: #E5E7EB;
+    margin: 16px 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .audit-modal {
+        max-width: 95%;
+    }
+
+    .audit-modal-header {
+        padding: 16px 20px;
+    }
+
+    .audit-modal-body {
+        padding: 20px;
+    }
+}

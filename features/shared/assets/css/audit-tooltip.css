@@ -1,0 +1,131 @@
+/* ============================================
+   AUDIT TRAIL TOOLTIP STYLES
+   ============================================ */
+
+.audit-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-left: 6px;
+    background: #4F46E5;
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: help;
+    position: relative;
+    transition: all 0.2s ease;
+    isolation: isolate;
+    /* Create new stacking context */
+    z-index: 1000;
+}
+
+.audit-info-icon:hover {
+    background: #4338CA;
+    transform: scale(1.1);
+    z-index: 10000;
+}
+
+.audit-info-icon i {
+    font-size: 10px;
+}
+
+/* Tooltip Container */
+.audit-tooltip {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1F2937 !important;
+    color: #FFFFFF !important;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 99999 !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5),
+        0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    min-width: 200px;
+}
+
+.audit-info-icon:hover .audit-tooltip {
+    opacity: 1;
+    visibility: visible;
+    left: calc(100% + 16px);
+}
+
+/* Tooltip Arrow */
+.audit-tooltip::after {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-right-color: #1F2937;
+}
+
+/* Tooltip Content */
+.audit-tooltip-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.audit-tooltip-row:last-child {
+    margin-bottom: 0;
+}
+
+.audit-tooltip-label {
+    font-weight: 600;
+    color: #9CA3AF !important;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.audit-tooltip-value {
+    color: #F3F4F6 !important;
+    font-weight: 500;
+}
+
+.audit-tooltip-username {
+    color: #60A5FA !important;
+    font-weight: 600;
+}
+
+.audit-tooltip-time {
+    color: #A78BFA !important;
+    font-size: 12px;
+}
+
+/* Divider */
+.audit-tooltip-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 8px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .audit-tooltip {
+        font-size: 12px;
+        padding: 10px 12px;
+        max-width: 250px;
+        white-space: normal;
+    }
+
+    .audit-info-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
+    }
+}

@@ -8,6 +8,7 @@
 class DepositAccountRepository
 {
     private mysqli $mysqli;
+    private $auditLogger;
 
     /**
      * Category columns in the deposits table
@@ -43,19 +44,20 @@ class DepositAccountRepository
         'kontra' => 'Kontra',
     ];
 
-    public function __construct(mysqli $mysqli)
+    public function __construct(mysqli $mysqli, $auditLogger = null)
     {
         $this->mysqli = $mysqli;
+        $this->auditLogger = $auditLogger;
     }
 
     /**
-     * Get all deposit records, ordered by tx_date descending
+     * Get all deposit records (excluding soft-deleted), ordered by tx_date descending
      *
      * @return array
      */
     public function findAll(): array
     {
-        $sql = "SELECT * FROM financial_deposit_accounts ORDER BY tx_date DESC, id DESC";
+        $sql = "SELECT * FROM financial_deposit_accounts WHERE deleted_at IS NULL ORDER BY tx_date DESC, id DESC";
         $result = $this->mysqli->query($sql);
 
         $rows = [];
@@ -204,9 +206,10 @@ class DepositAccountRepository
      * Create a new deposit record
      *
      * @param array $data Associative array with tx_date, description, and category amounts
+     * @param int|null $userId User creating the record
      * @return int The inserted ID
      */
-    public function create(array $data): int
+    public function create(array $data, $userId = null): int
     {
         // Auto-generate receipt number if not provided or empty
         if (empty($data['receipt_number'])) {
@@ -219,10 +222,11 @@ class DepositAccountRepository
             'receipt_number', 
             'received_from', 
             'payment_method', 
-            'payment_reference'
+            'payment_reference',
+            'created_by'
         ];
-        $placeholders = ['?', '?', '?', '?', '?', '?'];
-        $types = 'ssssss';
+        $placeholders = ['?', '?', '?', '?', '?', '?', '?'];
+        $types = 'ssssssi';
         $values = [
             $data['tx_date'],
             $data['description'],
@@ -230,6 +234,7 @@ class DepositAccountRepository
             $data['received_from'] ?? null,
             $data['payment_method'] ?? 'cash',
             $data['payment_reference'] ?? null,
+            $userId,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {
@@ -251,6 +256,12 @@ class DepositAccountRepository
         $insertedId = $stmt->insert_id;
         $stmt->close();
 
+        // Log audit trail
+        if ($this->auditLogger && $insertedId) {
+            $recordData = array_merge($data, ['id' => $insertedId, 'created_by' => $userId]);
+            $this->auditLogger->logCreate('financial_deposit_accounts', $insertedId, $userId, $recordData);
+        }
+
         return $insertedId;
     }
 
@@ -259,19 +270,27 @@ class DepositAccountRepository
      *
      * @param int $id
      * @param array $data
+     * @param int|null $userId User updating the record
      * @return bool
      */
-    public function update(int $id, array $data): bool
+    public function update(int $id, array $data, $userId = null): bool
     {
+        // Get old values for audit log
+        $oldValues = null;
+        if ($this->auditLogger) {
+            $oldValues = $this->findById($id);
+        }
+
         $setClauses = [
             'tx_date = ?', 
             'description = ?',
             'receipt_number = ?',
             'received_from = ?',
             'payment_method = ?',
-            'payment_reference = ?'
+            'payment_reference = ?',
+            'updated_by = ?'
         ];
-        $types = 'ssssss';
+        $types = 'ssssssi';
         $values = [
             $data['tx_date'],
             $data['description'],
@@ -279,6 +298,7 @@ class DepositAccountRepository
             $data['received_from'] ?? null,
             $data['payment_method'] ?? 'cash',
             $data['payment_reference'] ?? null,
+            $userId,
         ];
 
         foreach (self::CATEGORY_COLUMNS as $col) {
@@ -300,11 +320,48 @@ class DepositAccountRepository
         $success = $stmt->execute();
         $stmt->close();
 
+        // Log audit trail
+        if ($this->auditLogger && $success && $oldValues) {
+            $newValues = array_merge($data, ['updated_by' => $userId]);
+            $this->auditLogger->logUpdate('financial_deposit_accounts', $id, $userId, $oldValues, $newValues);
+        }
+
         return $success;
     }
 
     /**
-     * Delete a deposit record by ID
+     * Soft delete a deposit record by ID
+     *
+     * @param int $id
+     * @param int|null $userId User deleting the record
+     * @return bool
+     */
+    public function softDelete(int $id, $userId = null): bool
+    {
+        // Get old values for audit log
+        $oldValues = null;
+        if ($this->auditLogger) {
+            $oldValues = $this->findById($id);
+        }
+
+        $stmt = $this->mysqli->prepare(
+            "UPDATE financial_deposit_accounts SET deleted_at = NOW(), deleted_by = ? WHERE id = ?"
+        );
+        $stmt->bind_param('ii', $userId, $id);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        // Log audit trail
+        if ($this->auditLogger && $success && $oldValues) {
+            $this->auditLogger->logDelete('financial_deposit_accounts', $id, $userId, $oldValues);
+        }
+
+        return $success;
+    }
+
+    /**
+     * Hard delete a deposit record by ID (permanent deletion)
+     * Use with caution - this is irreversible
      *
      * @param int $id
      * @return bool
@@ -317,6 +374,58 @@ class DepositAccountRepository
         $stmt->close();
 
         return $success;
+    }
+
+    /**
+     * Restore a soft-deleted deposit record
+     *
+     * @param int $id
+     * @param int|null $userId User restoring the record
+     * @return bool
+     */
+    public function restore(int $id, $userId = null): bool
+    {
+        $stmt = $this->mysqli->prepare(
+            "UPDATE financial_deposit_accounts SET deleted_at = NULL, deleted_by = NULL WHERE id = ?"
+        );
+        $stmt->bind_param('i', $id);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        // Log audit trail
+        if ($this->auditLogger && $success) {
+            $this->auditLogger->logRestore('financial_deposit_accounts', $id, $userId);
+        }
+
+        return $success;
+    }
+
+    /**
+     * Get audit trail for a deposit record
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getAuditTrail(int $id): array
+    {
+        if (!$this->auditLogger) {
+            return [];
+        }
+        return $this->auditLogger->getAuditTrail('financial_deposit_accounts', $id);
+    }
+
+    /**
+     * Get creator info for tooltip display
+     *
+     * @param int $id
+     * @return array|null
+     */
+    public function getCreatorInfo(int $id): ?array
+    {
+        if (!$this->auditLogger) {
+            return null;
+        }
+        return $this->auditLogger->getLastAction('financial_deposit_accounts', $id, 'create');
     }
 
     /**
