@@ -129,6 +129,80 @@ class UserDeathsModel
     }
 
     /**
+     * Get verified notifications filtered by date_of_death year/month
+     */
+    public function getVerifiedByDate($year = null, $month = null)
+    {
+        $items = [];
+        $sql = 'SELECT id, deceased_name, ic_number, date_of_death, place_of_death, cause_of_death, 
+                    next_of_kin_name, next_of_kin_phone, verified, verified_at, verified_by, created_at 
+                FROM death_notifications WHERE verified = 1';
+
+        $params = [];
+        $types = '';
+
+        if (!empty($year)) {
+            $sql .= ' AND YEAR(date_of_death) = ?';
+            $types .= 'i';
+            $params[] = (int) $year;
+        }
+
+        if (!empty($month)) {
+            $sql .= ' AND MONTH(date_of_death) = ?';
+            $types .= 'i';
+            $params[] = (int) $month;
+        }
+
+        $sql .= ' ORDER BY date_of_death DESC';
+
+        if (!empty($params)) {
+            $stmt = $this->mysqli->prepare($sql);
+            if ($stmt) {
+                $bindNames = [];
+                $bindNames[] = & $types;
+                for ($i = 0; $i < count($params); $i++) {
+                    $bindNames[] = & $params[$i];
+                }
+                call_user_func_array([$stmt, 'bind_param'], $bindNames);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                while ($row = $res->fetch_assoc()) {
+                    $items[] = (object)$row;
+                }
+                $stmt->close();
+            }
+        } else {
+            $stmt = $this->mysqli->prepare($sql);
+            if ($stmt) {
+                $stmt->execute();
+                $res = $stmt->get_result();
+                while ($row = $res->fetch_assoc()) {
+                    $items[] = (object)$row;
+                }
+                $stmt->close();
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Get distinct years from date_of_death for verified notifications
+     */
+    public function getVerifiedYears()
+    {
+        $years = [];
+        $res = $this->mysqli->query("SELECT DISTINCT YEAR(date_of_death) AS y FROM death_notifications WHERE verified = 1 AND date_of_death IS NOT NULL ORDER BY y DESC");
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $years[] = (int) $row['y'];
+            }
+            $res->close();
+        }
+        return $years;
+    }
+
+    /**
      * Get funeral logistics for user's notifications
      */
     public function getFuneralLogisticsByUser($userId)
@@ -138,11 +212,12 @@ class UserDeathsModel
         // Return logistics for notifications that are verified OR those reported by the user.
         $sql =
             'SELECT fl.id, fl.death_notification_id, fl.burial_date, fl.burial_location, 
-                    fl.grave_number, fl.notes, fl.arranged_by, fl.created_at,
-                    dn.deceased_name 
+                fl.grave_number, fl.notes, fl.arranged_by, fl.created_at,
+                dn.deceased_name 
              FROM funeral_logistics fl
              INNER JOIN death_notifications dn ON fl.death_notification_id = dn.id
-             WHERE dn.reported_by = ? OR dn.verified = 1
+             WHERE (dn.reported_by = ? OR dn.verified = 1)
+               AND fl.created_at >= DATE_SUB(NOW(), INTERVAL 48 HOUR)
              ORDER BY fl.created_at DESC';
 
         $stmt = $this->mysqli->prepare($sql);
