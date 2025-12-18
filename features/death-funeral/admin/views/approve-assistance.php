@@ -1,3 +1,5 @@
+<?php include __DIR__ . '/../../shared/views/quick_menu.php'; ?>
+
 <div class="card page-card">
     <h2>Approve Assistance</h2>
     <p>Approve or decline funeral assistance requests.</p>

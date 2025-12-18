@@ -225,6 +225,7 @@ class AdminDeathsModel {
         $res = $this->mysqli->query(
             'SELECT fl.*, dn.deceased_name FROM funeral_logistics fl 
              LEFT JOIN death_notifications dn ON fl.death_notification_id = dn.id 
+             WHERE fl.created_at >= DATE_SUB(NOW(), INTERVAL 48 HOUR)
              ORDER BY fl.created_at DESC'
         );
 
