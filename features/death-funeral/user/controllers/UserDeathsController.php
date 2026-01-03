@@ -97,5 +97,19 @@ class UserDeathsController {
     public function getVerifiedNotifications() {
         return $this->model->getVerifiedNotifications();
     }
+
+    /**
+     * Get verified notifications filtered by year/month (date_of_death)
+     */
+    public function getVerifiedByDate($year = null, $month = null) {
+        return $this->model->getVerifiedByDate($year, $month);
+    }
+
+    /**
+     * Get years list for verified notifications (date_of_death)
+     */
+    public function getVerifiedYears() {
+        return $this->model->getVerifiedYears();
+    }
 }
 ?>

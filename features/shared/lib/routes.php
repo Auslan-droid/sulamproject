@@ -305,17 +305,103 @@ $router->post('/events', function() use ($ROOT) {
     }
 });
 
+// Death & Funeral index (quick menu only)
 $router->get('/death-funeral', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
     if (isAdmin()) {
-        require $ROOT . '/features/death-funeral/admin/pages/death-funeral.php';
+        require $ROOT . '/features/death-funeral/admin/pages/death-funeral-index.php';
     } else {
-        require $ROOT . '/features/death-funeral/user/pages/death-funeral.php';
+        require $ROOT . '/features/death-funeral/user/pages/death-funeral-index.php';
     }
 });
 
-// Death & Funeral AJAX endpoints (must come before generic /death-funeral route)
+// Per-section admin pages for Death & Funeral
+$router->get('/death-funeral/verify-death/debug', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/pages/debug-verify.php';
+});
+
+$router->get('/death-funeral/verify-death', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/pages/verify-death.php';
+});
+
+$router->get('/death-funeral/verified-print', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/pages/verified-print.php';
+});
+
+$router->get('/death-funeral/manage-notifications', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/pages/manage-notifications.php';
+});
+
+$router->post('/death-funeral/manage-notifications', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/pages/manage-notifications.php';
+});
+
+$router->get('/death-funeral/record-logistics', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/pages/record-logistics.php';
+});
+
+$router->post('/death-funeral/record-logistics', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/pages/record-logistics.php';
+});
+
+$router->get('/death-funeral/funeral-logistics', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    if (isAdmin()) {
+        require $ROOT . '/features/death-funeral/admin/pages/funeral-logistics.php';
+    } else {
+        require $ROOT . '/features/death-funeral/user/pages/funeral-logistics.php';
+    }
+});
+
+// Per-section user pages for Death & Funeral
+$router->get('/death-funeral/record-notification', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    require $ROOT . '/features/death-funeral/user/pages/record-notification.php';
+});
+
+$router->post('/death-funeral/record-notification', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    require $ROOT . '/features/death-funeral/user/pages/record-notification.php';
+});
+
+$router->get('/death-funeral/verified-notifications', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    require $ROOT . '/features/death-funeral/user/pages/verified-notifications.php';
+});
+
+$router->get('/death-funeral/my-notifications', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    require $ROOT . '/features/death-funeral/user/pages/my-notifications.php';
+});
+
+// Death & Funeral AJAX endpoints
 $router->post('/death-funeral/ajax/verify', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
@@ -330,15 +416,32 @@ $router->post('/death-funeral/ajax/delete', function() use ($ROOT) {
     require $ROOT . '/features/death-funeral/admin/ajax/delete-notification.php';
 });
 
-$router->post('/death-funeral', function() use ($ROOT) {
+$router->post('/death-funeral/ajax/get-logistics', function() use ($ROOT) {
     initSecureSession();
     requireAuth();
-    if (isAdmin()) {
-        require $ROOT . '/features/death-funeral/admin/pages/death-funeral.php';
-    } else {
-        // Allow users to post death notifications
-        require $ROOT . '/features/death-funeral/user/pages/death-funeral.php';
-    }
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/ajax/get-logistics.php';
+});
+
+$router->get('/death-funeral/ajax/get-logistics', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/ajax/get-logistics.php';
+});
+
+$router->post('/death-funeral/ajax/update-logistics', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/ajax/update-logistics.php';
+});
+
+$router->post('/death-funeral/ajax/delete-logistics', function() use ($ROOT) {
+    initSecureSession();
+    requireAuth();
+    requireAdmin();
+    require $ROOT . '/features/death-funeral/admin/ajax/delete-logistics.php';
 });
 
 $router->get('/waris', function() use ($ROOT) {

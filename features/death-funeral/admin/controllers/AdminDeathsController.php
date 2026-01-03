@@ -19,6 +19,24 @@ class AdminDeathsController {
     }
 
     /**
+     * Admin index page (shows quick menu only)
+     */
+    public function index(): array {
+        $unverifiedCount = 0;
+        $res = $this->mysqli->query('SELECT COUNT(*) as c FROM death_notifications WHERE verified = 0');
+        if ($res) {
+            $row = $res->fetch_assoc();
+            $unverifiedCount = (int) ($row['c'] ?? 0);
+            $res->close();
+        }
+
+        return [
+            'title' => 'Death & Funeral',
+            'unverifiedCount' => $unverifiedCount,
+        ];
+    }
+
+    /**
      * Handle creating a new death notification
      */
     public function handleCreate() {
@@ -109,7 +127,8 @@ class AdminDeathsController {
      */
     public function getAll() {
         $items = [];
-        $res = $this->mysqli->query('SELECT * FROM death_notifications ORDER BY created_at DESC');
+        // Order unverified (verified=0) first, then by newest
+        $res = $this->mysqli->query('SELECT * FROM death_notifications ORDER BY verified ASC, created_at DESC');
         
         if ($res) {
             while ($row = $res->fetch_assoc()) {
@@ -182,6 +201,79 @@ class AdminDeathsController {
         require_once __DIR__ . '/../lib/AdminDeathsModel.php';
         $model = new AdminDeathsModel($this->mysqli);
         return $model->getFuneralLogistics();
+    }
+
+    /**
+     * Get verified notifications filtered by year and month (based on date_of_death)
+     * @param int|null $year
+     * @param int|null $month
+     * @return DeathNotification[]
+     */
+    public function getVerifiedByDate($year = null, $month = null) {
+        $items = [];
+        // Select death_notifications fields and resolve verifier full name
+        $sql = 'SELECT dn.*, u.name AS verified_by FROM death_notifications dn LEFT JOIN users u ON dn.verified_by = u.id WHERE dn.verified = 1';
+
+        $params = [];
+        $types = '';
+
+        if (!empty($year)) {
+            $sql .= ' AND YEAR(date_of_death) = ?';
+            $types .= 'i';
+            $params[] = (int) $year;
+        }
+
+        if (!empty($month)) {
+            $sql .= ' AND MONTH(date_of_death) = ?';
+            $types .= 'i';
+            $params[] = (int) $month;
+        }
+
+        $sql .= ' ORDER BY date_of_death DESC';
+
+        if (!empty($params)) {
+            $stmt = $this->mysqli->prepare($sql);
+            if ($stmt) {
+                $bindNames = [];
+                $bindNames[] = & $types;
+                for ($i = 0; $i < count($params); $i++) {
+                    $bindNames[] = & $params[$i];
+                }
+                call_user_func_array([$stmt, 'bind_param'], $bindNames);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                while ($row = $res->fetch_assoc()) {
+                    $items[] = new DeathNotification($row);
+                }
+                $stmt->close();
+            }
+        } else {
+            $res = $this->mysqli->query($sql);
+            if ($res) {
+                while ($row = $res->fetch_assoc()) {
+                    $items[] = new DeathNotification($row);
+                }
+                $res->close();
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Get distinct years that have verified notifications (for filter options)
+     * @return int[]
+     */
+    public function getVerifiedYears() {
+        $years = [];
+        $res = $this->mysqli->query("SELECT DISTINCT YEAR(date_of_death) AS y FROM death_notifications WHERE verified = 1 AND date_of_death IS NOT NULL ORDER BY y DESC");
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $years[] = (int) $row['y'];
+            }
+            $res->close();
+        }
+        return $years;
     }
 }
 ?>
