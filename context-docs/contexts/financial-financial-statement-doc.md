@@ -29,19 +29,27 @@ Where to look when changing things
 Detailed file-by-file explanation
 
 1) `features/financial/admin/pages/financial-statement.php`
-- Purpose: small admin page where an admin selects `start_date` and `end_date` and clicks Generate to open the print view.
+- Purpose: Admin landing page where you pick the report period (Month/Year/Custom) before generating the statement.
 - Top includes and initialization:
-  - `$ROOT = dirname(__DIR__, 4);` — calculate project root relative to this file. This pattern appears in many pages for reliable includes.
-  - `require_once $ROOT . '/features/shared/lib/auth/session.php';` — session helpers (see below).
+  - `require_once $ROOT . '/features/shared/lib/auth/session.php';` — session helpers.
   - `require_once $ROOT . '/features/shared/lib/utilities/functions.php';` — general helpers (e.g., `url()`).
-  - `initSecureSession(); requireAuth(); requireAdmin();` — start secure session and enforce that the user is authenticated and an admin.
-- Default dates: reads `start_date`/`end_date` from `$_GET` or falls back to first/last day of current month using `date('Y-m-01')` and `date('Y-m-t')`.
-- `$pageHeader` array: used by the layout to show a contextual header and breadcrumb. The header keys are `title`, `subtitle`, `breadcrumb`, and `actions`.
-- The UI: the file captures inner content using `ob_start()`/`ob_get_clean()` and builds a small card containing a form with two `<input type="date">` fields and a submit button. The form action is `url('financial/statement-print')` and the `method` is GET so start/end dates are passed in the query string.
-- Important details:
-  - `target="_blank"` means the print view opens in a separate tab — this keeps the admin on the selection page.
-  - The code uses `url()` to build routes. `url()` is defined in `features/shared/lib/utilities/functions.php`.
-- Layout handling: the page captures `$content` and then includes `features/shared/components/layouts/app-layout.php` and `features/shared/components/layouts/base.php` (these contain the global HTML shell). To change where this page is wrapped, update those layout files.
+  - `initSecureSession(); requireAuth(); requireAdmin();` — enforce admin-only access.
+- Default dates: reads `start_date`/`end_date` from `$_GET` or falls back to first/last day of current month.
+- The UI (The Filter Card):
+  - Uses a "Bento-style" card ([styleguide/bento-grid-usage.md](styleguide/bento-grid-usage.md)) with a collapsible filter section.
+  - **Period Type Select**: Let's users choose between **Monthly**, **Annual**, or **Custom Range**.
+  - **Dynamic Controls**: 
+    - Monthly: Shows Year and Month dropdowns.
+    - Annual: Shows only Year dropdown.
+    - Custom: Shows Start Date and End Date date-pickers.
+- JavaScript Logic (Bottom of file):
+  - `toggleStatementFilter()`: Handles the card collapse/expand.
+  - `updateVisibility()`: Shows/hides specific inputs based on the chosen "Period Type".
+  - `updateDates()`: This is the critical part. It automatically calculates the correct `YYYY-MM-DD` strings for the backend. For example, if you pick "Monthly" and "February 2026", it sets the hidden inputs to `2026-02-01` and `2026-02-28`.
+- Form Submission:
+  - Points to `url('financial/statement-print')`.
+  - Uses `target="_blank"` so the report opens in a fresh tab, keeping the filter page open for the user.
+- Layout handling: uses the standard `app-layout.php` and `base.php` shell.
 
 2) `features/financial/admin/pages/financial-statement-print.php`
 - Purpose: render a printable statement (Lampiran 9) for the provided date range.
@@ -139,6 +147,24 @@ Developer tasks checklist (examples)
 
 - Change printed header address: edit the header lines inside `financial-statement-print.php` (hard-coded lines under the `<div class="header-line">`). Consider moving these strings to a configuration file if you need to reuse them.
 
+---
+
+## 💡 Junior Dev Tips
+
+### Want to add a new income or expense category?
+You don't actually need to touch the statement page or the controller! 
+- Simply add the new column to the DB.
+- Add it to the constants in `DepositAccountRepository` or `PaymentAccountRepository`.
+- The `FinancialStatementController` loops through those constants, so it will automatically "see" your new category and add it to the report sums.
+
+### Why is `kontra` skipped?
+In [features/financial/shared/lib/FinancialStatementController.php](features/financial/shared/lib/FinancialStatementController.php), you'll see we skip the `kontra` category. This is because "Kontra" entries are usually internal transfers (moving money from Cash to Bank or vice versa). If we counted them as real income or real expenses, it would double-count the mosque's money!
+
+### The "Double Line" trick
+In accounting, final totals often have a double underline. Check out the `.amount-double` and `.amount-double-custom` classes in [financial-statement-print.php](features/financial/admin/pages/financial-statement-print.php). They use a mix of `border-bottom: 3px double` and pseudo-elements (`::after`) to get that perfect look.
+
+---
+
 Appendix: important paths (copy-paste friendly)
 - Selection page: `features/financial/admin/pages/financial-statement.php`
 - Print page: `features/financial/admin/pages/financial-statement-print.php`
@@ -148,10 +174,6 @@ Appendix: important paths (copy-paste friendly)
 - Utilities: `features/shared/lib/utilities/functions.php`
 - DB bootstrap: `features/shared/lib/database/mysqli-db.php`
 - Schema + migrations: `database/schema.sql`, `database/migrations/`
-
-If you want, I can:
-- Extract the inline print CSS into a feature-scoped CSS file and include it from the layout (so it’s easier to edit and version-control).
-- Add a small unit test script that calls `FinancialStatementController::getStatementData()` with sample data (requires a test DB or mocking `$mysqli`).
 
 ---
 Document created: financial-financial-statement-doc.md
