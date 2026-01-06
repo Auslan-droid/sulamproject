@@ -7,14 +7,17 @@
 
 require_once __DIR__ . '/DepositAccountRepository.php';
 require_once __DIR__ . '/PaymentAccountRepository.php';
+require_once __DIR__ . '/FinancialSettingsRepository.php';
 
 class FinancialStatementController
 {
     private mysqli $mysqli;
+    private FinancialSettingsRepository $settingsRepo;
 
     public function __construct(mysqli $mysqli)
     {
         $this->mysqli = $mysqli;
+        $this->settingsRepo = new FinancialSettingsRepository($mysqli);
     }
 
     /**
@@ -61,40 +64,59 @@ class FinancialStatementController
 
     /**
      * Calculate balance (Cash & Bank) up to a specific date (exclusive).
+     * 
+     * Logic:
+     * 1. Check if there are Financial Settings for the year of the $date.
+     * 2. If settings exist, use them as the base opening balance and sum transactions from Jan 1st of that year.
+     * 3. If settings DO NOT exist, fall back to summing all historical transactions (legacy behavior).
      */
     private function calculateBalance(string $date): array
     {
+        $year = date('Y', strtotime($date));
+        $settings = $this->settingsRepo->getByFiscalYear((int)$year);
+
+        if ($settings) {
+            $baseCash = (float)($settings['opening_cash_balance'] ?? 0);
+            $baseBank = (float)($settings['opening_bank_balance'] ?? 0);
+            $startDate = "$year-01-01";
+        } else {
+            // Fallback: no settings found, assume 0 base and sum from beginning of time
+            $baseCash = 0.0;
+            $baseBank = 0.0;
+            $startDate = "1000-01-01"; // Arbitrary old date effectively meaning "all history"
+        }
+
         // Cash In (Receipts)
         $cashIn = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', DepositAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_deposit_accounts 
-            WHERE tx_date < ? AND payment_method = 'cash'
-        ) as t", $date);
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method = 'cash'
+        ) as t", $startDate, $date);
 
         // Bank In (Receipts)
         $bankIn = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', DepositAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_deposit_accounts 
-            WHERE tx_date < ? AND payment_method != 'cash'
-        ) as t", $date);
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method != 'cash'
+        ) as t", $startDate, $date);
 
         // Cash Out (Payments)
         $cashOut = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', PaymentAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_payment_accounts 
-            WHERE tx_date < ? AND payment_method = 'cash'
-        ) as t", $date);
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method = 'cash'
+        ) as t", $startDate, $date);
 
         // Bank Out (Payments)
         $bankOut = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', PaymentAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_payment_accounts 
-            WHERE tx_date < ? AND payment_method != 'cash'
-        ) as t", $date);
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method != 'cash'
+        ) as t", $startDate, $date);
 
         return [
-            'cash' => $cashIn - $cashOut,
-            'bank' => $bankIn - $bankOut
+            'cash' => $baseCash + $cashIn - $cashOut,
+            'bank' => $baseBank + $bankIn - $bankOut
         ];
     }
 
