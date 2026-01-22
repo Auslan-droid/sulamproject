@@ -171,7 +171,8 @@ class FinancialController {
         $depositSum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", DepositAccountRepository::CATEGORY_COLUMNS));
         $paymentSum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", PaymentAccountRepository::CATEGORY_COLUMNS));
 
-        $yearFilter = $fiscalYear ? "WHERE YEAR(tx_date) = $fiscalYear" : "";
+        $yearCondition = $fiscalYear ? "YEAR(tx_date) = $fiscalYear" : "1=1";
+        $whereClause = "WHERE deleted_at IS NULL AND $yearCondition";
 
         $sql = "
             (SELECT 
@@ -182,7 +183,7 @@ class FinancialController {
                 ($depositSum) as amount, 
                 payment_method, 
                 'IN' as type 
-            FROM financial_deposit_accounts $yearFilter)
+            FROM financial_deposit_accounts $whereClause)
             
             UNION ALL
             
@@ -194,7 +195,7 @@ class FinancialController {
                 ($paymentSum) as amount, 
                 payment_method, 
                 'OUT' as type 
-            FROM financial_payment_accounts $yearFilter)
+            FROM financial_payment_accounts $whereClause)
             
             ORDER BY tx_date ASC, id ASC
         ";
