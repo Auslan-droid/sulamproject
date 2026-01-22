@@ -61,7 +61,7 @@
                 <div class="bento-icon bento-icon-sm" style="background: #d1fae5; color: #065f46;">
                     <i class="fas fa-arrow-down"></i>
                 </div>
-                <div class="bento-label">Receipts (Terimaan)</div>
+                <div class="bento-label">Deposit (Terimaan) <span style="font-weight: 400; font-size: 0.75em; display: block; margin-top: 2px;">(Not including initial balance)</span></div>
             </div>
             <div class="bento-value-sm" style="color: #065f46; margin-bottom: 0.5rem;">
                 RM <?php echo number_format(($balances['total_cash_in'] ?? 0) + ($balances['total_bank_in'] ?? 0), 2); ?>

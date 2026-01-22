@@ -123,9 +123,17 @@ class FinancialSettingsRepository {
     public function calculateClosingBalances(int $fiscalYear): array {
         $settings = $this->getByFiscalYear($fiscalYear);
         
+        // Ensure repositories are loaded for constants
+        require_once __DIR__ . '/DepositAccountRepository.php';
+        require_once __DIR__ . '/PaymentAccountRepository.php';
+
         $cashBalance = (float)($settings['opening_cash_balance'] ?? 0);
         $bankBalance = (float)($settings['opening_bank_balance'] ?? 0);
         
+        // Build dynamic Deposit columns
+        $depCols = DepositAccountRepository::CATEGORY_COLUMNS;
+        $depSum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", $depCols));
+
         // Get totals from deposits (IN)
         $depositSql = "
             SELECT 
@@ -133,18 +141,9 @@ class FinancialSettingsRepository {
                 SUM(CASE WHEN payment_method IN ('bank', 'cheque') THEN total ELSE 0 END) as bank_in
             FROM (
                 SELECT payment_method,
-                    COALESCE(geran_kerajaan, 0) + 
-                    COALESCE(sumbangan_derma, 0) + 
-                    COALESCE(tabung_masjid, 0) + 
-                    COALESCE(kutipan_jumaat_sadak, 0) + 
-                    COALESCE(kutipan_aidilfitri_aidiladha, 0) + 
-                    COALESCE(sewa_peralatan_masjid, 0) + 
-                    COALESCE(hibah_faedah_bank, 0) + 
-                    COALESCE(faedah_simpanan_tetap, 0) + 
-                    COALESCE(sewa_rumah_kedai_tadika_menara, 0) + 
-                    COALESCE(lain_lain_terimaan, 0) as total
+                    ($depSum) as total
                 FROM financial_deposit_accounts
-                WHERE YEAR(tx_date) = ?
+                WHERE YEAR(tx_date) = ? AND deleted_at IS NULL
             ) as deposits
         ";
         
@@ -155,6 +154,10 @@ class FinancialSettingsRepository {
         $deposits = $result->fetch_assoc();
         $stmt->close();
         
+        // Build dynamic Payment columns
+        $payCols = PaymentAccountRepository::CATEGORY_COLUMNS;
+        $paySum = implode(' + ', array_map(fn($c) => "COALESCE($c, 0)", $payCols));
+
         // Get totals from payments (OUT)
         $paymentSql = "
             SELECT 
@@ -162,20 +165,9 @@ class FinancialSettingsRepository {
                 SUM(CASE WHEN payment_method IN ('bank', 'cheque') THEN total ELSE 0 END) as bank_out
             FROM (
                 SELECT payment_method,
-                    COALESCE(perayaan_islam, 0) + 
-                    COALESCE(pengimarahan_aktiviti_masjid, 0) + 
-                    COALESCE(penyelenggaraan_masjid, 0) + 
-                    COALESCE(keperluan_kelengkapan_masjid, 0) + 
-                    COALESCE(gaji_upah_saguhati_elaun, 0) + 
-                    COALESCE(sumbangan_derma, 0) + 
-                    COALESCE(mesyuarat_jamuan, 0) + 
-                    COALESCE(utiliti, 0) + 
-                    COALESCE(alat_tulis_percetakan, 0) + 
-                    COALESCE(pengangkutan_perjalanan, 0) + 
-                    COALESCE(caj_bank, 0) + 
-                    COALESCE(lain_lain_perbelanjaan, 0) as total
+                    ($paySum) as total
                 FROM financial_payment_accounts
-                WHERE YEAR(tx_date) = ?
+                WHERE YEAR(tx_date) = ? AND deleted_at IS NULL
             ) as payments
         ";
         
