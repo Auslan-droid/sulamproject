@@ -60,9 +60,9 @@ class DashboardController extends BaseController {
         $depositQuery = $mysqli->query("
             SELECT 
                 SUM(CASE WHEN payment_method = 'cash' THEN ($depositSumClause) ELSE 0 END) as cash_deposits,
-                SUM(CASE WHEN payment_method = 'bank' THEN ($depositSumClause) ELSE 0 END) as bank_deposits
+                SUM(CASE WHEN payment_method IN ('bank', 'cheque') THEN ($depositSumClause) ELSE 0 END) as bank_deposits
             FROM financial_deposit_accounts
-            WHERE YEAR(tx_date) = $currentYear
+            WHERE YEAR(tx_date) = $currentYear AND deleted_at IS NULL
         ");
         $deposits = $depositQuery ? $depositQuery->fetch_assoc() : ['cash_deposits' => 0, 'bank_deposits' => 0];
         
@@ -72,9 +72,9 @@ class DashboardController extends BaseController {
         $paymentQuery = $mysqli->query("
             SELECT 
                 SUM(CASE WHEN payment_method = 'cash' THEN ($paymentSumClause) ELSE 0 END) as cash_payments,
-                SUM(CASE WHEN payment_method = 'bank' THEN ($paymentSumClause) ELSE 0 END) as bank_payments
+                SUM(CASE WHEN payment_method IN ('bank', 'cheque') THEN ($paymentSumClause) ELSE 0 END) as bank_payments
             FROM financial_payment_accounts
-            WHERE YEAR(tx_date) = $currentYear
+            WHERE YEAR(tx_date) = $currentYear AND deleted_at IS NULL
         ");
         $payments = $paymentQuery ? $paymentQuery->fetch_assoc() : ['cash_payments' => 0, 'bank_payments' => 0];
         
