@@ -827,7 +827,7 @@ class FinancialController {
                 payment_method,
                 SUM($depositSumClause) as total
             FROM financial_deposit_accounts
-            WHERE tx_date < ?
+            WHERE tx_date < ? AND deleted_at IS NULL
             GROUP BY payment_method
         ";
 
@@ -855,7 +855,7 @@ class FinancialController {
                 payment_method,
                 SUM($paymentSumClause) as total
             FROM financial_payment_accounts
-            WHERE tx_date < ?
+            WHERE tx_date < ? AND deleted_at IS NULL
             GROUP BY payment_method
         ";
 
@@ -896,7 +896,7 @@ class FinancialController {
         $selectClause = implode(', ', $selectClauses);
 
         // Get totals by category
-        $sql = "SELECT $selectClause FROM financial_deposit_accounts WHERE tx_date BETWEEN ? AND ?";
+        $sql = "SELECT $selectClause FROM financial_deposit_accounts WHERE tx_date BETWEEN ? AND ? AND deleted_at IS NULL";
         $stmt = $this->mysqli->prepare($sql);
         $stmt->bind_param('ss', $startDate, $endDate);
         $stmt->execute();
@@ -917,7 +917,7 @@ class FinancialController {
                 payment_method,
                 SUM($depositSumClause) as total
             FROM financial_deposit_accounts
-            WHERE tx_date BETWEEN ? AND ?
+            WHERE tx_date BETWEEN ? AND ? AND deleted_at IS NULL
             GROUP BY payment_method
         ";
         $stmt = $this->mysqli->prepare($sqlMethod);
@@ -956,7 +956,7 @@ class FinancialController {
         $selectClause = implode(', ', $selectClauses);
 
         // Get totals by category
-        $sql = "SELECT $selectClause FROM financial_payment_accounts WHERE tx_date BETWEEN ? AND ?";
+        $sql = "SELECT $selectClause FROM financial_payment_accounts WHERE tx_date BETWEEN ? AND ? AND deleted_at IS NULL";
         $stmt = $this->mysqli->prepare($sql);
         $stmt->bind_param('ss', $startDate, $endDate);
         $stmt->execute();
@@ -977,7 +977,7 @@ class FinancialController {
                 payment_method,
                 SUM($paymentSumClause) as total
             FROM financial_payment_accounts
-            WHERE tx_date BETWEEN ? AND ?
+            WHERE tx_date BETWEEN ? AND ? AND deleted_at IS NULL
             GROUP BY payment_method
         ";
         $stmt = $this->mysqli->prepare($sqlMethod);

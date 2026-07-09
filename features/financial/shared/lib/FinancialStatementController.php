@@ -90,28 +90,28 @@ class FinancialStatementController
         $cashIn = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', DepositAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_deposit_accounts 
-            WHERE tx_date >= ? AND tx_date < ? AND payment_method = 'cash'
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method = 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $date);
 
         // Bank In (Receipts)
         $bankIn = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', DepositAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_deposit_accounts 
-            WHERE tx_date >= ? AND tx_date < ? AND payment_method != 'cash'
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method != 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $date);
 
         // Cash Out (Payments)
         $cashOut = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', PaymentAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_payment_accounts 
-            WHERE tx_date >= ? AND tx_date < ? AND payment_method = 'cash'
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method = 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $date);
 
         // Bank Out (Payments)
         $bankOut = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', PaymentAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_payment_accounts 
-            WHERE tx_date >= ? AND tx_date < ? AND payment_method != 'cash'
+            WHERE tx_date >= ? AND tx_date < ? AND payment_method != 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $date);
 
         return [
@@ -129,28 +129,28 @@ class FinancialStatementController
         $cashIn = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', DepositAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_deposit_accounts 
-            WHERE tx_date BETWEEN ? AND ? AND payment_method = 'cash'
+            WHERE tx_date BETWEEN ? AND ? AND payment_method = 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $endDate);
 
         // Bank In
         $bankIn = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', DepositAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_deposit_accounts 
-            WHERE tx_date BETWEEN ? AND ? AND payment_method != 'cash'
+            WHERE tx_date BETWEEN ? AND ? AND payment_method != 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $endDate);
 
         // Cash Out
         $cashOut = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', PaymentAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_payment_accounts 
-            WHERE tx_date BETWEEN ? AND ? AND payment_method = 'cash'
+            WHERE tx_date BETWEEN ? AND ? AND payment_method = 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $endDate);
 
         // Bank Out
         $bankOut = $this->getSum("SELECT SUM(amount) FROM (
             SELECT (" . implode(' + ', PaymentAccountRepository::CATEGORY_COLUMNS) . ") as amount 
             FROM financial_payment_accounts 
-            WHERE tx_date BETWEEN ? AND ? AND payment_method != 'cash'
+            WHERE tx_date BETWEEN ? AND ? AND payment_method != 'cash' AND deleted_at IS NULL
         ) as t", $startDate, $endDate);
 
         return [
@@ -173,7 +173,7 @@ class FinancialStatementController
                 continue;
             }
             
-            $sum = $this->getSum("SELECT SUM($col) FROM financial_deposit_accounts WHERE tx_date BETWEEN ? AND ?", $startDate, $endDate);
+            $sum = $this->getSum("SELECT SUM($col) FROM financial_deposit_accounts WHERE tx_date BETWEEN ? AND ? AND deleted_at IS NULL", $startDate, $endDate);
             if ($sum > 0) {
                 $results[] = [
                     'label' => DepositAccountRepository::CATEGORY_LABELS[$col],
@@ -196,7 +196,7 @@ class FinancialStatementController
                 continue;
             }
             
-            $sum = $this->getSum("SELECT SUM($col) FROM financial_payment_accounts WHERE tx_date BETWEEN ? AND ?", $startDate, $endDate);
+            $sum = $this->getSum("SELECT SUM($col) FROM financial_payment_accounts WHERE tx_date BETWEEN ? AND ? AND deleted_at IS NULL", $startDate, $endDate);
             if ($sum > 0) {
                 $results[] = [
                     'label' => PaymentAccountRepository::CATEGORY_LABELS[$col],
